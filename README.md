@@ -1,4 +1,5 @@
 # Group-Project-KCL2018
+## Team Name: Grey Hats
 ## Introduction
 
 This is the group project for 7ccsmgpr.
