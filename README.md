@@ -1,3 +1,2 @@
 # Group-Project-KCL2018
-# 
-Cooper here
+### Team Name: Grey Hats
