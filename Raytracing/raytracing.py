@@ -56,18 +56,50 @@ def intersect_sphere(O, D, S, R):
     if disc > 0:
         distSqrt = np.sqrt(disc)
         q = (-b - distSqrt) / 2.0 if b < 0 else (-b + distSqrt) / 2.0
-        t0 = q / a
-        t1 = c / q
+        t0 = (-b - distSqrt) / 2.0 / a
+        t1 = (-b + distSqrt) / 2.0 / a
         t0, t1 = min(t0, t1), max(t0, t1)
         if t1 >= 0:
             return t1 if t0 < 0 else t0
     return np.inf
+
+def intersect_triangle(O, D, PS):
+        dist = np.inf
+        for i, plane in enumerate(PS):
+            p_dist = intersect_plane(O, D, plane[0], plane[3])
+            if p_dist != np.inf:
+                if PointinTriangle(plane[0], plane[1], plane[2], O + D * p_dist):
+                    dist = min(dist,p_dist)
+        return dist
+
+def PointinTriangle(point_1, point_2, point_3, M):
+        v0 = point_3 - point_1 
+        v1 = point_2 - point_1 
+        v2 = M - point_1
+
+        dot00 = np.dot(v0, v0) 
+        dot01 = np.dot(v0, v1)
+        dot02 = np.dot(v0, v2)
+        dot11 = np.dot(v1, v1)
+        dot12 = np.dot(v1, v2)
+
+        inverDeno = 1 / ((dot00 * dot11) - (dot01 * dot01))
+        u = ((dot11 * dot02) - (dot01 * dot12)) * inverDeno
+        if u < 0 or u > 1: # if u out of range, return directly
+            return False 
+
+        v = ((dot00 * dot12) - (dot01 * dot02)) * inverDeno
+        if v < 0 or v > 1: # if v out of range, return directly
+            return False 
+        return u + v <= 1
 
 def intersect(O, D, obj):
     if obj['type'] == 'plane':
         return intersect_plane(O, D, obj['position'], obj['normal'])
     elif obj['type'] == 'sphere':
         return intersect_sphere(O, D, obj['position'], obj['radius'])
+    elif obj['type'] == 'triangle':
+        return intersect_triangle(O, D, obj['triangle_plane'])
 
 def get_normal(obj, M):
     # Find normal.
@@ -75,8 +107,19 @@ def get_normal(obj, M):
         N = normalize(M - obj['position'])
     elif obj['type'] == 'plane':
         N = obj['normal']
+    elif obj['type'] == 'triangle':
+        for i, plane in enumerate(obj['triangle_plane']):
+            if abs(np.dot(M - plane[0],plane[3])) < 0.000000000000001:
+                N = plane[3]
     return N
     
+def check_normal_direction(O,N,P):
+
+    if  np.dot(P - O, N) < 0:
+        return N
+    else:
+        return N * -1
+
 def get_color(obj, M):
     color = obj['color']
     if not hasattr(color, '__len__'):
@@ -126,10 +169,44 @@ def add_plane(position, normal):
             if (int(M[0] * 2) % 2) == (int(M[2] * 2) % 2) else color_plane1),
         diffuse_c=.75, specular_c=.5, reflection=.25)
     
+#determine a triangl by giving the position of 4 nodes and color
+def add_triangle(position, color):
+    
+    triangle_plane = np.zeros((4,4,3))
+
+    # 3 nodes determine a plane
+    triangle_plane[0,0] = np.array(position[0])
+    triangle_plane[0,1] = np.array(position[1])
+    triangle_plane[0,2] = np.array(position[2])
+    # normal vector of plane 
+    triangle_plane[0,3] = check_normal_direction(np.array(position[0]),normalize(np.cross(np.array(position[1]) - np.array(position[0]), 
+                                                    np.array(position[2]) - np.array(position[0]))),np.array(position[3]))
+
+    triangle_plane[1,0] = np.array(position[0])
+    triangle_plane[1,1] = np.array(position[1])
+    triangle_plane[1,2] = np.array(position[3])
+    triangle_plane[1,3] = check_normal_direction(np.array(position[0]),normalize(np.cross(np.array(position[1]) - np.array(position[0]), 
+                                                    np.array(position[3]) - np.array(position[0]))),np.array(position[2]))
+    triangle_plane[2,0] = np.array(position[0])
+    triangle_plane[2,1] = np.array(position[2])
+    triangle_plane[2,2] = np.array(position[3])
+    triangle_plane[2,3] = check_normal_direction(np.array(position[0]),normalize(np.cross(np.array(position[2]) - np.array(position[0]), 
+                                                    np.array(position[3]) - np.array(position[0]))),np.array(position[1]))
+
+    triangle_plane[3,0] = np.array(position[1])
+    triangle_plane[3,1] = np.array(position[2])
+    triangle_plane[3,2] = np.array(position[3])
+    triangle_plane[3,3] = check_normal_direction(np.array(position[1]),normalize(np.cross(np.array(position[2]) - np.array(position[1]), 
+                                                    np.array(position[3]) - np.array(position[1]))),np.array(position[0]))
+
+    return dict(type='triangle', triangle_plane=triangle_plane, 
+                color=np.array(color), reflection = 0.5)
+
 # List of objects.
 color_plane0 = 1. * np.ones(3)
 color_plane1 = 0. * np.ones(3)
-scene = [add_sphere([.75, .1, 1.], .6, [0., 0., 1.]),
+scene = [add_triangle(([0, -.5, 1.5],[0.8,-.5,1.5],[0.25,-.5,0.8],[0.25,0.4,0.75]), 
+                      [1, 0.3, 0.25]),
          add_sphere([-.75, .1, 2.25], .6, [.5, .223, .5]),
          add_sphere([-2.75, .1, 3.5], .6, [1., .572, .184]),
          add_plane([0., -.5, 0.], [0., 1., 0.]),
