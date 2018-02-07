@@ -97,7 +97,7 @@ def intersect(O, D, obj):
         return intersect_plane(O, D, obj['position'], obj['normal'])
     elif obj['type'] == 'sphere':
         return intersect_sphere(O, D, obj['position'], obj['radius'])
-    elif obj['type'] == 'triangle':
+    else:
         return intersect_triangle(O, D, obj['triangle_plane'])
 
 def get_normal(obj, M):
@@ -106,7 +106,7 @@ def get_normal(obj, M):
         N = normalize(M - obj['position'])
     elif obj['type'] == 'plane':
         N = obj['normal']
-    elif obj['type'] == 'triangle':
+    else:
         for i, plane in enumerate(obj['triangle_plane']):
             if abs(np.dot(M - plane[0],plane[3])) < 0.000000000000001:
                 N = plane[3]
@@ -169,7 +169,7 @@ def add_plane(position, normal):
         diffuse_c=.75, specular_c=.5, reflection=.25)
     
 #determine a triangl by giving the position of 4 nodes and color
-def add_triangle(position, color):
+def add_tetrahedron(position, color):
     
     triangle_plane = np.zeros((4,4,3))
 
@@ -198,15 +198,103 @@ def add_triangle(position, color):
     triangle_plane[3,3] = check_normal_direction(np.array(position[1]),normalize(np.cross(np.array(position[2]) - np.array(position[1]), 
                                                     np.array(position[3]) - np.array(position[1]))),np.array(position[0]))
 
-    return dict(type='triangle', triangle_plane=triangle_plane, 
+    return dict(type='tetrahedron', triangle_plane=triangle_plane, 
                 color=np.array(color), reflection = 0.5)
 
+#determine a cube by giving the centre position, length, rotation angle, and
+#color
+#split cube to 12 triangle_plane
+def add_cube(P, length, R, color):
 
+    position = np.array(P)
+    square = [[],[],[],[],[],[]]
+    x_n_vector = np.array([[1,0,0],[-1,0,0]]) * length / 2
+    y_n_vector = np.array([[0,1,0],[0,-1,0]]) * length / 2
+    z_n_vector = np.array([[0,0,1],[0,0,-1]]) * length / 2
+    rota = np.array(R)
+
+    #find 6 square plane of cube
+    for i,x in enumerate(x_n_vector):
+        for j,y in enumerate(y_n_vector):
+            for k,z in enumerate(z_n_vector):
+                node = rotation(position + x + y + z,position,rota)
+                if i == 0:
+                    square[0].append(node)
+                if i == 1:
+                    square[1].append(node)
+                if j == 0:
+                    square[2].append(node)                
+                if j == 1:
+                    square[3].append(node)
+                if k == 0:
+                    square[4].append(node)
+                if k == 1:
+                    square[5].append(node)
+
+    triangle_plane = np.zeros((12,4,3))
+
+    #split each square plane to triangle plane
+    for i,s in enumerate(square):
+        split_triangle = split_square_to_triangle(s)
+        triangle_plane[i * 2,0] = np.array(split_triangle[0][0])
+        triangle_plane[i * 2,1] = np.array(split_triangle[0][1])
+        triangle_plane[i * 2,2] = np.array(split_triangle[0][2])
+        triangle_plane[i * 2,3] = check_normal_direction(triangle_plane[i * 2,0],normalize(np.cross(triangle_plane[i * 2,1] - triangle_plane[i * 2,0], 
+                                                        triangle_plane[i * 2,2] - triangle_plane[i * 2,0])),position)
+
+        triangle_plane[(i * 2) + 1,0] = np.array(split_triangle[1][0])
+        triangle_plane[(i * 2) + 1,1] = np.array(split_triangle[1][1])
+        triangle_plane[(i * 2) + 1,2] = np.array(split_triangle[1][2])
+        triangle_plane[(i * 2) + 1,3] = check_normal_direction(triangle_plane[(i * 2) + 1,0],normalize(np.cross(triangle_plane[(i * 2) + 1,1] - triangle_plane[(i * 2) + 1,0], 
+                                                        triangle_plane[(i * 2) + 1,2] - triangle_plane[(i * 2) + 1,0])),position)
+
+    return dict(type='cube', triangle_plane=triangle_plane, 
+                color=np.array(color), reflection = 0.5)
+
+#split square plane to two triangle plane
+def split_square_to_triangle(square_vertex):
+    triangle_vertex = np.zeros((2,3,3))
+
+    #choose first three nodes as first triangle plane
+    triangle_vertex[0] = np.array([square_vertex[0],square_vertex[1],square_vertex[2]])
+
+    max_dis = 0
+    max_index = 0
+    tmp_vertex = []
+
+    for i in range(3):
+        dis = np.linalg.norm(square_vertex[i] - square_vertex[3])
+        if dis > max_dis:
+            max_dis = dis
+            max_index = i
+    
+    #choose forth node and other two closer nodes as second triangle plane
+    for i in range(4):
+        if i != max_index:
+            tmp_vertex.append(square_vertex[i])
+
+    triangle_vertex[1] = np.array(tmp_vertex)
+
+    return triangle_vertex
+
+#rotate a node base on given center node with specific x-axis, y-asix, z-axis
+#angle
+def rotation(node,r_centre,r_angle):
+
+    angle = r_angle * np.pi / 180
+    r_x = np.matrix([[1,0,0],[0,np.cos(angle[0]),np.sin(angle[0] * -1)],[0,np.sin(angle[0]),np.cos(angle[0])]])
+    r_y = np.matrix([[np.cos(angle[1]),0,np.sin(angle[1])],[0,1,0],[np.sin(angle[1]) * -1,0,np.cos(angle[1])]])
+    r_z = np.matrix([[np.cos(angle[2]),np.sin(angle[2]) * -1,0],[np.sin(angle[2]),np.cos(angle[2]),0],[0,0,1]])
+
+    tmp_node = node - r_centre
+    r_node = np.matmul(r_z,np.matmul(r_y,np.matmul(r_x,(np.matrix([[tmp_node[0]],[tmp_node[1]],[tmp_node[2]]])))))
+
+    return np.array([r_node.item(0),r_node.item(1),r_node.item(2)]) + r_centre
+
+#trace ray of pixel in given area
 def trace_ray_main(result_queue,x_start,x_end,y_start,y_end):
     img = np.zeros((h, w, 3))
     for i, x in enumerate(x_project[np.where(x_project == x_start)[0][0]:np.where(x_project == x_end)[0][0] + 1]):
-        if i % 10 == 0:
-            print(i / float(w) * 100, "%")
         for j, y in enumerate(y_project[np.where(y_project == y_start)[0][0]:np.where(y_project == y_end)[0][0] + 1]):
             col = np.zeros(3)
             col[:] = 0
@@ -237,10 +325,12 @@ h = 300
 # List of objects.
 color_plane0 = 1. * np.ones(3)
 color_plane1 = 0. * np.ones(3)
-scene = [add_triangle(([0, -.5, 1.5],[0.8,-.5,1.5],[0.25,-.5,0.8],[0.25,0.4,0.75]), 
-                        [1, 0.3, 0.25]),
-            add_sphere([-.75, .1, 2.25], .6, [.5, .223, .5]),
+scene = [add_tetrahedron(([0, -.5, 1.5],[0.8,-.5,1.5],[0.25,-.5,0.8],[0.25,0.4,0.75]), 
+                        [1, 0.3, 0.25]),            
+            #add_sphere([-.75, .1, 2.25], .6, [.5, .223, .5]),
+            add_cube([-.75,-.2,1.2],.6,[0,0,0],[.5,.223,.5]),
             add_sphere([-2.75, .1, 3.5], .6, [1., .572, .184]),
+            #add_cube([-2.75, .1, 3.5],.6,[0,0,0],[1., .572, .184]),
             add_plane([0., -.5, 0.], [0., 1., 0.]),]
 
 # Light position and color.
@@ -259,12 +349,13 @@ O = np.array([0., 0.35, -1.])  # Camera.
 r = float(w) / h
 # Screen coordinates: x0, y0, x1, y1.
 S = (-1., -1. / r + .25, 1., 1. / r + .25)
-
 x_project = np.linspace(S[0], S[2], w)
-
 y_project = np.linspace(S[1], S[3], h)
 
+#divide project plane to multiple smaller plane
 processes_divided = 8
+
+#find divided point
 processes_x = x_project[0:len(x_project):round(len(x_project) / processes_divided)]
 processes_y = y_project[0:len(y_project):round(len(y_project) / processes_divided)]
 
@@ -277,13 +368,9 @@ if processes_y[len(processes_y) - 1] != y_project[len(y_project) - 1]:
 result_queue = mp.Queue()
 ps = []
 
-# Loop through all pixels.
+# Create new processes to trace ray on given area
 for i in range(0, len(processes_x) - 1):
-    #if i % 10 == 0:
-        #print(i / float(w) * 100, "%")
     for j in range(0, len(processes_y) - 1):
-        #trace_ray_main(i,x,j,y)
-        # Create new threads
         x_start = processes_x[i] if i == 0 else x_project[np.where(x_project == processes_x[i])[0][0] + 1]
         x_end = processes_x[i + 1]
         y_start = processes_y[j] if j == 0 else y_project[np.where(y_project == processes_y[j])[0][0] + 1]
@@ -295,10 +382,12 @@ if __name__ == '__main__':
     img = np.zeros((h, w, 3))
     l = []
 
+    #start processes
     for p in ps:
             p.start()
 
     for i in range(len(ps)):
        img = img + result_queue.get()
+       print(i / len(ps) * 100, '%')
 
     plt.imsave('fig.png', img)
