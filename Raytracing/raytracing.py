@@ -24,16 +24,14 @@ SOFTWARE.
 
 import numpy as np
 import matplotlib.pyplot as plt
-
-w = 400
-h = 300
+import multiprocessing as mp
 
 def normalize(x):
     x /= np.linalg.norm(x)
     return x
 
 def intersect_plane(O, D, P, N):
-    # Return the distance from O to the intersection of the ray (O, D) with the 
+    # Return the distance from O to the intersection of the ray (O, D) with the
     # plane (P, N), or +inf if there is no intersection.
     # O and P are 3D points, D and N (normal) are normalized vectors.
     denom = np.dot(D, N)
@@ -45,9 +43,10 @@ def intersect_plane(O, D, P, N):
     return d
 
 def intersect_sphere(O, D, S, R):
-    # Return the distance from O to the intersection of the ray (O, D) with the 
+    # Return the distance from O to the intersection of the ray (O, D) with the
     # sphere (S, R), or +inf if there is no intersection.
-    # O and S are 3D points, D (direction) is a normalized vector, R is a scalar.
+    # O and S are 3D points, D (direction) is a normalized vector, R is a
+    # scalar.
     a = np.dot(D, D)
     OS = O - S
     b = 2 * np.dot(D, OS)
@@ -178,7 +177,7 @@ def add_triangle(position, color):
     triangle_plane[0,0] = np.array(position[0])
     triangle_plane[0,1] = np.array(position[1])
     triangle_plane[0,2] = np.array(position[2])
-    # normal vector of plane 
+    # normal vector of plane
     triangle_plane[0,3] = check_normal_direction(np.array(position[0]),normalize(np.cross(np.array(position[1]) - np.array(position[0]), 
                                                     np.array(position[2]) - np.array(position[0]))),np.array(position[3]))
 
@@ -202,15 +201,47 @@ def add_triangle(position, color):
     return dict(type='triangle', triangle_plane=triangle_plane, 
                 color=np.array(color), reflection = 0.5)
 
+
+def trace_ray_main(result_queue,x_start,x_end,y_start,y_end):
+    img = np.zeros((h, w, 3))
+    for i, x in enumerate(x_project[np.where(x_project == x_start)[0][0]:np.where(x_project == x_end)[0][0] + 1]):
+        if i % 10 == 0:
+            print(i / float(w) * 100, "%")
+        for j, y in enumerate(y_project[np.where(y_project == y_start)[0][0]:np.where(y_project == y_end)[0][0] + 1]):
+            col = np.zeros(3)
+            col[:] = 0
+            Q = np.array([0., 0., 0.])  # Camera pointing to.
+            Q[:2] = (x, y)
+            D = normalize(Q - O)
+            depth = 0
+            rayO, rayD = O, D
+            reflection = 1.
+            # Loop through initial and secondary rays.
+            while depth < depth_max:
+                traced = trace_ray(rayO, rayD)
+                if not traced:
+                    break
+                obj, M, N, col_ray = traced
+                # Reflection: create a new ray.
+                rayO, rayD = M + N * .0001, normalize(rayD - 2 * np.dot(rayD, N) * N)
+                depth += 1
+                col += reflection * col_ray
+                reflection *= obj.get('reflection', 1.)
+            img[h - np.where(y_project == y)[0][0] - 1, np.where(x_project == x)[0][0], :] = np.clip(col, 0, 1)
+    result_queue.put(img) 
+
+
+w = 400
+h = 300
+
 # List of objects.
 color_plane0 = 1. * np.ones(3)
 color_plane1 = 0. * np.ones(3)
 scene = [add_triangle(([0, -.5, 1.5],[0.8,-.5,1.5],[0.25,-.5,0.8],[0.25,0.4,0.75]), 
-                      [1, 0.3, 0.25]),
-         add_sphere([-.75, .1, 2.25], .6, [.5, .223, .5]),
-         add_sphere([-2.75, .1, 3.5], .6, [1., .572, .184]),
-         add_plane([0., -.5, 0.], [0., 1., 0.]),
-    ]
+                        [1, 0.3, 0.25]),
+            add_sphere([-.75, .1, 2.25], .6, [.5, .223, .5]),
+            add_sphere([-2.75, .1, 3.5], .6, [1., .572, .184]),
+            add_plane([0., -.5, 0.], [0., 1., 0.]),]
 
 # Light position and color.
 L = np.array([5., 5., -10.])
@@ -225,35 +256,49 @@ specular_k = 50
 depth_max = 5  # Maximum number of light reflections.
 col = np.zeros(3)  # Current color.
 O = np.array([0., 0.35, -1.])  # Camera.
-Q = np.array([0., 0., 0.])  # Camera pointing to.
-img = np.zeros((h, w, 3))
-
 r = float(w) / h
 # Screen coordinates: x0, y0, x1, y1.
 S = (-1., -1. / r + .25, 1., 1. / r + .25)
 
-# Loop through all pixels.
-for i, x in enumerate(np.linspace(S[0], S[2], w)):
-    if i % 10 == 0:
-        print (i / float(w) * 100, "%")
-    for j, y in enumerate(np.linspace(S[1], S[3], h)):
-        col[:] = 0
-        Q[:2] = (x, y)
-        D = normalize(Q - O)
-        depth = 0
-        rayO, rayD = O, D
-        reflection = 1.
-        # Loop through initial and secondary rays.
-        while depth < depth_max:
-            traced = trace_ray(rayO, rayD)
-            if not traced:
-                break
-            obj, M, N, col_ray = traced
-            # Reflection: create a new ray.
-            rayO, rayD = M + N * .0001, normalize(rayD - 2 * np.dot(rayD, N) * N)
-            depth += 1
-            col += reflection * col_ray
-            reflection *= obj.get('reflection', 1.)
-        img[h - j - 1, i, :] = np.clip(col, 0, 1)
+x_project = np.linspace(S[0], S[2], w)
 
-plt.imsave('fig.png', img)
+y_project = np.linspace(S[1], S[3], h)
+
+processes_divided = 8
+processes_x = x_project[0:len(x_project):round(len(x_project) / processes_divided)]
+processes_y = y_project[0:len(y_project):round(len(y_project) / processes_divided)]
+
+if processes_x[len(processes_x) - 1] != x_project[len(x_project) - 1]:
+    processes_x = np.append(processes_x,x_project[len(x_project) - 1])
+
+if processes_y[len(processes_y) - 1] != y_project[len(y_project) - 1]:
+    processes_y = np.append(processes_y,y_project[len(y_project) - 1])
+
+result_queue = mp.Queue()
+ps = []
+
+# Loop through all pixels.
+for i in range(0, len(processes_x) - 1):
+    #if i % 10 == 0:
+        #print(i / float(w) * 100, "%")
+    for j in range(0, len(processes_y) - 1):
+        #trace_ray_main(i,x,j,y)
+        # Create new threads
+        x_start = processes_x[i] if i == 0 else x_project[np.where(x_project == processes_x[i])[0][0] + 1]
+        x_end = processes_x[i + 1]
+        y_start = processes_y[j] if j == 0 else y_project[np.where(y_project == processes_y[j])[0][0] + 1]
+        y_end = processes_y[j + 1]
+        ps.append(mp.Process(target=trace_ray_main,args=(result_queue,x_start,x_end,y_start,y_end,)))
+
+if __name__ == '__main__':
+
+    img = np.zeros((h, w, 3))
+    l = []
+
+    for p in ps:
+            p.start()
+
+    for i in range(len(ps)):
+       img = img + result_queue.get()
+
+    plt.imsave('fig.png', img)
