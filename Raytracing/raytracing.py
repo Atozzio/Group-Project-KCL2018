@@ -26,11 +26,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import multiprocessing as mp
 
-
 def normalize(x):
     x /= np.linalg.norm(x)
     return x
-
 
 def intersect_plane(O, D, P, N):
     # Return the distance from O to the intersection of the ray (O, D) with the
@@ -43,7 +41,6 @@ def intersect_plane(O, D, P, N):
     if d < 0:
         return np.inf
     return d
-
 
 def intersect_sphere(O, D, S, R):
     # Return the distance from O to the intersection of the ray (O, D) with the
@@ -65,38 +62,35 @@ def intersect_sphere(O, D, S, R):
             return t1 if t0 < 0 else t0
     return np.inf
 
-
 def intersect_triangle(O, D, PS):
-    dist = np.inf
-    for i, plane in enumerate(PS):
-        p_dist = intersect_plane(O, D, plane[0], plane[3])
-        if p_dist != np.inf:
-            if PointinTriangle(plane[0], plane[1], plane[2], O + D * p_dist):
-                dist = min(dist, p_dist)
-    return dist
-
+        dist = np.inf
+        for i, plane in enumerate(PS):
+            p_dist = intersect_plane(O, D, plane[0], plane[3])
+            if p_dist != np.inf:
+                if PointinTriangle(plane[0], plane[1], plane[2], O + D * p_dist):
+                    dist = min(dist,p_dist)
+        return dist
 
 def PointinTriangle(point_1, point_2, point_3, M):
-    v0 = point_3 - point_1
-    v1 = point_2 - point_1
-    v2 = M - point_1
+        v0 = point_3 - point_1 
+        v1 = point_2 - point_1 
+        v2 = M - point_1
 
-    dot00 = np.dot(v0, v0)
-    dot01 = np.dot(v0, v1)
-    dot02 = np.dot(v0, v2)
-    dot11 = np.dot(v1, v1)
-    dot12 = np.dot(v1, v2)
+        dot00 = np.dot(v0, v0) 
+        dot01 = np.dot(v0, v1)
+        dot02 = np.dot(v0, v2)
+        dot11 = np.dot(v1, v1)
+        dot12 = np.dot(v1, v2)
 
-    inverDeno = 1 / ((dot00 * dot11) - (dot01 * dot01))
-    u = ((dot11 * dot02) - (dot01 * dot12)) * inverDeno
-    if u < 0 or u > 1:  # if u out of range, return directly
-        return False
+        inverDeno = 1 / ((dot00 * dot11) - (dot01 * dot01))
+        u = ((dot11 * dot02) - (dot01 * dot12)) * inverDeno
+        if u < 0 or u > 1: # if u out of range, return directly
+            return False 
 
-    v = ((dot00 * dot12) - (dot01 * dot02)) * inverDeno
-    if v < 0 or v > 1:  # if v out of range, return directly
-        return False
-    return u + v <= 1
-
+        v = ((dot00 * dot12) - (dot01 * dot02)) * inverDeno
+        if v < 0 or v > 1: # if v out of range, return directly
+            return False 
+        return u + v <= 1
 
 def intersect(O, D, obj):
     if obj['type'] == 'plane':
@@ -106,7 +100,6 @@ def intersect(O, D, obj):
     else:
         return intersect_triangle(O, D, obj['triangle_plane'])
 
-
 def get_normal(obj, M):
     # Find normal.
     if obj['type'] == 'sphere':
@@ -115,24 +108,22 @@ def get_normal(obj, M):
         N = obj['normal']
     else:
         for i, plane in enumerate(obj['triangle_plane']):
-            if abs(np.dot(M - plane[0], plane[3])) < 0.000000000000001:
+            if abs(np.dot(M - plane[0],plane[3])) < 0.000000000000001:
                 N = plane[3]
     return N
+    
+def check_normal_direction(O,N,P):
 
-
-def check_normal_direction(O, N, P):
-    if np.dot(P - O, N) < 0:
+    if  np.dot(P - O, N) < 0:
         return N
     else:
         return N * -1
-
 
 def get_color(obj, M):
     color = obj['color']
     if not hasattr(color, '__len__'):
         color = color(M)
     return color
-
 
 def trace_ray(rayO, rayD):
     # Find first point of intersection with the scene.
@@ -154,8 +145,8 @@ def trace_ray(rayO, rayD):
     toL = normalize(L - M)
     toO = normalize(O - M)
     # Shadow: find if the point is shadowed or not.
-    l = [intersect(M + N * .0001, toL, obj_sh)
-         for k, obj_sh in enumerate(scene) if k != obj_idx]
+    l = [intersect(M + N * .0001, toL, obj_sh) 
+            for k, obj_sh in enumerate(scene) if k != obj_idx]
     if l and min(l) < np.inf:
         return
     # Start computing the color.
@@ -166,83 +157,73 @@ def trace_ray(rayO, rayD):
     col_ray += obj.get('specular_c', specular_c) * max(np.dot(N, normalize(toL + toO)), 0) ** specular_k * color_light
     return obj, M, N, col_ray
 
-
 def add_sphere(position, radius, color):
-    return dict(type='sphere', position=np.array(position),
-                radius=np.array(radius), color=np.array(color), reflection=.5)
-
-
+    return dict(type='sphere', position=np.array(position), 
+        radius=np.array(radius), color=np.array(color), reflection=.5)
+    
 def add_plane(position, normal):
-    return dict(type='plane', position=np.array(position),
-                normal=np.array(normal),
-                color=lambda M: (color_plane0
-                if (int(M[0] * 2) % 2) == (int(M[2] * 2) % 2) else color_plane1),
-                diffuse_c=.75, specular_c=.5, reflection=.25)
-
-
-# determine a triangl by giving the position of 4 nodes and color
+    return dict(type='plane', position=np.array(position), 
+        normal=np.array(normal),
+        color=lambda M: (color_plane0 
+            if (int(M[0] * 2) % 2) == (int(M[2] * 2) % 2) else color_plane1),
+        diffuse_c=.75, specular_c=.5, reflection=.25)
+    
+#determine a triangl by giving the position of 4 nodes and color
 def add_tetrahedron(position, color):
-    triangle_plane = np.zeros((4, 4, 3))
+    
+    triangle_plane = np.zeros((4,4,3))
 
     # 3 nodes determine a plane
-    triangle_plane[0, 0] = np.array(position[0])
-    triangle_plane[0, 1] = np.array(position[1])
-    triangle_plane[0, 2] = np.array(position[2])
+    triangle_plane[0,0] = np.array(position[0])
+    triangle_plane[0,1] = np.array(position[1])
+    triangle_plane[0,2] = np.array(position[2])
     # normal vector of plane
-    triangle_plane[0, 3] = check_normal_direction(np.array(position[0]),
-                                                  normalize(np.cross(np.array(position[1]) - np.array(position[0]),
-                                                                     np.array(position[2]) - np.array(position[0]))),
-                                                  np.array(position[3]))
+    triangle_plane[0,3] = check_normal_direction(np.array(position[0]),normalize(np.cross(np.array(position[1]) - np.array(position[0]), 
+                                                    np.array(position[2]) - np.array(position[0]))),np.array(position[3]))
 
-    triangle_plane[1, 0] = np.array(position[0])
-    triangle_plane[1, 1] = np.array(position[1])
-    triangle_plane[1, 2] = np.array(position[3])
-    triangle_plane[1, 3] = check_normal_direction(np.array(position[0]),
-                                                  normalize(np.cross(np.array(position[1]) - np.array(position[0]),
-                                                                     np.array(position[3]) - np.array(position[0]))),
-                                                  np.array(position[2]))
-    triangle_plane[2, 0] = np.array(position[0])
-    triangle_plane[2, 1] = np.array(position[2])
-    triangle_plane[2, 2] = np.array(position[3])
-    triangle_plane[2, 3] = check_normal_direction(np.array(position[0]),
-                                                  normalize(np.cross(np.array(position[2]) - np.array(position[0]),
-                                                                     np.array(position[3]) - np.array(position[0]))),
-                                                  np.array(position[1]))
+    triangle_plane[1,0] = np.array(position[0])
+    triangle_plane[1,1] = np.array(position[1])
+    triangle_plane[1,2] = np.array(position[3])
+    triangle_plane[1,3] = check_normal_direction(np.array(position[0]),normalize(np.cross(np.array(position[1]) - np.array(position[0]), 
+                                                    np.array(position[3]) - np.array(position[0]))),np.array(position[2]))
+    triangle_plane[2,0] = np.array(position[0])
+    triangle_plane[2,1] = np.array(position[2])
+    triangle_plane[2,2] = np.array(position[3])
+    triangle_plane[2,3] = check_normal_direction(np.array(position[0]),normalize(np.cross(np.array(position[2]) - np.array(position[0]), 
+                                                    np.array(position[3]) - np.array(position[0]))),np.array(position[1]))
 
-    triangle_plane[3, 0] = np.array(position[1])
-    triangle_plane[3, 1] = np.array(position[2])
-    triangle_plane[3, 2] = np.array(position[3])
-    triangle_plane[3, 3] = check_normal_direction(np.array(position[1]),
-                                                  normalize(np.cross(np.array(position[2]) - np.array(position[1]),
-                                                                     np.array(position[3]) - np.array(position[1]))),
-                                                  np.array(position[0]))
+    triangle_plane[3,0] = np.array(position[1])
+    triangle_plane[3,1] = np.array(position[2])
+    triangle_plane[3,2] = np.array(position[3])
+    triangle_plane[3,3] = check_normal_direction(np.array(position[1]),normalize(np.cross(np.array(position[2]) - np.array(position[1]), 
+                                                    np.array(position[3]) - np.array(position[1]))),np.array(position[0]))
 
-    return dict(type='tetrahedron', triangle_plane=triangle_plane,
-                color=np.array(color), reflection=0.05)
+    return dict(type='tetrahedron', triangle_plane=triangle_plane, 
+                color=np.array(color), reflection = 0.5)
 
-
-# determine a cube by giving the centre position, length, rotation angle, and
-# color
-# split cube to 12 triangle_plane
+#determine a cube by giving the centre position, length, rotation angle, and
+#color
+#split cube to 12 triangle_plane
 def add_cube(P, length, R, color):
+
     position = np.array(P)
-    square = [[], [], [], [], [], []]
-    x_n_vector = np.array([[1, 0, 0], [-1, 0, 0]]) * length / 2
-    y_n_vector = np.array([[0, 1, 0], [0, -1, 0]]) * length / 2
-    z_n_vector = np.array([[0, 0, 1], [0, 0, -1]]) * length / 2
+    square = [[],[],[],[],[],[]]
+    x_n_vector = np.array([[1,0,0],[-1,0,0]]) * length / 2
+    y_n_vector = np.array([[0,1,0],[0,-1,0]]) * length / 2
+    z_n_vector = np.array([[0,0,1],[0,0,-1]]) * length / 2
     rota = np.array(R)
 
-    # find 6 square plane of cube
-    for i, x in enumerate(x_n_vector):
-        for j, y in enumerate(y_n_vector):
-            for k, z in enumerate(z_n_vector):
-                node = rotation(position + x + y + z, position, rota)
+    #find 6 square plane of cube
+    for i,x in enumerate(x_n_vector):
+        for j,y in enumerate(y_n_vector):
+            for k,z in enumerate(z_n_vector):
+                node = rotation(position + x + y + z,position,rota)
                 if i == 0:
                     square[0].append(node)
                 if i == 1:
                     square[1].append(node)
                 if j == 0:
-                    square[2].append(node)
+                    square[2].append(node)                
                 if j == 1:
                     square[3].append(node)
                 if k == 0:
@@ -250,35 +231,32 @@ def add_cube(P, length, R, color):
                 if k == 1:
                     square[5].append(node)
 
-    triangle_plane = np.zeros((12, 4, 3))
+    triangle_plane = np.zeros((12,4,3))
 
-    # split each square plane to triangle plane
-    for i, s in enumerate(square):
+    #split each square plane to triangle plane
+    for i,s in enumerate(square):
         split_triangle = split_square_to_triangle(s)
-        triangle_plane[i * 2, 0] = np.array(split_triangle[0][0])
-        triangle_plane[i * 2, 1] = np.array(split_triangle[0][1])
-        triangle_plane[i * 2, 2] = np.array(split_triangle[0][2])
-        triangle_plane[i * 2, 3] = check_normal_direction(triangle_plane[i * 2, 0], normalize(
-            np.cross(triangle_plane[i * 2, 1] - triangle_plane[i * 2, 0],
-                     triangle_plane[i * 2, 2] - triangle_plane[i * 2, 0])), position)
+        triangle_plane[i * 2,0] = np.array(split_triangle[0][0])
+        triangle_plane[i * 2,1] = np.array(split_triangle[0][1])
+        triangle_plane[i * 2,2] = np.array(split_triangle[0][2])
+        triangle_plane[i * 2,3] = check_normal_direction(triangle_plane[i * 2,0],normalize(np.cross(triangle_plane[i * 2,1] - triangle_plane[i * 2,0], 
+                                                        triangle_plane[i * 2,2] - triangle_plane[i * 2,0])),position)
 
-        triangle_plane[(i * 2) + 1, 0] = np.array(split_triangle[1][0])
-        triangle_plane[(i * 2) + 1, 1] = np.array(split_triangle[1][1])
-        triangle_plane[(i * 2) + 1, 2] = np.array(split_triangle[1][2])
-        triangle_plane[(i * 2) + 1, 3] = check_normal_direction(triangle_plane[(i * 2) + 1, 0], normalize(
-            np.cross(triangle_plane[(i * 2) + 1, 1] - triangle_plane[(i * 2) + 1, 0],
-                     triangle_plane[(i * 2) + 1, 2] - triangle_plane[(i * 2) + 1, 0])), position)
+        triangle_plane[(i * 2) + 1,0] = np.array(split_triangle[1][0])
+        triangle_plane[(i * 2) + 1,1] = np.array(split_triangle[1][1])
+        triangle_plane[(i * 2) + 1,2] = np.array(split_triangle[1][2])
+        triangle_plane[(i * 2) + 1,3] = check_normal_direction(triangle_plane[(i * 2) + 1,0],normalize(np.cross(triangle_plane[(i * 2) + 1,1] - triangle_plane[(i * 2) + 1,0], 
+                                                        triangle_plane[(i * 2) + 1,2] - triangle_plane[(i * 2) + 1,0])),position)
 
-    return dict(type='cube', triangle_plane=triangle_plane,
-                color=np.array(color), reflection=0.05)
+    return dict(type='cube', triangle_plane=triangle_plane, 
+                color=np.array(color), reflection = 0.5)
 
-
-# split square plane to two triangle plane
+#split square plane to two triangle plane
 def split_square_to_triangle(square_vertex):
-    triangle_vertex = np.zeros((2, 3, 3))
+    triangle_vertex = np.zeros((2,3,3))
 
-    # choose first three nodes as first triangle plane
-    triangle_vertex[0] = np.array([square_vertex[0], square_vertex[1], square_vertex[2]])
+    #choose first three nodes as first triangle plane
+    triangle_vertex[0] = np.array([square_vertex[0],square_vertex[1],square_vertex[2]])
 
     max_dis = 0
     max_index = 0
@@ -289,8 +267,8 @@ def split_square_to_triangle(square_vertex):
         if dis > max_dis:
             max_dis = dis
             max_index = i
-
-    # choose forth node and other two closer nodes as second triangle plane
+    
+    #choose forth node and other two closer nodes as second triangle plane
     for i in range(4):
         if i != max_index:
             tmp_vertex.append(square_vertex[i])
@@ -299,23 +277,22 @@ def split_square_to_triangle(square_vertex):
 
     return triangle_vertex
 
+#rotate a node base on given center node with specific x-axis, y-asix, z-axis
+#angle
+def rotation(node,r_centre,r_angle):
 
-# rotate a node base on given center node with specific x-axis, y-asix, z-axis
-# angle
-def rotation(node, r_centre, r_angle):
     angle = r_angle * np.pi / 180
-    r_x = np.matrix([[1, 0, 0], [0, np.cos(angle[0]), np.sin(angle[0] * -1)], [0, np.sin(angle[0]), np.cos(angle[0])]])
-    r_y = np.matrix([[np.cos(angle[1]), 0, np.sin(angle[1])], [0, 1, 0], [np.sin(angle[1]) * -1, 0, np.cos(angle[1])]])
-    r_z = np.matrix([[np.cos(angle[2]), np.sin(angle[2]) * -1, 0], [np.sin(angle[2]), np.cos(angle[2]), 0], [0, 0, 1]])
+    r_x = np.matrix([[1,0,0],[0,np.cos(angle[0]),np.sin(angle[0] * -1)],[0,np.sin(angle[0]),np.cos(angle[0])]])
+    r_y = np.matrix([[np.cos(angle[1]),0,np.sin(angle[1])],[0,1,0],[np.sin(angle[1]) * -1,0,np.cos(angle[1])]])
+    r_z = np.matrix([[np.cos(angle[2]),np.sin(angle[2]) * -1,0],[np.sin(angle[2]),np.cos(angle[2]),0],[0,0,1]])
 
     tmp_node = node - r_centre
-    r_node = np.matmul(r_z, np.matmul(r_y, np.matmul(r_x, (np.matrix([[tmp_node[0]], [tmp_node[1]], [tmp_node[2]]])))))
+    r_node = np.matmul(r_z,np.matmul(r_y,np.matmul(r_x,(np.matrix([[tmp_node[0]],[tmp_node[1]],[tmp_node[2]]])))))
 
-    return np.array([r_node.item(0), r_node.item(1), r_node.item(2)]) + r_centre
+    return np.array([r_node.item(0),r_node.item(1),r_node.item(2)]) + r_centre
 
-
-# trace ray of pixel in given area
-def trace_ray_main(result_queue, x_start, x_end, y_start, y_end):
+#trace ray of pixel in given area
+def trace_ray_main(result_queue,x_start,x_end,y_start,y_end):
     img = np.zeros((h, w, 3))
     for i, x in enumerate(x_project[np.where(x_project == x_start)[0][0]:np.where(x_project == x_end)[0][0] + 1]):
         for j, y in enumerate(y_project[np.where(y_project == y_start)[0][0]:np.where(y_project == y_end)[0][0] + 1]):
@@ -339,7 +316,7 @@ def trace_ray_main(result_queue, x_start, x_end, y_start, y_end):
                 col += reflection * col_ray
                 reflection *= obj.get('reflection', 1.)
             img[h - np.where(y_project == y)[0][0] - 1, np.where(x_project == x)[0][0], :] = np.clip(col, 0, 1)
-    result_queue.put(img)
+    result_queue.put(img) 
 
 
 w = 400
@@ -348,13 +325,13 @@ h = 300
 # List of objects.
 color_plane0 = 1. * np.ones(3)
 color_plane1 = 0. * np.ones(3)
-scene = [add_tetrahedron(([0, -.5, 1.5], [0.8, -.5, 1.5], [0.25, -.5, 0.8], [0.25, 0.4, 0.75]),
-                         [0, 2.3, 2.25]),
-         # add_sphere([-.75, .1, 2.25], .6, [.5, .223, .5]),
-         add_cube([-.75, -.2, 1.2], .6, [0, 0, 0], [1.5, 1.223, 2.5]),
-         add_sphere([-2.75, .1, 3.5], .6, [1., .572, .184]),
-         # add_cube([-2.75, .1, 3.5],.6,[0,0,0],[1., .572, .184]),
-         add_plane([0., -.5, 0.], [0., 1., 0.]), ]
+scene = [add_tetrahedron(([0, -.5, 1.5],[0.8,-.5,1.5],[0.25,-.5,0.8],[0.25,0.4,0.75]), 
+                        [1, 0.3, 0.25]),            
+            #add_sphere([-.75, .1, 2.25], .6, [.5, .223, .5]),
+            add_cube([-.75,-.2,1.2],.6,[0,0,0],[.5,.223,.5]),
+            add_sphere([-2.75, .1, 3.5], .6, [1., .572, .184]),
+            #add_cube([-2.75, .1, 3.5],.6,[0,0,0],[1., .572, .184]),
+            add_plane([0., -.5, 0.], [0., 1., 0.]),]
 
 # Light position and color.
 L = np.array([5., 5., -10.])
@@ -375,18 +352,18 @@ S = (-1., -1. / r + .25, 1., 1. / r + .25)
 x_project = np.linspace(S[0], S[2], w)
 y_project = np.linspace(S[1], S[3], h)
 
-# divide project plane to multiple smaller plane
+#divide project plane to multiple smaller plane
 processes_divided = 8
 
-# find divided point
+#find divided point
 processes_x = x_project[0:len(x_project):round(len(x_project) / processes_divided)]
 processes_y = y_project[0:len(y_project):round(len(y_project) / processes_divided)]
 
 if processes_x[len(processes_x) - 1] != x_project[len(x_project) - 1]:
-    processes_x = np.append(processes_x, x_project[len(x_project) - 1])
+    processes_x = np.append(processes_x,x_project[len(x_project) - 1])
 
 if processes_y[len(processes_y) - 1] != y_project[len(y_project) - 1]:
-    processes_y = np.append(processes_y, y_project[len(y_project) - 1])
+    processes_y = np.append(processes_y,y_project[len(y_project) - 1])
 
 result_queue = mp.Queue()
 ps = []
@@ -398,19 +375,19 @@ for i in range(0, len(processes_x) - 1):
         x_end = processes_x[i + 1]
         y_start = processes_y[j] if j == 0 else y_project[np.where(y_project == processes_y[j])[0][0] + 1]
         y_end = processes_y[j + 1]
-        ps.append(mp.Process(target=trace_ray_main, args=(result_queue, x_start, x_end, y_start, y_end,)))
+        ps.append(mp.Process(target=trace_ray_main,args=(result_queue,x_start,x_end,y_start,y_end,)))
 
 if __name__ == '__main__':
 
     img = np.zeros((h, w, 3))
     l = []
 
-    # start processes
+    #start processes
     for p in ps:
-        p.start()
+            p.start()
 
     for i in range(len(ps)):
-        img = img + result_queue.get()
-        print(i / len(ps) * 100, '%')
+       img = img + result_queue.get()
+       print(i / len(ps) * 100, '%')
 
     plt.imsave('fig.png', img)
