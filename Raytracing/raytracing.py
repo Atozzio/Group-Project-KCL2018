@@ -26,6 +26,91 @@ import numpy as np
 import matplotlib.pyplot as plt
 import multiprocessing as mp
 
+class triangle_plane():
+    point_1 = None
+    point_2 = None
+    point_3 = None
+    normal_vector = None
+
+    def __init__(self, point_1, point_2, point_3):
+        self.point_1 = point_1
+        self.point_2 = point_2
+        self.point_3 = point_3
+        self.normal_vector = normalize(np.cross(point_2 - point_1, point_3 - point_1)) 
+
+    def getReflectedNormalVector(self, raySource):
+        if  np.dot(self.point_1 - raySource, self.normal_vector) < 0:
+            return self.normal_vector
+        else:
+            return -1 * self.normal_vector
+
+    def intersection(self, O, D):  
+        dist = intersect_plane(O, D, self.point_1, self.normal_vector)
+        if dist != np.inf:
+            if PointinTriangle(self.point_1, self.point_2, self.point_3, O + D * dist):
+                return dist
+        return np.inf
+    
+    def check_on_plane(self, point):
+        if abs(np.dot(point - self.point_1, self.normal_vector)) < 0.000000000000001:
+            if PointinTriangle(self.point_1, self.point_2, self.point_3, point):
+                return True
+        
+        return False
+
+class cube():
+
+    position = None
+    length = None
+    rotation_angle = None
+    triangle_planes = None
+
+    def __init__(self, position, length, rotation_angle):
+        
+        self.position = position
+        self.length = length
+        self.rotation_angle = rotation_angle
+
+        square = [[],[],[],[],[],[]]
+        self.triangle_planes = []
+
+        x_n_vector = rotation_vector(np.array([1,0,0]) * self.length / 2, rotation_angle)
+        y_n_vector = rotation_vector(np.array([0,1,0]) * self.length / 2, rotation_angle)
+        z_n_vector = rotation_vector(np.array([0,0,1]) * self.length / 2, rotation_angle)
+
+        #find 6 square plane of cube
+        for i,x in enumerate([x_n_vector, -1 * x_n_vector]):
+            for j,y in enumerate([y_n_vector, -1 * y_n_vector]):
+                for k,z in enumerate([z_n_vector, -1 * z_n_vector]):
+                    node = self.position + x + y + z
+                    if i == 0:
+                        square[0].append(node)
+                    if i == 1:
+                        square[1].append(node)
+                    if j == 0:
+                        square[2].append(node)                
+                    if j == 1:
+                        square[3].append(node)
+                    if k == 0:
+                        square[4].append(node)
+                    if k == 1:
+                        square[5].append(node)
+
+        #split each square plane to triangle plane
+        for i,s in enumerate(square):
+            self.triangle_planes = self.triangle_planes + split_square_to_triangle(s)
+
+    def intersection(self, O, D):
+        if intersect_sphere(O, D, self.position, np.sqrt(3) * self.length / 2) != np.inf:
+            return intersect_TriangleSet(O, D, self.triangle_planes)
+        else:
+            return np.inf
+
+    def getNormalVector(self, O, M):
+        for i, triangle_plane in enumerate(self.triangle_planes):
+            if abs(np.dot(M - triangle_plane.point_1,triangle_plane.normal_vector)) < 0.000000000000001:
+                return triangle_plane.getReflectedNormalVector(O)
+
 
 class circle_plane():
 
@@ -45,7 +130,6 @@ class circle_plane():
                 return True
         
         return False
-
 
 class cylinder():
 
@@ -150,14 +234,11 @@ def intersect_sphere(O, D, S, R):
             return t1 if t0 < 0 else t0
     return np.inf
 
-def intersect_triangle(O, D, PS):
+def intersect_TriangleSet(O, D, triangle_planes):
 
     dist = np.inf
-    for i, plane in enumerate(PS):
-        p_dist = intersect_plane(O, D, plane[0], plane[3])
-        if p_dist != np.inf:
-            if PointinTriangle(plane[0], plane[1], plane[2], O + D * p_dist):
-                dist = min(dist,p_dist)
+    for i, triangle_plane in enumerate(triangle_planes):
+        dist = min(dist,triangle_plane.intersection(O, D))
     return dist
 
 def PointinTriangle(point_1, point_2, point_3, M):
@@ -188,10 +269,16 @@ def intersect(O, D, obj):
         return intersect_sphere(O, D, obj['position'], obj['radius'])
     elif obj['type'] == 'cylinder':
         return obj['obj'].intersection(O, D)
+    elif obj['type'] == 'cube':
+        return obj['obj'].intersection(O, D)
     else:
-        return intersect_triangle(O, D, obj['triangle_plane'])
+        return intersect_TriangleSet(O, D, obj['triangle_planes'])
 
 def get_normal(obj, M):
+    
+    #camera
+    global O
+
     # Find normal.
     if obj['type'] == 'sphere':
         N = normalize(M - obj['position'])
@@ -199,10 +286,12 @@ def get_normal(obj, M):
         N = obj['normal']
     elif obj['type'] == 'cylinder':
         N = obj['obj'].getNormalVector(M)
-    else:
-        for i, plane in enumerate(obj['triangle_plane']):
-            if abs(np.dot(M - plane[0],plane[3])) < 0.000000000000001:
-                N = plane[3]
+    elif obj['type'] == 'cube':
+        N = obj['obj'].getNormalVector(O, M)
+    else:       
+        for i, triangle_plane in enumerate(obj['triangle_planes']):
+            if abs(np.dot(M - triangle_plane.point_1,triangle_plane.normal_vector)) < 0.000000000000001:
+                N = triangle_plane.getReflectedNormalVector(O)
     return N
     
 def check_normal_direction(O,N,P):
@@ -263,85 +352,22 @@ def add_plane(position, normal):
     
 #determine a triangl by giving the position of 4 nodes and color
 def add_tetrahedron(position, color):
-    
-    triangle_plane = np.zeros((4,4,3))
 
-    # 3 nodes determine a plane
-    triangle_plane[0,0] = np.array(position[0])
-    triangle_plane[0,1] = np.array(position[1])
-    triangle_plane[0,2] = np.array(position[2])
-    # normal vector of plane
-    triangle_plane[0,3] = check_normal_direction(np.array(position[0]),normalize(np.cross(np.array(position[1]) - np.array(position[0]), 
-                                                    np.array(position[2]) - np.array(position[0]))),np.array(position[3]))
+    # 3 nodes determine a plane, total 4 planes
+    triangle_planes = [triangle_plane(np.array(position[0]),np.array(position[1]),np.array(position[2])),
+                       triangle_plane(np.array(position[0]),np.array(position[1]),np.array(position[3])),
+                       triangle_plane(np.array(position[0]),np.array(position[2]),np.array(position[3])),
+                       triangle_plane(np.array(position[1]),np.array(position[2]),np.array(position[3])),]
 
-    triangle_plane[1,0] = np.array(position[0])
-    triangle_plane[1,1] = np.array(position[1])
-    triangle_plane[1,2] = np.array(position[3])
-    triangle_plane[1,3] = check_normal_direction(np.array(position[0]),normalize(np.cross(np.array(position[1]) - np.array(position[0]), 
-                                                    np.array(position[3]) - np.array(position[0]))),np.array(position[2]))
-    triangle_plane[2,0] = np.array(position[0])
-    triangle_plane[2,1] = np.array(position[2])
-    triangle_plane[2,2] = np.array(position[3])
-    triangle_plane[2,3] = check_normal_direction(np.array(position[0]),normalize(np.cross(np.array(position[2]) - np.array(position[0]), 
-                                                    np.array(position[3]) - np.array(position[0]))),np.array(position[1]))
-
-    triangle_plane[3,0] = np.array(position[1])
-    triangle_plane[3,1] = np.array(position[2])
-    triangle_plane[3,2] = np.array(position[3])
-    triangle_plane[3,3] = check_normal_direction(np.array(position[1]),normalize(np.cross(np.array(position[2]) - np.array(position[1]), 
-                                                    np.array(position[3]) - np.array(position[1]))),np.array(position[0]))
-
-    return dict(type='tetrahedron', triangle_plane=triangle_plane, 
+    return dict(type='tetrahedron', triangle_planes=triangle_planes, 
                 color=np.array(color), reflection = 0.5)
 
 #determine a cube by giving the centre position, length, rotation angle, and
 #color
 #split cube to 12 triangle_plane
-def add_cube(P, length, R, color):
+def add_cube(position, length, rotation_angle, color):
 
-    position = np.array(P)
-    square = [[],[],[],[],[],[]]
-    x_n_vector = np.array([[1,0,0],[-1,0,0]]) * length / 2
-    y_n_vector = np.array([[0,1,0],[0,-1,0]]) * length / 2
-    z_n_vector = np.array([[0,0,1],[0,0,-1]]) * length / 2
-    rota = np.array(R)
-
-    #find 6 square plane of cube
-    for i,x in enumerate(x_n_vector):
-        for j,y in enumerate(y_n_vector):
-            for k,z in enumerate(z_n_vector):
-                node = rotation(position + x + y + z,position,rota)
-                if i == 0:
-                    square[0].append(node)
-                if i == 1:
-                    square[1].append(node)
-                if j == 0:
-                    square[2].append(node)                
-                if j == 1:
-                    square[3].append(node)
-                if k == 0:
-                    square[4].append(node)
-                if k == 1:
-                    square[5].append(node)
-
-    triangle_plane = np.zeros((12,4,3))
-
-    #split each square plane to triangle plane
-    for i,s in enumerate(square):
-        split_triangle = split_square_to_triangle(s)
-        triangle_plane[i * 2,0] = np.array(split_triangle[0][0])
-        triangle_plane[i * 2,1] = np.array(split_triangle[0][1])
-        triangle_plane[i * 2,2] = np.array(split_triangle[0][2])
-        triangle_plane[i * 2,3] = check_normal_direction(triangle_plane[i * 2,0],normalize(np.cross(triangle_plane[i * 2,1] - triangle_plane[i * 2,0], 
-                                                        triangle_plane[i * 2,2] - triangle_plane[i * 2,0])),position)
-
-        triangle_plane[(i * 2) + 1,0] = np.array(split_triangle[1][0])
-        triangle_plane[(i * 2) + 1,1] = np.array(split_triangle[1][1])
-        triangle_plane[(i * 2) + 1,2] = np.array(split_triangle[1][2])
-        triangle_plane[(i * 2) + 1,3] = check_normal_direction(triangle_plane[(i * 2) + 1,0],normalize(np.cross(triangle_plane[(i * 2) + 1,1] - triangle_plane[(i * 2) + 1,0], 
-                                                        triangle_plane[(i * 2) + 1,2] - triangle_plane[(i * 2) + 1,0])),position)
-
-    return dict(type='cube', triangle_plane=triangle_plane, 
+    return dict(type='cube', obj = cube(np.array(position), length, np.array(rotation_angle)), 
                 color=np.array(color), reflection = 0.5)
 
 
@@ -354,7 +380,7 @@ def split_square_to_triangle(square_vertex):
     triangle_vertex = np.zeros((2,3,3))
 
     #choose first three nodes as first triangle plane
-    triangle_vertex[0] = np.array([square_vertex[0],square_vertex[1],square_vertex[2]])
+    triangle_plane_1 = triangle_plane(np.array(square_vertex[0]),np.array(square_vertex[1]),np.array(square_vertex[2]))
 
     max_dis = 0
     max_index = 0
@@ -371,9 +397,9 @@ def split_square_to_triangle(square_vertex):
         if i != max_index:
             tmp_vertex.append(square_vertex[i])
 
-    triangle_vertex[1] = np.array(tmp_vertex)
+    triangle_plane_2 = triangle_plane(np.array(tmp_vertex[0]),np.array(tmp_vertex[1]),np.array(tmp_vertex[2]))
 
-    return triangle_vertex
+    return [triangle_plane_1,triangle_plane_2]
 
 #rotate a node base on given center node with specific x-axis, y-asix, z-axis
 #angle
@@ -430,12 +456,13 @@ h = 300
 color_plane0 = 1. * np.ones(3)
 color_plane1 = 0. * np.ones(3)
 scene = [add_tetrahedron(([0, -.5, 1.5],[0.8,-.5,1.5],[0.25,-.5,0.8],[0.25,0.4,0.75]), 
-                        [1, 0.3, 0.25]),            
+                        [1, 0.3, 0.25]), 
+            add_cube([1, .5, 1.2],.6,[30,0,30],[.4, .81, .6]),
             #add_sphere([-.75, .1, 2.25], .6, [.5, .223, .5]),
             #add_cube([-.75,.5,1.2],.6,[45,45,0],[.5,.223,.5]),
             add_cylinder([-.75,.25,1.],.5,.4,[-30,0,30],[.5,.223,.5]),
-            add_sphere([-2.75, .1, 3.5], .6, [1., .572, .184]),
-            #add_cube([-2.75, .1, 3.5],.6,[0,0,0],[1., .572, .184]),
+            #add_sphere([-2.75, .1, 3.5], .6, [1., .572, .184]),
+            add_cube([-2.75, .1, 3.5],.6,[0,0,0],[1., .572, .184]),
             add_plane([0., -.5, 0.], [0., 1., 0.]),]
 
 # Light position and color.
