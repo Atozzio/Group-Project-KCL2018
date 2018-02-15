@@ -26,6 +26,94 @@ import numpy as np
 import matplotlib.pyplot as plt
 import multiprocessing as mp
 
+
+class circle_plane():
+
+    position = None
+    radius = None
+    normal_vector = None
+
+    def __init__(self, position, radius, normal_vector):
+        self.position = position
+        self.radius = radius
+        self.normal_vector = normal_vector
+
+    def check_on_plane(self, point):
+
+        if abs(np.dot(point - self.position,self.normal_vector)) < 0.000000000000001:
+            if (np.linalg.norm(point - self.position)) < self.radius:
+                return True
+        
+        return False
+
+
+class cylinder():
+
+    type = 'cylinder'
+    position = None
+    height = None
+    radius = None
+    normal_vector = None
+    color = None
+    top_bottom_plane = None
+    reflection = 0.5
+
+    def __init__(self, position, height, radius, rotation_angle, color):
+        self.position = np.array(position)
+        self.height = height
+        self.radius = radius
+        self.normal_vector = rotation_vector(np.array([0,1,0]),np.array(rotation_angle))
+
+        top_plane = circle_plane(self.position + self.normal_vector * (height/2) , radius, self.normal_vector)
+        bottom_plane = circle_plane(self.position - self.normal_vector * (height/2) , radius, -1 * self.normal_vector)
+        self.top_bottom_plane = [top_plane, bottom_plane]
+
+    def intersection(self, O, D):
+        dist = np.inf
+        p = np.dot(D, self.normal_vector) * self.normal_vector - D
+        q = self.position - O - np.dot(self.position - O, self.normal_vector) * self.normal_vector
+        a = np.dot(p, p)
+        b = 2 * np.dot(p, q)
+        c = np.dot(q, q) - (self.radius)**2
+
+        if a == 0:
+            if b != 0 :
+                 t0 = -1 * c  / b
+                 if t0 > 0:
+                    dist = t0
+        else:
+            disc = b * b - 4 * a * c
+            if disc > 0:
+                distSqrt = np.sqrt(disc)
+                t0 = (-b - distSqrt) / 2.0 / a
+                t1 = (-b + distSqrt) / 2.0 / a
+                t0, t1 = min(t0, t1), max(t0, t1)
+                if t1 >= 0:
+                    if t0 < 0:
+                        if (np.linalg.norm(O + D * t1 - self.position))**2 < self.radius**2 + (self.height / 2)**2 :
+                            dist = t1
+                    else:
+                        if (np.linalg.norm(O + D * t0 - self.position))**2 < self.radius**2 + (self.height / 2)**2 :
+                            dist = t0 
+
+        for i, plane in enumerate(self.top_bottom_plane):
+            tmp_dist = intersect_plane(O, D, plane.position, plane.normal_vector)
+            if tmp_dist < dist:
+                if np.linalg.norm(O + tmp_dist * D - plane.position) <= plane.radius :
+                    dist = tmp_dist
+        
+        return dist
+
+    def getNormalVector(self, intersected_point):
+
+        for i, cycle_palne in enumerate(self.top_bottom_plane):
+            if cycle_palne.check_on_plane(intersected_point):
+                return cycle_palne.normal_vector
+
+        project_point = self.position - np.dot((self.position - intersected_point), self.normal_vector) * self.normal_vector
+        return normalize(intersected_point - project_point)
+
+
 def normalize(x):
     x /= np.linalg.norm(x)
     return x
@@ -63,13 +151,14 @@ def intersect_sphere(O, D, S, R):
     return np.inf
 
 def intersect_triangle(O, D, PS):
-        dist = np.inf
-        for i, plane in enumerate(PS):
-            p_dist = intersect_plane(O, D, plane[0], plane[3])
-            if p_dist != np.inf:
-                if PointinTriangle(plane[0], plane[1], plane[2], O + D * p_dist):
-                    dist = min(dist,p_dist)
-        return dist
+
+    dist = np.inf
+    for i, plane in enumerate(PS):
+        p_dist = intersect_plane(O, D, plane[0], plane[3])
+        if p_dist != np.inf:
+            if PointinTriangle(plane[0], plane[1], plane[2], O + D * p_dist):
+                dist = min(dist,p_dist)
+    return dist
 
 def PointinTriangle(point_1, point_2, point_3, M):
         v0 = point_3 - point_1 
@@ -97,6 +186,8 @@ def intersect(O, D, obj):
         return intersect_plane(O, D, obj['position'], obj['normal'])
     elif obj['type'] == 'sphere':
         return intersect_sphere(O, D, obj['position'], obj['radius'])
+    elif obj['type'] == 'cylinder':
+        return obj['obj'].intersection(O, D)
     else:
         return intersect_triangle(O, D, obj['triangle_plane'])
 
@@ -106,6 +197,8 @@ def get_normal(obj, M):
         N = normalize(M - obj['position'])
     elif obj['type'] == 'plane':
         N = obj['normal']
+    elif obj['type'] == 'cylinder':
+        N = obj['obj'].getNormalVector(M)
     else:
         for i, plane in enumerate(obj['triangle_plane']):
             if abs(np.dot(M - plane[0],plane[3])) < 0.000000000000001:
@@ -251,6 +344,11 @@ def add_cube(P, length, R, color):
     return dict(type='cube', triangle_plane=triangle_plane, 
                 color=np.array(color), reflection = 0.5)
 
+
+def add_cylinder(poisition, height, radius, rotation_angle, color):
+    return dict(type='cylinder', obj = cylinder(poisition, height, radius, rotation_angle, color), 
+                color=np.array(color), reflection = 0.5)
+
 #split square plane to two triangle plane
 def split_square_to_triangle(square_vertex):
     triangle_vertex = np.zeros((2,3,3))
@@ -291,6 +389,12 @@ def rotation(node,r_centre,r_angle):
 
     return np.array([r_node.item(0),r_node.item(1),r_node.item(2)]) + r_centre
 
+
+def rotation_vector(vector,r_angle):
+
+    return rotation(vector, np.array([0,0,0]), r_angle)
+
+
 #trace ray of pixel in given area
 def trace_ray_main(result_queue,x_start,x_end,y_start,y_end):
     img = np.zeros((h, w, 3))
@@ -328,7 +432,8 @@ color_plane1 = 0. * np.ones(3)
 scene = [add_tetrahedron(([0, -.5, 1.5],[0.8,-.5,1.5],[0.25,-.5,0.8],[0.25,0.4,0.75]), 
                         [1, 0.3, 0.25]),            
             #add_sphere([-.75, .1, 2.25], .6, [.5, .223, .5]),
-            add_cube([-.75,-.2,1.2],.6,[0,0,0],[.5,.223,.5]),
+            #add_cube([-.75,.5,1.2],.6,[45,45,0],[.5,.223,.5]),
+            add_cylinder([-.75,.25,1.],.5,.4,[-30,0,30],[.5,.223,.5]),
             add_sphere([-2.75, .1, 3.5], .6, [1., .572, .184]),
             #add_cube([-2.75, .1, 3.5],.6,[0,0,0],[1., .572, .184]),
             add_plane([0., -.5, 0.], [0., 1., 0.]),]
@@ -380,7 +485,6 @@ for i in range(0, len(processes_x) - 1):
 if __name__ == '__main__':
 
     img = np.zeros((h, w, 3))
-    l = []
 
     #start processes
     for p in ps:
@@ -388,6 +492,9 @@ if __name__ == '__main__':
 
     for i in range(len(ps)):
        img = img + result_queue.get()
-       print(i / len(ps) * 100, '%')
+       print((i+1) / len(ps) * 100, '%')
+
+    #trace_ray_main(result_queue,S[0], S[2],S[1], S[3])
+    #img = img + result_queue.get()
 
     plt.imsave('fig.png', img)
