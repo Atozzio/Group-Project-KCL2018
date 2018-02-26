@@ -26,6 +26,59 @@ import numpy as np
 import matplotlib.pyplot as plt
 import multiprocessing as mp
 
+class PositionType:
+	IN, OUT = 1, -1
+
+class ray():
+
+    origin = None
+    direction = None
+
+    def __init__(self, origin, direction):
+        self.origin = origin
+        self.direction = direction
+
+    def trace_ray(self, scene):
+        # Find first point of intersection with the scene.
+        t = np.inf
+        for i, obj in enumerate(scene):
+            t_obj = intersect(self.origin, self.direction, obj)
+            if t_obj < t:
+                t, obj_idx = t_obj, i
+        # Return None if the ray does not intersect any object.
+        if t == np.inf:
+            return
+        # Find the object.
+        obj = scene[obj_idx]
+        # Find the point of intersection on the object.
+        M =  self.origin + self.direction * t
+        # Find properties of the object.
+        N = get_normal(obj, M, self.origin)
+        color = get_color(obj, M)
+        toL = normalize(L - M)
+        toO = normalize(self.origin - M)
+        # Shadow: find if the point is shadowed or not.
+        transparent_ratio = 1
+        for k, obj_sh in enumerate(scene): 
+            if k != obj_idx:
+                if intersect(M + N * .001, toL, obj_sh) < np.inf:
+                    transparent_ratio *= 1- scene[k].get("reflection")
+
+        #l = [intersect(M + N * .0001, toL, obj_sh) 
+        #for k, obj_sh in enumerate(scene) if k != obj_idx]
+        #if l and min(l) < np.inf:
+        #    return
+
+        # Start computing the color.
+        col_ray = ambient
+        # Lambert shading (diffuse).
+        col_ray += obj.get('diffuse_c', diffuse_c) * max(np.dot(N, toL), 0) * color
+        # Blinn-Phong shading (specular).
+        col_ray += obj.get('specular_c', specular_c) * max(np.dot(N, normalize(toL + toO)), 0) ** specular_k * color_light
+        
+        col_ray *= transparent_ratio**2
+        
+        return obj, M, N, col_ray
 
 class triangle_plane():
     point_1 = None
@@ -53,7 +106,7 @@ class triangle_plane():
         return np.inf
 
     def check_on_plane(self, point):
-        if abs(np.dot(point - self.point_1, self.normal_vector)) < 0.000000000000001:
+        if abs(np.dot(point - self.point_1, self.normal_vector)) < 0.00000000001:
             if PointinTriangle(self.point_1, self.point_2, self.point_3, point):
                 return True
 
@@ -101,16 +154,20 @@ class cube():
         for i, s in enumerate(square):
             self.triangle_planes = self.triangle_planes + split_square_to_triangle(s)
 
+        for i, plane in enumerate(self.triangle_planes):
+            if  np.dot(plane.point_1 - self.position, plane.normal_vector) < 0:
+                self.triangle_planes[i].normal_vector *=-1
+
     def intersection(self, O, D):
         if intersect_sphere(O, D, self.position, np.sqrt(3) * self.length / 2) != np.inf:
             return intersect_TriangleSet(O, D, self.triangle_planes)
         else:
             return np.inf
 
-    def getNormalVector(self, O, M):
+    def getNormalVector(self, M):
         for i, triangle_plane in enumerate(self.triangle_planes):
-            if abs(np.dot(M - triangle_plane.point_1, triangle_plane.normal_vector)) < 0.000000000000001:
-                return triangle_plane.getReflectedNormalVector(O)
+            if abs(np.dot(M - triangle_plane.point_1,triangle_plane.normal_vector)) < 0.00000000001:
+                return triangle_plane.normal_vector
 
 
 class circle_plane():
@@ -125,7 +182,7 @@ class circle_plane():
 
     def check_on_plane(self, point):
 
-        if abs(np.dot(point - self.position, self.normal_vector)) < 0.000000000000001:
+        if abs(np.dot(point - self.position, self.normal_vector)) < 0.00000000001:
             if (np.linalg.norm(point - self.position)) < self.radius:
                 return True
 
@@ -282,9 +339,7 @@ def intersect(O, D, obj):
         return intersect_TriangleSet(O, D, obj['triangle_planes'])
 
 
-def get_normal(obj, M):
-    # camera
-    global O
+def get_normal(obj, M, O):
 
     # Find normal.
     if obj['type'] == 'sphere':
@@ -294,10 +349,10 @@ def get_normal(obj, M):
     elif obj['type'] == 'cylinder':
         N = obj['obj'].getNormalVector(M)
     elif obj['type'] == 'cube':
-        N = obj['obj'].getNormalVector(O, M)
+        N = obj['obj'].getNormalVector(M)
     else:
         for i, triangle_plane in enumerate(obj['triangle_planes']):
-            if abs(np.dot(M - triangle_plane.point_1, triangle_plane.normal_vector)) < 0.000000000000001:
+            if abs(np.dot(M - triangle_plane.point_1, triangle_plane.normal_vector)) < 0.00000000001:
                 N = triangle_plane.getReflectedNormalVector(O)
     return N
 
@@ -315,43 +370,9 @@ def get_color(obj, M):
         color = color(M)
     return color
 
-
-def trace_ray(rayO, rayD, scene):
-    # Find first point of intersection with the scene.
-    t = np.inf
-    for i, obj in enumerate(scene):
-        t_obj = intersect(rayO, rayD, obj)
-        if t_obj < t:
-            t, obj_idx = t_obj, i
-    # Return None if the ray does not intersect any object.
-    if t == np.inf:
-        return
-    # Find the object.
-    obj = scene[obj_idx]
-    # Find the point of intersection on the object.
-    M = rayO + rayD * t
-    # Find properties of the object.
-    N = get_normal(obj, M)
-    color = get_color(obj, M)
-    toL = normalize(L - M)
-    toO = normalize(O - M)
-    # Shadow: find if the point is shadowed or not.
-    l = [intersect(M + N * .0001, toL, obj_sh)
-         for k, obj_sh in enumerate(scene) if k != obj_idx]
-    if l and min(l) < np.inf:
-        return
-    # Start computing the color.
-    col_ray = ambient
-    # Lambert shading (diffuse).
-    col_ray += obj.get('diffuse_c', diffuse_c) * max(np.dot(N, toL), 0) * color
-    # Blinn-Phong shading (specular).
-    col_ray += obj.get('specular_c', specular_c) * max(np.dot(N, normalize(toL + toO)), 0) ** specular_k * color_light
-    return obj, M, N, col_ray
-
-
 def add_sphere(position, radius, color):
     return dict(type='sphere', position=np.array(position),
-                radius=np.array(radius), color=np.array(color), reflection=.5)
+                radius=np.array(radius), color=np.array(color), reflection=.5, refractive_indices= 1.1)
 
 
 def add_plane(position, normal):
@@ -359,7 +380,7 @@ def add_plane(position, normal):
                 normal=np.array(normal),
                 color=lambda M: (color_plane0
                                  if (int(M[0] * 2) % 2) == (int(M[2] * 2) % 2) else color_plane1),
-                diffuse_c=.75, specular_c=.5, reflection=.25)
+                diffuse_c=.75, specular_c=.5, reflection=.25, refractive_indices= 4)
 
 
 # determine a triangl by giving the position of 4 nodes and color
@@ -371,7 +392,7 @@ def add_tetrahedron(position, color):
                        triangle_plane(np.array(position[1]), np.array(position[2]), np.array(position[3])), ]
 
     return dict(type='tetrahedron', triangle_planes=triangle_planes,
-                color=np.array(color), reflection=0.5)
+                color=np.array(color), reflection=0.5, refractive_indices= 1.1)
 
 
 # determine a cube by giving the centre position, length, rotation angle, and
@@ -379,12 +400,12 @@ def add_tetrahedron(position, color):
 # split cube to 12 triangle_plane
 def add_cube(position, length, rotation_angle, color):
     return dict(type='cube', obj=cube(np.array(position), length, np.array(rotation_angle)),
-                color=np.array(color), reflection=0.5)
+                color=np.array(color), reflection=0.5, refractive_indices= 1.05)
 
 
 def add_cylinder(poisition, height, radius, rotation_angle, color):
     return dict(type='cylinder', obj=cylinder(poisition, height, radius, rotation_angle, color),
-                color=np.array(color), reflection=0.5)
+                color=np.array(color), reflection=0.5, refractive_indices= 1.05)
 
 
 # split square plane to two triangle plane
@@ -433,8 +454,8 @@ def rotation_vector(vector, r_angle):
     return rotation(vector, np.array([0, 0, 0]), r_angle)
 
 
-# trace ray of pixel in given area
-def trace_ray_main(result_queue, x_start, x_end, y_start, y_end, scene_input):
+#trace ray of pixel in given area
+def trace_ray_main(result_queue,x_start,x_end,y_start,y_end, scene_input):
     img = np.zeros((h, w, 3))
     scene = analyse_input(scene_input)
     for i, x in enumerate(x_project[np.where(x_project == x_start)[0][0]:np.where(x_project == x_end)[0][0] + 1]):
@@ -445,21 +466,91 @@ def trace_ray_main(result_queue, x_start, x_end, y_start, y_end, scene_input):
             Q[:2] = (x, y)
             D = normalize(Q - O)
             depth = 0
-            rayO, rayD = O, D
-            reflection = 1.
-            # Loop through initial and secondary rays.
-            while depth < depth_max:
-                traced = trace_ray(rayO, rayD, scene)
-                if not traced:
-                    break
-                obj, M, N, col_ray = traced
-                # Reflection: create a new ray.
-                rayO, rayD = M + N * .0001, normalize(rayD - 2 * np.dot(rayD, N) * N)
-                depth += 1
-                col += reflection * col_ray
-                reflection *= obj.get('reflection', 1.)
+            primaryRay = ray(O, D)
+
+            col = reflect_and_refract(primaryRay, scene, PositionType.OUT, depth, 1,i,j)
+
             img[h - np.where(y_project == y)[0][0] - 1, np.where(x_project == x)[0][0], :] = np.clip(col, 0, 1)
-    result_queue.put(img)
+    result_queue.put(img) 
+
+def reflect_and_refract(primaryRay, scene, positionType, depth, pathLoss, i,j):
+
+    traced = primaryRay.trace_ray(scene)
+    
+    if not traced:
+        return 0. * np.zeros(3)
+
+    obj, M, N, col_ray = traced
+
+    if np.dot(primaryRay.direction, N) < 0:
+        positionType = PositionType.OUT
+        col = pathLoss * col_ray
+        n1 = 1
+        n2 = obj.get('refractive_indices')
+        newNormal = N
+    else:
+        positionType = PositionType.IN
+        newNormal = N * -1
+        col = np.zeros(3)
+        n2 = 1
+        n1 = obj.get('refractive_indices')
+
+    # Reflection Ray
+    reflectAmount = fresnel (n1, n2, newNormal, primaryRay.direction)
+
+    reflectRay = ray( M + newNormal * .001, normalize(primaryRay.direction - 2 * np.dot(primaryRay.direction, newNormal) * newNormal))
+
+    if depth+1 < depth_max:
+        col+= reflect_and_refract(reflectRay, scene, positionType, depth+1, pathLoss*reflectAmount, i,j)
+
+    refractionAmount = 1 - reflectAmount
+
+    # Refraction Ray
+    if depth+1 < depth_max and refractionAmount > 0:
+            refractionRay = refraction(primaryRay, positionType, newNormal, obj, M)
+            if refractionRay is not None:
+                col+= reflect_and_refract(refractionRay, scene, positionType, depth+1, pathLoss*refractionAmount, i,j)
+
+    return col
+
+def refraction(primaryRay, positionType, normal, refraction_obj, refraction_point):
+
+    r = 1 / refraction_obj.get('refractive_indices')
+
+    if  positionType == PositionType.IN:
+        r = 1/r
+
+    c1 = abs(np.dot(normal, primaryRay.direction))    
+    t = 1- r**2 * (1-c1**2)    
+
+    if t < 0:
+        return None
+    else:
+        c2 = np.sqrt(t)
+
+    T = normalize(r * primaryRay.direction + (r*c1 - c2) * normal)
+
+    refraction_ray = ray(refraction_point + 0.001 * normal * -1, T)
+
+    return refraction_ray
+
+def fresnel(n1, n2, normal, incident) :
+ 
+    cosi = abs(np.dot(incident, normal))
+    # Compute sini using Snell's law
+
+    sint = n1 / n2 * np.sqrt(1 - cosi **2)
+    # Total internal reflection
+    if sint >= 1 : 
+        kr = 1; 
+    
+    else : 
+        cost = np.sqrt(1 - sint * sint)
+        Rs = ((n2 * cosi) - (n1 * cost)) / ((n2 * cosi) + (n1 * cost)) 
+        Rp = ((n1 * cosi) - (n2 * cost)) / ((n1 * cosi) + (n2 * cost))
+        kr = (Rs * Rs + Rp * Rp) / 2 
+
+    return kr
 
 def analyse_input(totalLines):
 
@@ -647,7 +738,7 @@ if __name__ == '__main__':
         print((i + 1) / len(ps) * 100, '%')
 
     # for debug
-    # trace_ray_main(result_queue,S[0], S[2],S[1], S[3])
-    # img = img + result_queue.get()
+    #trace_ray_main(result_queue,s[0], s[2],s[1], s[3], totallines)
+    #img = img + result_queue.get()
 
     plt.imsave('fig.png', img)
