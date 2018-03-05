@@ -26,6 +26,59 @@ import numpy as np
 import matplotlib.pyplot as plt
 import multiprocessing as mp
 
+class PositionType:
+	IN, OUT = 1, -1
+
+class ray():
+
+    origin = None
+    direction = None
+
+    def __init__(self, origin, direction):
+        self.origin = origin
+        self.direction = direction
+
+    def trace_ray(self, scene):
+        # Find first point of intersection with the scene.
+        t = np.inf
+        for i, obj in enumerate(scene):
+            t_obj = intersect(self.origin, self.direction, obj)
+            if t_obj < t:
+                t, obj_idx = t_obj, i
+        # Return None if the ray does not intersect any object.
+        if t == np.inf:
+            return
+        # Find the object.
+        obj = scene[obj_idx]
+        # Find the point of intersection on the object.
+        M =  self.origin + self.direction * t
+        # Find properties of the object.
+        N = get_normal(obj, M, self.origin)
+        color = get_color(obj, M)
+        toL = normalize(L - M)
+        toO = normalize(self.origin - M)
+        # Shadow: find if the point is shadowed or not.
+        transparent_ratio = 1
+        for k, obj_sh in enumerate(scene): 
+            if k != obj_idx:
+                if intersect(M + N * .001, toL, obj_sh) < np.inf:
+                    transparent_ratio *= 1- scene[k].get("reflection")
+
+        #l = [intersect(M + N * .0001, toL, obj_sh) 
+        #for k, obj_sh in enumerate(scene) if k != obj_idx]
+        #if l and min(l) < np.inf:
+        #    return
+
+        # Start computing the color.
+        col_ray = ambient
+        # Lambert shading (diffuse).
+        col_ray += obj.get('diffuse_c', diffuse_c) * max(np.dot(N, toL), 0) * color
+        # Blinn-Phong shading (specular).
+        col_ray += obj.get('specular_c', specular_c) * max(np.dot(N, normalize(toL + toO)), 0) ** specular_k * color_light
+        
+        col_ray *= transparent_ratio**2
+        
+        return obj, M, N, col_ray
 
 class triangle_plane():
     point_1 = None
@@ -53,7 +106,7 @@ class triangle_plane():
         return np.inf
 
     def check_on_plane(self, point):
-        if abs(np.dot(point - self.point_1, self.normal_vector)) < 0.000000000000001:
+        if abs(np.dot(point - self.point_1, self.normal_vector)) < 0.00000000001:
             if PointinTriangle(self.point_1, self.point_2, self.point_3, point):
                 return True
 
@@ -101,16 +154,20 @@ class cube():
         for i, s in enumerate(square):
             self.triangle_planes = self.triangle_planes + split_square_to_triangle(s)
 
+        for i, plane in enumerate(self.triangle_planes):
+            if  np.dot(plane.point_1 - self.position, plane.normal_vector) < 0:
+                self.triangle_planes[i].normal_vector *=-1
+
     def intersection(self, O, D):
         if intersect_sphere(O, D, self.position, np.sqrt(3) * self.length / 2) != np.inf:
             return intersect_TriangleSet(O, D, self.triangle_planes)
         else:
             return np.inf
 
-    def getNormalVector(self, O, M):
+    def getNormalVector(self, M):
         for i, triangle_plane in enumerate(self.triangle_planes):
-            if abs(np.dot(M - triangle_plane.point_1, triangle_plane.normal_vector)) < 0.000000000000001:
-                return triangle_plane.getReflectedNormalVector(O)
+            if abs(np.dot(M - triangle_plane.point_1,triangle_plane.normal_vector)) < 0.00000000001:
+                return triangle_plane.normal_vector
 
 
 class circle_plane():
@@ -125,7 +182,7 @@ class circle_plane():
 
     def check_on_plane(self, point):
 
-        if abs(np.dot(point - self.position, self.normal_vector)) < 0.000000000000001:
+        if abs(np.dot(point - self.position, self.normal_vector)) < 0.00000000001:
             if (np.linalg.norm(point - self.position)) < self.radius:
                 return True
 
@@ -282,9 +339,7 @@ def intersect(O, D, obj):
         return intersect_TriangleSet(O, D, obj['triangle_planes'])
 
 
-def get_normal(obj, M):
-    # camera
-    global O
+def get_normal(obj, M, O):
 
     # Find normal.
     if obj['type'] == 'sphere':
@@ -294,10 +349,10 @@ def get_normal(obj, M):
     elif obj['type'] == 'cylinder':
         N = obj['obj'].getNormalVector(M)
     elif obj['type'] == 'cube':
-        N = obj['obj'].getNormalVector(O, M)
+        N = obj['obj'].getNormalVector(M)
     else:
         for i, triangle_plane in enumerate(obj['triangle_planes']):
-            if abs(np.dot(M - triangle_plane.point_1, triangle_plane.normal_vector)) < 0.000000000000001:
+            if abs(np.dot(M - triangle_plane.point_1, triangle_plane.normal_vector)) < 0.00000000001:
                 N = triangle_plane.getReflectedNormalVector(O)
     return N
 
@@ -315,43 +370,9 @@ def get_color(obj, M):
         color = color(M)
     return color
 
-
-def trace_ray(rayO, rayD):
-    # Find first point of intersection with the scene.
-    t = np.inf
-    for i, obj in enumerate(scene):
-        t_obj = intersect(rayO, rayD, obj)
-        if t_obj < t:
-            t, obj_idx = t_obj, i
-    # Return None if the ray does not intersect any object.
-    if t == np.inf:
-        return
-    # Find the object.
-    obj = scene[obj_idx]
-    # Find the point of intersection on the object.
-    M = rayO + rayD * t
-    # Find properties of the object.
-    N = get_normal(obj, M)
-    color = get_color(obj, M)
-    toL = normalize(L - M)
-    toO = normalize(O - M)
-    # Shadow: find if the point is shadowed or not.
-    l = [intersect(M + N * .0001, toL, obj_sh)
-         for k, obj_sh in enumerate(scene) if k != obj_idx]
-    if l and min(l) < np.inf:
-        return
-    # Start computing the color.
-    col_ray = ambient
-    # Lambert shading (diffuse).
-    col_ray += obj.get('diffuse_c', diffuse_c) * max(np.dot(N, toL), 0) * color
-    # Blinn-Phong shading (specular).
-    col_ray += obj.get('specular_c', specular_c) * max(np.dot(N, normalize(toL + toO)), 0) ** specular_k * color_light
-    return obj, M, N, col_ray
-
-
 def add_sphere(position, radius, color):
     return dict(type='sphere', position=np.array(position),
-                radius=np.array(radius), color=np.array(color), reflection=.5)
+                radius=np.array(radius), color=np.array(color), reflection=.5, refractive_indices= 1.1)
 
 
 def add_plane(position, normal):
@@ -359,7 +380,7 @@ def add_plane(position, normal):
                 normal=np.array(normal),
                 color=lambda M: (color_plane0
                                  if (int(M[0] * 2) % 2) == (int(M[2] * 2) % 2) else color_plane1),
-                diffuse_c=.75, specular_c=.5, reflection=.25)
+                diffuse_c=.75, specular_c=.5, reflection=.25, refractive_indices= 4)
 
 
 # determine a triangl by giving the position of 4 nodes and color
@@ -371,7 +392,7 @@ def add_tetrahedron(position, color):
                        triangle_plane(np.array(position[1]), np.array(position[2]), np.array(position[3])), ]
 
     return dict(type='tetrahedron', triangle_planes=triangle_planes,
-                color=np.array(color), reflection=0.5)
+                color=np.array(color), reflection=0.5, refractive_indices= 1.1)
 
 
 # determine a cube by giving the centre position, length, rotation angle, and
@@ -379,12 +400,12 @@ def add_tetrahedron(position, color):
 # split cube to 12 triangle_plane
 def add_cube(position, length, rotation_angle, color):
     return dict(type='cube', obj=cube(np.array(position), length, np.array(rotation_angle)),
-                color=np.array(color), reflection=0.5)
+                color=np.array(color), reflection=0.5, refractive_indices= 1.05)
 
 
 def add_cylinder(poisition, height, radius, rotation_angle, color):
     return dict(type='cylinder', obj=cylinder(poisition, height, radius, rotation_angle, color),
-                color=np.array(color), reflection=0.5)
+                color=np.array(color), reflection=0.5, refractive_indices= 1.05)
 
 
 # split square plane to two triangle plane
@@ -433,9 +454,10 @@ def rotation_vector(vector, r_angle):
     return rotation(vector, np.array([0, 0, 0]), r_angle)
 
 
-# trace ray of pixel in given area
-def trace_ray_main(result_queue, x_start, x_end, y_start, y_end):
+#trace ray of pixel in given area
+def trace_ray_main(result_queue,x_start,x_end,y_start,y_end, scene_input):
     img = np.zeros((h, w, 3))
+    scene = analyse_input(scene_input)
     for i, x in enumerate(x_project[np.where(x_project == x_start)[0][0]:np.where(x_project == x_end)[0][0] + 1]):
         for j, y in enumerate(y_project[np.where(y_project == y_start)[0][0]:np.where(y_project == y_end)[0][0] + 1]):
             col = np.zeros(3)
@@ -444,22 +466,209 @@ def trace_ray_main(result_queue, x_start, x_end, y_start, y_end):
             Q[:2] = (x, y)
             D = normalize(Q - O)
             depth = 0
-            rayO, rayD = O, D
-            reflection = 1.
-            # Loop through initial and secondary rays.
-            while depth < depth_max:
-                traced = trace_ray(rayO, rayD)
-                if not traced:
-                    break
-                obj, M, N, col_ray = traced
-                # Reflection: create a new ray.
-                rayO, rayD = M + N * .0001, normalize(rayD - 2 * np.dot(rayD, N) * N)
-                depth += 1
-                col += reflection * col_ray
-                reflection *= obj.get('reflection', 1.)
-            img[h - np.where(y_project == y)[0][0] - 1, np.where(x_project == x)[0][0], :] = np.clip(col, 0, 1)
-    result_queue.put(img)
+            primaryRay = ray(O, D)
 
+            col = reflect_and_refract(primaryRay, scene, PositionType.OUT, depth, 1,i,j)
+
+            img[h - np.where(y_project == y)[0][0] - 1, np.where(x_project == x)[0][0], :] = np.clip(col, 0, 1)
+    result_queue.put(img) 
+
+def reflect_and_refract(primaryRay, scene, positionType, depth, pathLoss, i,j):
+
+    traced = primaryRay.trace_ray(scene)
+    
+    if not traced:
+        return 0. * np.zeros(3)
+
+    obj, M, N, col_ray = traced
+
+    if np.dot(primaryRay.direction, N) < 0:
+        positionType = PositionType.OUT
+        col = pathLoss * col_ray
+        n1 = 1
+        n2 = obj.get('refractive_indices')
+        newNormal = N
+    else:
+        positionType = PositionType.IN
+        newNormal = N * -1
+        col = np.zeros(3)
+        n2 = 1
+        n1 = obj.get('refractive_indices')
+
+    # Reflection Ray
+    reflectAmount = fresnel (n1, n2, newNormal, primaryRay.direction)
+
+    reflectRay = ray( M + newNormal * .001, normalize(primaryRay.direction - 2 * np.dot(primaryRay.direction, newNormal) * newNormal))
+
+    if depth+1 < depth_max:
+        col+= reflect_and_refract(reflectRay, scene, positionType, depth+1, pathLoss*reflectAmount, i,j)
+
+    refractionAmount = 1 - reflectAmount
+
+    # Refraction Ray
+    if depth+1 < depth_max and refractionAmount > 0:
+            refractionRay = refraction(primaryRay, positionType, newNormal, obj, M)
+            if refractionRay is not None:
+                col+= reflect_and_refract(refractionRay, scene, positionType, depth+1, pathLoss*refractionAmount, i,j)
+
+    return col
+
+def refraction(primaryRay, positionType, normal, refraction_obj, refraction_point):
+
+    r = 1 / refraction_obj.get('refractive_indices')
+
+    if  positionType == PositionType.IN:
+        r = 1/r
+
+    c1 = abs(np.dot(normal, primaryRay.direction))    
+    t = 1- r**2 * (1-c1**2)    
+
+    if t < 0:
+        return None
+    else:
+        c2 = np.sqrt(t)
+
+    T = normalize(r * primaryRay.direction + (r*c1 - c2) * normal)
+
+    refraction_ray = ray(refraction_point + 0.001 * normal * -1, T)
+
+    return refraction_ray
+
+def fresnel(n1, n2, normal, incident) :
+ 
+    cosi = abs(np.dot(incident, normal))
+    # Compute sini using Snell's law
+
+    sint = n1 / n2 * np.sqrt(1 - cosi **2)
+    # Total internal reflection
+    if sint >= 1 : 
+        kr = 1; 
+    
+    else : 
+        cost = np.sqrt(1 - sint * sint)
+        Rs = ((n2 * cosi) - (n1 * cost)) / ((n2 * cosi) + (n1 * cost)) 
+        Rp = ((n1 * cosi) - (n2 * cost)) / ((n1 * cosi) + (n2 * cost))
+        kr = (Rs * Rs + Rp * Rp) / 2 
+
+    return kr
+
+def analyse_input(totalLines):
+
+    """
+    # Read Data from file called "input.txt", which should be generated by GUI.
+
+    ## Known Problem: conflict with multi-processing.
+    ## Reason: Unknown (Need to be mentioned in the meeting)
+
+    The format of the GUI's output should be 
+    `name, parameter, parameter, parameter,.....`
+    for example:
+
+    ------------------------------------------------------------------------------
+
+    tetrahedron,0,-0.5,1.5,0.8,-0.5,1.5,0.25,-0.5,0.8,0.25,0.4,0.75,1,0.3,0.25
+    cube,1,0.5,1.2,0.6,30,0,30,0.4,0.81,0.6
+    cylinder,-0.75,0.25,1,0.5,0.4,-30,0,30,0.5,0.223,0.5
+    cube,-2.75,0.1,3.5,0.6,0,0,0,1,0.572,0.184
+    plane,0,-0.5,0,0,1,0
+    sphere,-2.75,0.1,3.5,0.6,0,0,0,1,0.572,0.184
+
+    ------------------------------------------------------------------------------
+
+    There are different requirements for different shapes
+    For tetrahedron:
+    `tetrahedron,position,color`
+    For cube:
+    `cube,position,length,rotation_angle,color`
+    For cylinder:
+    `cylinder,position,height,radius,rotation_angle,color`
+    For sphere:
+    `sphere,position,radius,color`
+    For plane:
+    `plane,position,normal`
+
+    """
+    lists = []
+    scene = []
+
+    for line in totalLines:
+        lists.append(line.split(','))
+
+    def addTetrahedron():
+        print("add tetrahedron")
+
+    def addCube():
+        print("add cube")
+
+    def addCylinder():
+        print("add cylinder")
+
+    def addSphere():
+        print("add sphere")
+
+    def addPlane():
+        print("add plane")
+
+    def make_all_float(lst):
+        return [float(itr) for itr in lst]
+
+    for i in range(len(lists)):
+        if lists[i][0] == 'tetrahedron':
+            #addTetrahedron()
+            tmp= make_all_float(lists[i][1:])
+            position = tuple((tmp[0:3],)) + (tmp[3:6],) + (tmp[6:9],) + (tmp[9:12],)
+            color = tmp[12:]
+            scene.append(add_tetrahedron(position, color))
+
+        elif lists[i][0] == 'cube':
+            #addCube()
+            tmp = make_all_float(lists[i][1:])
+            # print(tmp)
+            position = tmp[0:3]
+            # print(position)
+            length = tmp[3]
+            # print(length)
+            rotation_angle = tmp[4:7]
+            # print(rotation_angle)
+            color = tmp[7:]
+            # print(color)
+
+            scene.append(add_cube(position, length, rotation_angle, color))
+
+        elif lists[i][0] == 'cylinder':
+            #addCylinder()
+
+            tmp = make_all_float(lists[i][1:])
+            position = tmp[0:3]
+            # print(position)
+            height = tmp[3]
+            # print(height)
+            radius = tmp[4]
+            # print(radius)
+            rotation_angle = tmp[5:8]
+            # print(rotation_angle)
+            color = tmp[8:]
+            # print(color)
+            scene.append(add_cylinder(position, height, radius, rotation_angle, color))
+
+        elif lists[i][0] == 'sphere':
+            #addSphere()
+
+            tmp = make_all_float(lists[i][1:])
+            position = tmp[0:3]
+            radius = tmp[3]
+            color = tmp[4:]
+            scene.append(add_sphere(position, radius, color))
+
+        elif lists[i][0] == 'plane':
+            #addPlane()
+
+            tmp = make_all_float(lists[i][1:])
+            position = tmp[0:3]
+            normal = tmp[3:]
+            scene.append(add_plane(position, normal))
+
+    return scene
 
 w = 400
 h = 300
@@ -467,130 +676,6 @@ h = 300
 # List of objects.
 color_plane0 = 1. * np.ones(3)
 color_plane1 = 0. * np.ones(3)
-
-
-"""
-# Read Data from file called "input.txt", which should be generated by GUI.
-
-## Known Problem: conflict with multi-processing.
-## Reason: Unknown (Need to be mentioned in the meeting)
-
-The format of the GUI's output should be 
-`name, parameter, parameter, parameter,.....`
-for example:
-
-------------------------------------------------------------------------------
-
-tetrahedron,0,-0.5,1.5,0.8,-0.5,1.5,0.25,-0.5,0.8,0.25,0.4,0.75,1,0.3,0.25
-cube,1,0.5,1.2,0.6,30,0,30,0.4,0.81,0.6
-cylinder,-0.75,0.25,1,0.5,0.4,-30,0,30,0.5,0.223,0.5
-cube,-2.75,0.1,3.5,0.6,0,0,0,1,0.572,0.184
-plane,0,-0.5,0,0,1,0
-sphere,-2.75,0.1,3.5,0.6,0,0,0,1,0.572,0.184
-
-------------------------------------------------------------------------------
-
-There are different requirements for different shapes
-For tetrahedron:
-`tetrahedron,position,color`
-For cube:
-`cube,position,length,rotation_angle,color`
-For cylinder:
-`cylinder,position,height,radius,rotation_angle,color`
-For sphere:
-`sphere,position,radius,color`
-For plane:
-`plane,position,normal`
-
-"""
-
-
-file = open('input.txt', 'r')
-totalLines = file.readlines()
-lists = []
-for line in totalLines:
-    lists.append(line.split(','))
-
-
-def addTetrahedron():
-    print("add tetrahedron")
-
-def addCube():
-    print("add cube")
-
-def addCylinder():
-    print("add cylinder")
-
-def addSphere():
-    print("add sphere")
-
-def addPlane():
-    print("add plane")
-
-
-
-def make_all_float(lst):
-    return [float(itr) for itr in lst]
-
-
-
-scene = []
-
-for i in range(len(lists)):
-    if lists[i][0] == 'tetrahedron':
-        addTetrahedron()
-        tmp= make_all_float(lists[i][1:])
-        position = tuple((tmp[0:3],)) + (tmp[3:6],) + (tmp[6:9],) + (tmp[9:12],)
-        color = tmp[12:]
-        scene.append(add_tetrahedron(position, color))
-
-    elif lists[i][0] == 'cube':
-        addCube()
-        tmp = make_all_float(lists[i][1:])
-        # print(tmp)
-        position = tmp[0:3]
-        # print(position)
-        length = tmp[3]
-        # print(length)
-        rotation_angle = tmp[4:7]
-        # print(rotation_angle)
-        color = tmp[7:]
-        # print(color)
-
-        scene.append(add_cube(position, length, rotation_angle, color))
-
-    elif lists[i][0] == 'cylinder':
-        addCylinder()
-
-        tmp = make_all_float(lists[i][1:])
-        position = tmp[0:3]
-        # print(position)
-        height = tmp[3]
-        # print(height)
-        radius = tmp[4]
-        # print(radius)
-        rotation_angle = tmp[5:8]
-        # print(rotation_angle)
-        color = tmp[8:]
-        # print(color)
-        scene.append(add_cylinder(position, height, radius, rotation_angle, color))
-
-    elif lists[i][0] == 'sphere':
-        addSphere()
-
-        tmp = make_all_float(lists[i][1:])
-        position = tmp[0:3]
-        radius = tmp[3]
-        color = tmp[4:]
-        scene.append(add_sphere(position, radius, color))
-
-    elif lists[i][0] == 'plane':
-        addPlane()
-
-        tmp = make_all_float(lists[i][1:])
-        position = tmp[0:3]
-        normal = tmp[3:]
-        scene.append(add_plane(position, normal))
 
 # Light position and color.
 L = np.array([5., 5., -10.])
@@ -611,32 +696,36 @@ S = (-1., -1. / r + .25, 1., 1. / r + .25)
 x_project = np.linspace(S[0], S[2], w)
 y_project = np.linspace(S[1], S[3], h)
 
-# divide project plane to multiple smaller plane
-processes_divided = 8
-
-# find divided point
-processes_x = x_project[0:len(x_project):round(len(x_project) / processes_divided)]
-processes_y = y_project[0:len(y_project):round(len(y_project) / processes_divided)]
-
-if processes_x[len(processes_x) - 1] != x_project[len(x_project) - 1]:
-    processes_x = np.append(processes_x, x_project[len(x_project) - 1])
-
-if processes_y[len(processes_y) - 1] != y_project[len(y_project) - 1]:
-    processes_y = np.append(processes_y, y_project[len(y_project) - 1])
-
-result_queue = mp.Queue()
-ps = []
-
-# Create new processes to trace ray on given area
-for i in range(0, len(processes_x) - 1):
-    for j in range(0, len(processes_y) - 1):
-        x_start = processes_x[i] if i == 0 else x_project[np.where(x_project == processes_x[i])[0][0] + 1]
-        x_end = processes_x[i + 1]
-        y_start = processes_y[j] if j == 0 else y_project[np.where(y_project == processes_y[j])[0][0] + 1]
-        y_end = processes_y[j + 1]
-        ps.append(mp.Process(target=trace_ray_main, args=(result_queue, x_start, x_end, y_start, y_end,)))
 
 if __name__ == '__main__':
+
+    file = open('input.txt', 'r')
+    totalLines = file.readlines()
+
+    # divide project plane to multiple smaller plane
+    processes_divided = 8
+
+    # find divided point
+    processes_x = x_project[0:len(x_project):round(len(x_project) / processes_divided)]
+    processes_y = y_project[0:len(y_project):round(len(y_project) / processes_divided)]
+
+    if processes_x[len(processes_x) - 1] != x_project[len(x_project) - 1]:
+        processes_x = np.append(processes_x, x_project[len(x_project) - 1])
+
+    if processes_y[len(processes_y) - 1] != y_project[len(y_project) - 1]:
+        processes_y = np.append(processes_y, y_project[len(y_project) - 1])
+
+    result_queue = mp.Queue()
+    ps = []
+
+    # Create new processes to trace ray on given area
+    for i in range(0, len(processes_x) - 1):
+        for j in range(0, len(processes_y) - 1):
+            x_start = processes_x[i] if i == 0 else x_project[np.where(x_project == processes_x[i])[0][0] + 1]
+            x_end = processes_x[i + 1]
+            y_start = processes_y[j] if j == 0 else y_project[np.where(y_project == processes_y[j])[0][0] + 1]
+            y_end = processes_y[j + 1]
+            ps.append(mp.Process(target=trace_ray_main, args=(result_queue, x_start, x_end, y_start, y_end, totalLines, )))
 
     img = np.zeros((h, w, 3))
 
@@ -648,7 +737,8 @@ if __name__ == '__main__':
         img = img + result_queue.get()
         print((i + 1) / len(ps) * 100, '%')
 
-    # trace_ray_main(result_queue,S[0], S[2],S[1], S[3])
-    # img = img + result_queue.get()
+    # for debug
+    #trace_ray_main(result_queue,s[0], s[2],s[1], s[3], totallines)
+    #img = img + result_queue.get()
 
     plt.imsave('fig.png', img)
