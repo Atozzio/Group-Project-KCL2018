@@ -1,18 +1,14 @@
 """
 MIT License
-
 Copyright (c) 2017 Cyrille Rossant
-
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
-
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
-
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,11 +22,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import multiprocessing as mp
 
+
 class PositionType:
-	IN, OUT = 1, -1
+    IN, OUT = 1, -1
+
 
 class ray():
-
     origin = None
     direction = None
 
@@ -51,7 +48,7 @@ class ray():
         # Find the object.
         obj = scene[obj_idx]
         # Find the point of intersection on the object.
-        M =  self.origin + self.direction * t
+        M = self.origin + self.direction * t
         # Find properties of the object.
         N = get_normal(obj, M, self.origin)
         color = get_color(obj, M)
@@ -59,14 +56,14 @@ class ray():
         toO = normalize(self.origin - M)
         # Shadow: find if the point is shadowed or not.
         transparent_ratio = 1
-        for k, obj_sh in enumerate(scene): 
+        for k, obj_sh in enumerate(scene):
             if k != obj_idx:
                 if intersect(M + N * .001, toL, obj_sh) < np.inf:
-                    transparent_ratio *= 1- scene[k].get("reflection")
+                    transparent_ratio *= 1 - scene[k].get("reflection")
 
-        #l = [intersect(M + N * .0001, toL, obj_sh) 
-        #for k, obj_sh in enumerate(scene) if k != obj_idx]
-        #if l and min(l) < np.inf:
+        # l = [intersect(M + N * .0001, toL, obj_sh)
+        # for k, obj_sh in enumerate(scene) if k != obj_idx]
+        # if l and min(l) < np.inf:
         #    return
 
         # Start computing the color.
@@ -74,11 +71,13 @@ class ray():
         # Lambert shading (diffuse).
         col_ray += obj.get('diffuse_c', diffuse_c) * max(np.dot(N, toL), 0) * color
         # Blinn-Phong shading (specular).
-        col_ray += obj.get('specular_c', specular_c) * max(np.dot(N, normalize(toL + toO)), 0) ** specular_k * color_light
-        
-        col_ray *= transparent_ratio**2
-        
+        col_ray += obj.get('specular_c', specular_c) * max(np.dot(N, normalize(toL + toO)),
+                                                           0) ** specular_k * color_light
+
+        col_ray *= transparent_ratio ** 2
+
         return obj, M, N, col_ray
+
 
 class triangle_plane():
     point_1 = None
@@ -155,8 +154,8 @@ class cube():
             self.triangle_planes = self.triangle_planes + split_square_to_triangle(s)
 
         for i, plane in enumerate(self.triangle_planes):
-            if  np.dot(plane.point_1 - self.position, plane.normal_vector) < 0:
-                self.triangle_planes[i].normal_vector *=-1
+            if np.dot(plane.point_1 - self.position, plane.normal_vector) < 0:
+                self.triangle_planes[i].normal_vector *= -1
 
     def intersection(self, O, D):
         if intersect_sphere(O, D, self.position, np.sqrt(3) * self.length / 2) != np.inf:
@@ -166,7 +165,7 @@ class cube():
 
     def getNormalVector(self, M):
         for i, triangle_plane in enumerate(self.triangle_planes):
-            if abs(np.dot(M - triangle_plane.point_1,triangle_plane.normal_vector)) < 0.00000000001:
+            if abs(np.dot(M - triangle_plane.point_1, triangle_plane.normal_vector)) < 0.00000000001:
                 return triangle_plane.normal_vector
 
 
@@ -275,6 +274,75 @@ def intersect_plane(O, D, P, N):
         return np.inf
     return d
 
+class cone():
+    type = 'cone'
+    position = None
+    height = None
+    radius = None
+    normal_vector = None
+    color = None
+    top_bottom_plane = None
+    angel= None
+    reflection = 0.5
+
+    def __init__(self, position, height, radius, rotation_angle, color):
+        self.position = np.array(position)
+        self.height = height
+        self.radius = radius
+        self.angel = math.atan(radius / (height/2))
+        self.normal_vector = rotation_vector(np.array([0, 1, 0]), np.array(rotation_angle))
+
+        top_plane = circle_plane(self.position + self.normal_vector * (height / 2), 0.1, self.normal_vector)
+        bottom_plane = circle_plane(self.position - self.normal_vector * (height / 2), radius, -1 * self.normal_vector)
+        self.top_bottom_plane = [top_plane, bottom_plane]
+
+    def intersection(self, O, D):
+        dist = np.inf
+        p = np.dot(D, self.normal_vector) * self.normal_vector - D
+        q = self.position - O - np.dot(self.position - O, self.normal_vector) * self.normal_vector
+        a = math.cos(self.angel)**2 *np.dot(p, p) - math.sin(self.angel)**2 * (np.dot(D, self.normal_vector)**2)
+        b = 2 * math.cos(self.angel)**2 * np.dot(p, q) - 2* math.sin(self.angel)**2 * np.dot(D,self.normal_vector)*np.dot((self.position-O),self.normal_vector)
+        c = math.cos(self.angel)**2 * np.dot(q, q) -  math.sin(self.angel)**2 * (np.dot(self.position-O,self.normal_vector)**2)
+
+        if a == 0:
+            if b != 0:
+                t0 = -1 * c / b
+                if t0 > 0:
+                    dist = t0
+        else:
+            disc = b * b - 4 * a * c
+            if disc > 0:
+                distSqrt = np.sqrt(disc)
+                t0 = (-b - distSqrt) / 2.0 / a
+                t1 = (-b + distSqrt) / 2.0 / a
+                t0, t1 = min(t0, t1), max(t0, t1)
+                if t1 >= 0:
+                    if t0 < 0:
+                        if (np.linalg.norm(O + D * t1 - self.position)) ** 2 < self.radius ** 2 + (
+                                self.height / 2) ** 2:
+                            dist = t1
+                    else:
+                        if (np.linalg.norm(O + D * t0 - self.position)) ** 2 < self.radius ** 2 + (
+                                self.height / 2) ** 2:
+                            dist = t0
+
+        for i, plane in enumerate(self.top_bottom_plane):
+            tmp_dist = intersect_plane(O, D, plane.position, plane.normal_vector)
+            if tmp_dist < dist:
+                if np.linalg.norm(O + tmp_dist * D - plane.position) <= plane.radius:
+                    dist = tmp_dist
+
+        return dist
+
+    def getNormalVector(self, intersected_point):
+
+        for i, cycle_palne in enumerate(self.top_bottom_plane):
+            if cycle_palne.check_on_plane(intersected_point):
+                return cycle_palne.normal_vector
+
+        project_point = self.position - np.dot((self.position - intersected_point),
+                                               self.normal_vector) * self.normal_vector
+        return normalize(intersected_point - project_point)
 
 def intersect_sphere(O, D, S, R):
     # Return the distance from O to the intersection of the ray (O, D) with the
@@ -333,6 +401,8 @@ def intersect(O, D, obj):
         return intersect_sphere(O, D, obj['position'], obj['radius'])
     elif obj['type'] == 'cylinder':
         return obj['obj'].intersection(O, D)
+    elif obj['type'] == 'cone':
+        return obj['obj'].intersection(O, D)
     elif obj['type'] == 'cube':
         return obj['obj'].intersection(O, D)
     else:
@@ -340,13 +410,14 @@ def intersect(O, D, obj):
 
 
 def get_normal(obj, M, O):
-
     # Find normal.
     if obj['type'] == 'sphere':
         N = normalize(M - obj['position'])
     elif obj['type'] == 'plane':
         N = obj['normal']
     elif obj['type'] == 'cylinder':
+        N = obj['obj'].getNormalVector(M)
+    elif obj['type'] == 'cone':
         N = obj['obj'].getNormalVector(M)
     elif obj['type'] == 'cube':
         N = obj['obj'].getNormalVector(M)
@@ -370,17 +441,18 @@ def get_color(obj, M):
         color = color(M)
     return color
 
+
 def add_sphere(position, radius, color):
     return dict(type='sphere', position=np.array(position),
-                radius=np.array(radius), color=np.array(color), reflection=.5, refractive_indices= 1.1)
+                radius=np.array(radius), color=np.array(color), reflection=.5, refractive_indices=1.1)
 
 
 def add_plane(position, normal):
     return dict(type='plane', position=np.array(position),
                 normal=np.array(normal),
                 color=lambda M: (color_plane0
-                                 if (int(M[0] * 2) % 2) == (int(M[2] * 2) % 2) else color_plane1),
-                diffuse_c=.75, specular_c=.5, reflection=.25, refractive_indices= 4)
+                if (int(M[0] * 2) % 2) == (int(M[2] * 2) % 2) else color_plane1),
+                diffuse_c=.75, specular_c=.5, reflection=.25, refractive_indices=4)
 
 
 # determine a triangl by giving the position of 4 nodes and color
@@ -392,7 +464,7 @@ def add_tetrahedron(position, color):
                        triangle_plane(np.array(position[1]), np.array(position[2]), np.array(position[3])), ]
 
     return dict(type='tetrahedron', triangle_planes=triangle_planes,
-                color=np.array(color), reflection=0.5, refractive_indices= 1.1)
+                color=np.array(color), reflection=0.5, refractive_indices=1.1)
 
 
 # determine a cube by giving the centre position, length, rotation angle, and
@@ -400,14 +472,16 @@ def add_tetrahedron(position, color):
 # split cube to 12 triangle_plane
 def add_cube(position, length, rotation_angle, color):
     return dict(type='cube', obj=cube(np.array(position), length, np.array(rotation_angle)),
-                color=np.array(color), reflection=0.5, refractive_indices= 1.05)
+                color=np.array(color), reflection=0.5, refractive_indices=1.05)
 
 
 def add_cylinder(poisition, height, radius, rotation_angle, color):
     return dict(type='cylinder', obj=cylinder(poisition, height, radius, rotation_angle, color),
-                color=np.array(color), reflection=0.5, refractive_indices= 1.05)
+                color=np.array(color), reflection=0.5, refractive_indices=1.05)
 
-
+def add_cone(poisition, height, radius, rotation_angle, color):
+    return dict(type='cone', obj=cone(poisition, height, radius, rotation_angle, color),
+                color=np.array(color), reflection=0.5)
 # split square plane to two triangle plane
 def split_square_to_triangle(square_vertex):
     triangle_vertex = np.zeros((2, 3, 3))
@@ -454,8 +528,8 @@ def rotation_vector(vector, r_angle):
     return rotation(vector, np.array([0, 0, 0]), r_angle)
 
 
-#trace ray of pixel in given area
-def trace_ray_main(result_queue,x_start,x_end,y_start,y_end, scene_input):
+# trace ray of pixel in given area
+def trace_ray_main(result_queue, x_start, x_end, y_start, y_end, scene_input):
     img = np.zeros((h, w, 3))
     scene = analyse_input(scene_input)
     for i, x in enumerate(x_project[np.where(x_project == x_start)[0][0]:np.where(x_project == x_end)[0][0] + 1]):
@@ -468,15 +542,15 @@ def trace_ray_main(result_queue,x_start,x_end,y_start,y_end, scene_input):
             depth = 0
             primaryRay = ray(O, D)
 
-            col = reflect_and_refract(primaryRay, scene, PositionType.OUT, depth, 1,i,j)
+            col = reflect_and_refract(primaryRay, scene, PositionType.OUT, depth, 1, i, j)
 
             img[h - np.where(y_project == y)[0][0] - 1, np.where(x_project == x)[0][0], :] = np.clip(col, 0, 1)
-    result_queue.put(img) 
+    result_queue.put(img)
 
-def reflect_and_refract(primaryRay, scene, positionType, depth, pathLoss, i,j):
 
+def reflect_and_refract(primaryRay, scene, positionType, depth, pathLoss, i, j):
     traced = primaryRay.trace_ray(scene)
-    
+
     if not traced:
         return 0. * np.zeros(3)
 
@@ -496,85 +570,80 @@ def reflect_and_refract(primaryRay, scene, positionType, depth, pathLoss, i,j):
         n1 = obj.get('refractive_indices')
 
     # Reflection Ray
-    reflectAmount = fresnel (n1, n2, newNormal, primaryRay.direction)
+    reflectAmount = fresnel(n1, n2, newNormal, primaryRay.direction)
 
-    reflectRay = ray( M + newNormal * .001, normalize(primaryRay.direction - 2 * np.dot(primaryRay.direction, newNormal) * newNormal))
+    reflectRay = ray(M + newNormal * .001,
+                     normalize(primaryRay.direction - 2 * np.dot(primaryRay.direction, newNormal) * newNormal))
 
-    if depth+1 < depth_max:
-        col+= reflect_and_refract(reflectRay, scene, positionType, depth+1, pathLoss*reflectAmount, i,j)
+    if depth + 1 < depth_max:
+        col += reflect_and_refract(reflectRay, scene, positionType, depth + 1, pathLoss * reflectAmount, i, j)
 
     refractionAmount = 1 - reflectAmount
 
     # Refraction Ray
-    if depth+1 < depth_max and refractionAmount > 0:
-            refractionRay = refraction(primaryRay, positionType, newNormal, obj, M)
-            if refractionRay is not None:
-                col+= reflect_and_refract(refractionRay, scene, positionType, depth+1, pathLoss*refractionAmount, i,j)
+    if depth + 1 < depth_max and refractionAmount > 0:
+        refractionRay = refraction(primaryRay, positionType, newNormal, obj, M)
+        if refractionRay is not None:
+            col += reflect_and_refract(refractionRay, scene, positionType, depth + 1, pathLoss * refractionAmount, i, j)
 
     return col
 
-def refraction(primaryRay, positionType, normal, refraction_obj, refraction_point):
 
+def refraction(primaryRay, positionType, normal, refraction_obj, refraction_point):
     r = 1 / refraction_obj.get('refractive_indices')
 
-    if  positionType == PositionType.IN:
-        r = 1/r
+    if positionType == PositionType.IN:
+        r = 1 / r
 
-    c1 = abs(np.dot(normal, primaryRay.direction))    
-    t = 1- r**2 * (1-c1**2)    
+    c1 = abs(np.dot(normal, primaryRay.direction))
+    t = 1 - r ** 2 * (1 - c1 ** 2)
 
     if t < 0:
         return None
     else:
         c2 = np.sqrt(t)
 
-    T = normalize(r * primaryRay.direction + (r*c1 - c2) * normal)
+    T = normalize(r * primaryRay.direction + (r * c1 - c2) * normal)
 
     refraction_ray = ray(refraction_point + 0.001 * normal * -1, T)
 
     return refraction_ray
 
-def fresnel(n1, n2, normal, incident) :
- 
+
+def fresnel(n1, n2, normal, incident):
     cosi = abs(np.dot(incident, normal))
     # Compute sini using Snell's law
 
-    sint = n1 / n2 * np.sqrt(1 - cosi **2)
+    sint = n1 / n2 * np.sqrt(1 - cosi ** 2)
     # Total internal reflection
-    if sint >= 1 : 
-        kr = 1; 
-    
-    else : 
+    if sint >= 1:
+        kr = 1;
+
+    else:
         cost = np.sqrt(1 - sint * sint)
-        Rs = ((n2 * cosi) - (n1 * cost)) / ((n2 * cosi) + (n1 * cost)) 
+        Rs = ((n2 * cosi) - (n1 * cost)) / ((n2 * cosi) + (n1 * cost))
         Rp = ((n1 * cosi) - (n2 * cost)) / ((n1 * cosi) + (n2 * cost))
-        kr = (Rs * Rs + Rp * Rp) / 2 
+        kr = (Rs * Rs + Rp * Rp) / 2
 
     return kr
 
-def analyse_input(totalLines):
 
+def analyse_input(totalLines):
     """
     # Read Data from file called "input.txt", which should be generated by GUI.
-
     ## Known Problem: conflict with multi-processing.
     ## Reason: Unknown (Need to be mentioned in the meeting)
-
-    The format of the GUI's output should be 
+    The format of the GUI's output should be
     `name, parameter, parameter, parameter,.....`
     for example:
-
     ------------------------------------------------------------------------------
-
     tetrahedron,0,-0.5,1.5,0.8,-0.5,1.5,0.25,-0.5,0.8,0.25,0.4,0.75,1,0.3,0.25
     cube,1,0.5,1.2,0.6,30,0,30,0.4,0.81,0.6
     cylinder,-0.75,0.25,1,0.5,0.4,-30,0,30,0.5,0.223,0.5
     cube,-2.75,0.1,3.5,0.6,0,0,0,1,0.572,0.184
     plane,0,-0.5,0,0,1,0
     sphere,-2.75,0.1,3.5,0.6,0,0,0,1,0.572,0.184
-
     ------------------------------------------------------------------------------
-
     There are different requirements for different shapes
     For tetrahedron:
     `tetrahedron,position,color`
@@ -586,7 +655,6 @@ def analyse_input(totalLines):
     `sphere,position,radius,color`
     For plane:
     `plane,position,normal`
-
     """
     lists = []
     scene = []
@@ -603,6 +671,9 @@ def analyse_input(totalLines):
     def addCylinder():
         print("add cylinder")
 
+    def addcone():
+        print("add cone")
+
     def addSphere():
         print("add sphere")
 
@@ -614,14 +685,14 @@ def analyse_input(totalLines):
 
     for i in range(len(lists)):
         if lists[i][0] == 'tetrahedron':
-            #addTetrahedron()
-            tmp= make_all_float(lists[i][1:])
+            # addTetrahedron()
+            tmp = make_all_float(lists[i][1:])
             position = tuple((tmp[0:3],)) + (tmp[3:6],) + (tmp[6:9],) + (tmp[9:12],)
             color = tmp[12:]
             scene.append(add_tetrahedron(position, color))
 
         elif lists[i][0] == 'cube':
-            #addCube()
+            # addCube()
             tmp = make_all_float(lists[i][1:])
             # print(tmp)
             position = tmp[0:3]
@@ -636,7 +707,7 @@ def analyse_input(totalLines):
             scene.append(add_cube(position, length, rotation_angle, color))
 
         elif lists[i][0] == 'cylinder':
-            #addCylinder()
+            # addCylinder()
 
             tmp = make_all_float(lists[i][1:])
             position = tmp[0:3]
@@ -651,8 +722,24 @@ def analyse_input(totalLines):
             # print(color)
             scene.append(add_cylinder(position, height, radius, rotation_angle, color))
 
+        elif lists[i][0] == 'cone':
+            # addcone()
+
+            tmp = make_all_float(lists[i][1:])
+            position = tmp[0:3]
+            # print(position)
+            height = tmp[2]
+            # print(height)
+            radius = tmp[2]
+            # print(radius)
+            rotation_angle = tmp[0:0]
+            # print(rotation_angle)
+            color = tmp[9:]
+            # print(color)
+            scene.append(add_cone(position, height, radius, rotation_angle, color))
+
         elif lists[i][0] == 'sphere':
-            #addSphere()
+            # addSphere()
 
             tmp = make_all_float(lists[i][1:])
             position = tmp[0:3]
@@ -661,7 +748,7 @@ def analyse_input(totalLines):
             scene.append(add_sphere(position, radius, color))
 
         elif lists[i][0] == 'plane':
-            #addPlane()
+            # addPlane()
 
             tmp = make_all_float(lists[i][1:])
             position = tmp[0:3]
@@ -670,8 +757,9 @@ def analyse_input(totalLines):
 
     return scene
 
-w = 400
-h = 300
+
+w = 600
+h = 600
 
 # List of objects.
 color_plane0 = 1. * np.ones(3)
@@ -695,7 +783,6 @@ r = float(w) / h
 S = (-1., -1. / r + .25, 1., 1. / r + .25)
 x_project = np.linspace(S[0], S[2], w)
 y_project = np.linspace(S[1], S[3], h)
-
 
 if __name__ == '__main__':
 
@@ -725,7 +812,8 @@ if __name__ == '__main__':
             x_end = processes_x[i + 1]
             y_start = processes_y[j] if j == 0 else y_project[np.where(y_project == processes_y[j])[0][0] + 1]
             y_end = processes_y[j + 1]
-            ps.append(mp.Process(target=trace_ray_main, args=(result_queue, x_start, x_end, y_start, y_end, totalLines, )))
+            ps.append(
+                mp.Process(target=trace_ray_main, args=(result_queue, x_start, x_end, y_start, y_end, totalLines,)))
 
     img = np.zeros((h, w, 3))
 
@@ -738,7 +826,7 @@ if __name__ == '__main__':
         print((i + 1) / len(ps) * 100, '%')
 
     # for debug
-    #trace_ray_main(result_queue,s[0], s[2],s[1], s[3], totallines)
-    #img = img + result_queue.get()
+    # trace_ray_main(result_queue,s[0], s[2],s[1], s[3], totallines)
+    # img = img + result_queue.get()
 
-    plt.imsave('fig.png', img)
+    plt.imsave('all_shapes.png', img)
