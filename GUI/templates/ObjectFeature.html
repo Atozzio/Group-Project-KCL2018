@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Object Features</title>
+
+<link href="../static/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+<link href="../static/bootstrap-3.3.5/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" href="../static/tinycolorpicker/tinycolorpicker.css" type="text/css" media="screen"/>
+
+<script src="../static/bootstrap-3.3.5/js/jquery-1.11.3.min.js" type="text/javascript"></script>
+<script src="../static/bootstrap-3.3.5/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="../static/bootstrap_select/js/bootstrap-select.js"></script>
+<script type="text/javascript" src="../static/tinycolorpicker/jquery.tinycolorpicker.js"></script>
+<script type="text/javascript">
+        $(document).ready(function()
+        {
+            var $box = $('#colorPicker');
+            $box.tinycolorpicker();
+        });
+</script>
+
+<script type="text/javascript">
+    function myFunction() {
+        var quant = {{quantity}};
+        var count = 1;
+        while (quant > 0)
+        {
+            var newDiv = document.createElement("div");
+            newDiv.id = "Object" + count;
+            newDiv.innerHTML += '<h3>Please select the features of Object '+count+':</h3><div class="input-group mb-3"><button style="height:50px; font-size:20px">Shape: </button><select style="height:50px; font-size:20px"><option value="Sphere" selected>Sphere</option><option value="Cube">Cube</option><option value="Tetrahedron">Tetrahedron</option><option value="Cylinder">Cylinder</option><option value="Plane">Plane</option></select></div>'
+            var currentDiv = document.getElementById("ObjectFeature"); 
+            currentDiv.appendChild(newDiv);
+            quant--;
+            count++;
+        }
+    }
+</script>
+
+</head>
+<body onload="myFunction()">
+<div class="container">
+    <br>
+    <div class="jumbotron">
+        <div class="container" >
+            <div style="width: 80%;float:left;">
+            <h1>Object Features</h1>
+            <div id="ObjectFeature">
+            
+            <!-- <h3>Please select the features of Object'+count+':</h3>
+
+            <div class="input-group mb-3">
+            <button style="height:50px; font-size:20px">Shape: </button>
+            <select style="height:50px; font-size:20px">
+                <option value="Sphere" selected>Sphere</option>
+                <option value="Cube">Cube</option>
+                <option value="Tetrahedron">Tetrahedron</option>
+                <option value="Cylinder">Cylinder</option>
+                <option value="Plane">Plane</option>
+            </select>
+
+            <select style="height:60px; font-size:25px">
+                <option value="Sphere" selected="selected">Sphere</option>
+                <option value="Cube">Cube</option>
+                <option value="Tetrahedron">Tetrahedron</option>
+                <option value="Cylinder">Cylinder</option>
+                <option value="Plane">Plane</option>
+            </select> -->
+
+
+            </div>
+            </div>
+        </div>
+        
+        <div align="right">
+            <button type="button" onclick="location.href = 'ObjectQuantity';" class="btn btn-primary btn-lg">Previous</button>
+            <button type="button" onclick="location.href = '#';" class="btn btn-success btn-lg">&nbsp;&nbsp;&nbsp;Next&nbsp;&nbsp;&nbsp;</button>
+        </div>
+    </div>
+    <br>
+    <div id="colorPicker">
+                <a class="color"><div class="colorInner"></div></a>
+                <div class="track"></div>
+                <ul class="dropdown"><li></li></ul>
+                <input type="hidden" class="colorInput"/>
+            </div>
+</body>
+</html>
