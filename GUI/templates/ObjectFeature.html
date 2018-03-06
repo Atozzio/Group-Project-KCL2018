@@ -8,12 +8,20 @@
 <link href="../static/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
 <link href="../static/bootstrap-3.3.5/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css"/>
 <link rel="stylesheet" href="../static/tinycolorpicker/tinycolorpicker.css" type="text/css" media="screen"/>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
 <script src="../static/bootstrap-3.3.5/js/jquery-1.11.3.min.js" type="text/javascript"></script>
 <script src="../static/bootstrap-3.3.5/js/bootstrap.min.js" type="text/javascript"></script>
 <script src="../static/bootstrap_select/js/bootstrap-select.js"></script>
-<script src="../static/jscolor.js"></script>
+<script type="text/javascript" src="../static/tinycolorpicker/jquery.tinycolorpicker.js"></script>
 
+<!-- <script type="text/javascript">
+        $(document).ready(function()
+        {
+            var $box = $('#colorPicker');
+            $box.tinycolorpicker();
+        });
+</script> -->
 
 <script type="text/javascript">
     function myFunction() {
@@ -23,7 +31,7 @@
         {
             var newDiv = document.createElement("div");
             newDiv.id = "Object" + count;
-            newDiv.innerHTML += '<h3>Please select the features of Object '+count+':</h3><div class="input-group mb-3"><button style="height:50px; font-size:20px">Shape: </button><select style="height:50px; font-size:20px"><option value="Sphere" selected>Sphere</option><option value="Cube">Cube</option><option value="Tetrahedron">Tetrahedron</option><option value="Cylinder">Cylinder</option><option value="Plane">Plane</option></select></div><button style="height:50px; font-size:20px">Colour: </button><form action="#"><input name="color" type="hidden" id="color_value" value="99cc00"><button class="jscolor {valueElement:\'color_value\'}">Pick a color</button><input type="submit"></form>';
+            newDiv.innerHTML += '<h3>Please select the features of Object '+count+':</h3><div class="input-group input-group-lg mb-3"><div class="input-group-prepend"><label class="input-group-text" for="inputGroupSelect01">Shape: </label></div><select class="custom-select custom-select-lg" id="inputGroupSelect01"><option value="Sphere" selected>Sphere</option><option value="Cube">Cube</option><option value="Tetrahedron">Tetrahedron</option><option value="Cylinder">Cylinder</option><option value="Plane">Plane</option></select></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span></div><input type="text" class="form-control" placeholder="R (0-255)"><input type="text" class="form-control" placeholder="G (0-255)"><input type="text" class="form-control" placeholder="B (0-255)"></div><br>'
             var currentDiv = document.getElementById("ObjectFeature"); 
             currentDiv.appendChild(newDiv);
             quant--;
@@ -44,6 +52,29 @@
             
             <!-- <h3>Please select the features of Object'+count+':</h3>
 
+            <div class="input-group input-group-lg mb-3">
+              <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect01">Shape: </label>
+              </div>
+              <select class="custom-select custom-select-lg" id="inputGroupSelect01">
+                <option value="Sphere" selected>Sphere</option>
+                <option value="Cube">Cube</option>
+                <option value="Tetrahedron">Tetrahedron</option>
+                <option value="Cylinder">Cylinder</option>
+                <option value="Plane">Plane</option>
+              </select>
+            </div>
+
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span>
+                </div>
+                <input type="text" class="form-control" placeholder="R (0-255)">
+                <input type="text" class="form-control" placeholder="G (0-255)">
+                <input type="text" class="form-control" placeholder="B (0-255)">
+            </div>
+
+
             <div class="input-group mb-3">
             <button style="height:50px; font-size:20px">Shape: </button>
             <select style="height:50px; font-size:20px">
@@ -60,26 +91,34 @@
                 <option value="Tetrahedron">Tetrahedron</option>
                 <option value="Cylinder">Cylinder</option>
                 <option value="Plane">Plane</option>
-            </select> -->
+            </select>
+            
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">ColorRGB</span>
+                </div>
+                <input type="text" class="form-control" placeholder="R" aria-label="R" aria-describedby="basic-addon1">
+                <input type="text" class="form-control">
+                <input type="text" class="form-control">
+            </div> -->
 
 
             </div>
             </div>
         </div>
-        <form action="show_data.html"> <!-- modify here -->
-            <p>
-                Color:
-                <input name="color" type="hidden" id="color_value" value="99cc00">
-                <button style="height:50px; font-size:20px" class="jscolor {valueElement: 'color_value'}">Pick a color</button>
-            </p>
-    
-            <input type="submit">
-        </form>
+        
         <div align="right">
             <button type="button" onclick="location.href = 'ObjectQuantity';" class="btn btn-primary btn-lg">Previous</button>
             <button type="button" onclick="location.href = '#';" class="btn btn-success btn-lg">&nbsp;&nbsp;&nbsp;Next&nbsp;&nbsp;&nbsp;</button>
         </div>
     </div>
     <br>
+    <div id="colorPicker">
+                <a class="color"><div class="colorInner"></div></a>
+                <div class="track"></div>
+                <ul class="dropdown"><li></li></ul>
+                <input type="hidden" class="colorInput"/>
+            </div>
 </body>
 </html>
