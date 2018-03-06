@@ -12,14 +12,8 @@
 <script src="../static/bootstrap-3.3.5/js/jquery-1.11.3.min.js" type="text/javascript"></script>
 <script src="../static/bootstrap-3.3.5/js/bootstrap.min.js" type="text/javascript"></script>
 <script src="../static/bootstrap_select/js/bootstrap-select.js"></script>
-<script type="text/javascript" src="../static/tinycolorpicker/jquery.tinycolorpicker.js"></script>
-<script type="text/javascript">
-        $(document).ready(function()
-        {
-            var $box = $('#colorPicker');
-            $box.tinycolorpicker();
-        });
-</script>
+<script src="../static/jscolor.js"></script>
+
 
 <script type="text/javascript">
     function myFunction() {
@@ -29,7 +23,7 @@
         {
             var newDiv = document.createElement("div");
             newDiv.id = "Object" + count;
-            newDiv.innerHTML += '<h3>Please select the features of Object '+count+':</h3><div class="input-group mb-3"><button style="height:50px; font-size:20px">Shape: </button><select style="height:50px; font-size:20px"><option value="Sphere" selected>Sphere</option><option value="Cube">Cube</option><option value="Tetrahedron">Tetrahedron</option><option value="Cylinder">Cylinder</option><option value="Plane">Plane</option></select></div>'
+            newDiv.innerHTML += '<h3>Please select the features of Object '+count+':</h3><div class="input-group mb-3"><button style="height:50px; font-size:20px">Shape: </button><select style="height:50px; font-size:20px"><option value="Sphere" selected>Sphere</option><option value="Cube">Cube</option><option value="Tetrahedron">Tetrahedron</option><option value="Cylinder">Cylinder</option><option value="Plane">Plane</option></select></div><button style="height:50px; font-size:20px">Colour: </button><form action="#"><input name="color" type="hidden" id="color_value" value="99cc00"><button class="jscolor {valueElement:\'color_value\'}">Pick a color</button><input type="submit"></form>';
             var currentDiv = document.getElementById("ObjectFeature"); 
             currentDiv.appendChild(newDiv);
             quant--;
@@ -72,18 +66,20 @@
             </div>
             </div>
         </div>
-        
+        <form action="show_data.html"> <!-- modify here -->
+            <p>
+                Color:
+                <input name="color" type="hidden" id="color_value" value="99cc00">
+                <button style="height:50px; font-size:20px" class="jscolor {valueElement: 'color_value'}">Pick a color</button>
+            </p>
+    
+            <input type="submit">
+        </form>
         <div align="right">
             <button type="button" onclick="location.href = 'ObjectQuantity';" class="btn btn-primary btn-lg">Previous</button>
             <button type="button" onclick="location.href = '#';" class="btn btn-success btn-lg">&nbsp;&nbsp;&nbsp;Next&nbsp;&nbsp;&nbsp;</button>
         </div>
     </div>
     <br>
-    <div id="colorPicker">
-                <a class="color"><div class="colorInner"></div></a>
-                <div class="track"></div>
-                <ul class="dropdown"><li></li></ul>
-                <input type="hidden" class="colorInput"/>
-            </div>
 </body>
 </html>
