@@ -26,6 +26,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import multiprocessing as mp
 import json
+import math
 
 class PositionType:
 	IN, OUT = 1, -1
@@ -258,6 +259,76 @@ class cylinder():
                                                self.normal_vector) * self.normal_vector
         return normalize(intersected_point - project_point)
 
+class cone():
+    type = 'cone'
+    position = None
+    height = None
+    radius = None
+    normal_vector = None
+    color = None
+    top_bottom_plane = None
+    angel= None
+    reflection = 0.5
+
+    def __init__(self, position, height, radius, rotation_angle, color):
+        self.position = np.array(position)
+        self.height = height
+        self.radius = radius
+        self.angel = math.atan(radius / (height/2))
+        self.normal_vector = rotation_vector(np.array([0, 1, 0]), np.array(rotation_angle))
+
+        top_plane = circle_plane(self.position + self.normal_vector * (height / 2), 0.1, self.normal_vector)
+        bottom_plane = circle_plane(self.position - self.normal_vector * (height / 2), radius, -1 * self.normal_vector)
+        self.top_bottom_plane = [top_plane, bottom_plane]
+
+    def intersection(self, O, D):
+        dist = np.inf
+        p = np.dot(D, self.normal_vector) * self.normal_vector - D
+        q = self.position - O - np.dot(self.position - O, self.normal_vector) * self.normal_vector
+        a = math.cos(self.angel)**2 *np.dot(p, p) - math.sin(self.angel)**2 * (np.dot(D, self.normal_vector)**2)
+        b = 2 * math.cos(self.angel)**2 * np.dot(p, q) - 2* math.sin(self.angel)**2 * np.dot(D,self.normal_vector)*np.dot((self.position-O),self.normal_vector)
+        c = math.cos(self.angel)**2 * np.dot(q, q) -  math.sin(self.angel)**2 * (np.dot(self.position-O,self.normal_vector)**2)
+
+        if a == 0:
+            if b != 0:
+                t0 = -1 * c / b
+                if t0 > 0:
+                    dist = t0
+        else:
+            disc = b * b - 4 * a * c
+            if disc > 0:
+                distSqrt = np.sqrt(disc)
+                t0 = (-b - distSqrt) / 2.0 / a
+                t1 = (-b + distSqrt) / 2.0 / a
+                t0, t1 = min(t0, t1), max(t0, t1)
+                if t1 >= 0:
+                    if t0 < 0:
+                        if (np.linalg.norm(O + D * t1 - self.position)) ** 2 < self.radius ** 2 + (
+                                self.height / 2) ** 2:
+                            dist = t1
+                    else:
+                        if (np.linalg.norm(O + D * t0 - self.position)) ** 2 < self.radius ** 2 + (
+                                self.height / 2) ** 2:
+                            dist = t0
+
+        for i, plane in enumerate(self.top_bottom_plane):
+            tmp_dist = intersect_plane(O, D, plane.position, plane.normal_vector)
+            if tmp_dist < dist:
+                if np.linalg.norm(O + tmp_dist * D - plane.position) <= plane.radius:
+                    dist = tmp_dist
+
+        return dist
+
+    def getNormalVector(self, intersected_point):
+
+        for i, cycle_palne in enumerate(self.top_bottom_plane):
+            if cycle_palne.check_on_plane(intersected_point):
+                return cycle_palne.normal_vector
+
+        project_point = self.position - np.dot((self.position - intersected_point),
+                                               self.normal_vector) * self.normal_vector
+        return normalize(intersected_point - project_point)
+
 
 def normalize(x):
     x /= np.linalg.norm(x)
@@ -334,6 +405,8 @@ def intersect(O, D, obj):
         return intersect_sphere(O, D, obj['position'], obj['radius'])
     elif obj['type'] == 'cylinder':
         return obj['obj'].intersection(O, D)
+    elif obj['type'] == 'cone':
+        return obj['obj'].intersection(O, D)
     elif obj['type'] == 'cube':
         return obj['obj'].intersection(O, D)
     else:
@@ -348,6 +421,8 @@ def get_normal(obj, M, O):
     elif obj['type'] == 'plane':
         N = obj['normal']
     elif obj['type'] == 'cylinder':
+        N = obj['obj'].getNormalVector(M)
+    elif obj['type'] == 'cone':
         N = obj['obj'].getNormalVector(M)
     elif obj['type'] == 'cube':
         N = obj['obj'].getNormalVector(M)
@@ -408,6 +483,9 @@ def add_cylinder(poisition, height, radius, rotation_angle, color):
     return dict(type='cylinder', obj=cylinder(poisition, height, radius, rotation_angle, color),
                 color=np.array(color), reflection=0.5, refractive_indices= 1.05)
 
+def add_cone(poisition, height, radius, rotation_angle, color):
+    return dict(type='cone', obj=cone(poisition, height, radius, rotation_angle, color),
+                color=np.array(color), reflection=0.5, refractive_indices= 1.05)
 
 # split square plane to two triangle plane
 def split_square_to_triangle(square_vertex):
@@ -585,6 +663,14 @@ def analyse_input(scene_input):
                 radius = data[key][_]['radius']
                 color = data[key][_]['color']
                 scene.append(add_cylinder(position, height, radius, rotation_angle, color))
+
+        elif key == 'cone':
+            for _ in range(len(data[key])):
+                position = data[key][_]['position']
+                height = data[key][_]['height']
+                radius = data[key][_]['radius']
+                color = data[key][_]['color']
+                scene.append(add_cone(position, height, radius, rotation_angle, color))
 
         elif key == 'sphere':
             for _ in range(len(data[key])):
