@@ -4,6 +4,12 @@ __pycache__/
 *$py.class
 # C extensions
 *.so
+# Python
+.pyc
+
+# DS_Store
+.DS_Store
+.DS_Store?
 
 
 # .DS_Store
