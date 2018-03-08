@@ -25,6 +25,7 @@ function check(object)
         document.getElementById('Section_for_Cube').style.display="none";
         document.getElementById('Section_for_Tetrahedron').style.display="none";
         document.getElementById('Section_for_Cylinder').style.display="none";
+        document.getElementById('Section_for_Cone').style.display="none";
     }
     else if (value=="Cube")
     {
@@ -32,6 +33,7 @@ function check(object)
         document.getElementById('Section_for_Cube').style.display="block";
         document.getElementById('Section_for_Tetrahedron').style.display="none";
         document.getElementById('Section_for_Cylinder').style.display="none";
+        document.getElementById('Section_for_Cone').style.display="none";
     }
     else if (value=="Tetrahedron")
     {
@@ -39,6 +41,7 @@ function check(object)
         document.getElementById('Section_for_Cube').style.display="none";
         document.getElementById('Section_for_Tetrahedron').style.display="block";
         document.getElementById('Section_for_Cylinder').style.display="none";
+        document.getElementById('Section_for_Cone').style.display="none";
     }
     else if (value=="Cylinder")
     {
@@ -46,6 +49,15 @@ function check(object)
         document.getElementById('Section_for_Cube').style.display="none";
         document.getElementById('Section_for_Tetrahedron').style.display="none";
         document.getElementById('Section_for_Cylinder').style.display="block";
+        document.getElementById('Section_for_Cone').style.display="none";
+    }
+    else if (value=="Cone")
+    {
+        document.getElementById('Section_for_Sphere').style.display="none";
+        document.getElementById('Section_for_Cube').style.display="none";
+        document.getElementById('Section_for_Tetrahedron').style.display="none";
+        document.getElementById('Section_for_Cylinder').style.display="none";
+        document.getElementById('Section_for_Cone').style.display="block";
     }
     else
     {
@@ -53,6 +65,7 @@ function check(object)
         document.getElementById('Section_for_Cube').style.display="none";
         document.getElementById('Section_for_Tetrahedron').style.display="none";
         document.getElementById('Section_for_Cylinder').style.display="none";
+        document.getElementById('Section_for_Cone').style.display="none";
     }
 }
 </script>
@@ -65,7 +78,7 @@ function check(object)
         {
             var newDiv = document.createElement("div");
             newDiv.id = "Object" + count;
-            newDiv.innerHTML += '<h3>Please select the features of Object '+count+':</h3><div class="input-group input-group-lg mb-3"><div class="input-group-prepend"><label class="input-group-text" for="inputGroupSelect01">Shape: </label></div><select class="custom-select custom-select-lg" id="inputGroupSelect01" name="inputGroupSelect01" onchange="check(this)"><option value="Default" selected>Please Choose...</option><option value="Sphere">Sphere</option>Sphere</option><option value="Cube">Cube</option><option value="Tetrahedron">Tetrahedron</option><option value="Cylinder">Cylinder</option></select></div><div class="container">  <div id="Section_for_Sphere" style="display: none">    <form id="nodeIP" name="nodeIP" class="form-horizontal" role="form" onchange="check(this)" ><div style="width: 90%;float:center;"><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Coordinates of Centre Point</span></div><input type="text" class="form-control" placeholder="X"><input type="text" class="form-control" placeholder="Y"><input type="text" class="form-control" placeholder="Z"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Radius</span></div><input type="text" class="form-control" placeholder="Please Input..."></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span></div><input type="text" class="form-control" placeholder="R (0-255)"><input type="text" class="form-control" placeholder="G (0-255)"><input type="text" class="form-control" placeholder="B (0-255)"></div></div></form></div><div id="Section_for_Cube" style="display: none">    <form id="nodeIP" name="nodeIP" class="form-horizontal" role="form" onchange="check(this)" ><div style="width: 90%;float:center;"><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Coordinates of an Endpoint</span></div><input type="text" class="form-control" placeholder="X"><input type="text" class="form-control" placeholder="Y"><input type="text" class="form-control" placeholder="Z"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Rotating Angle Between X,Y,Z-axises and a Side</span></div><input type="text" class="form-control" placeholder="X-axis"><input type="text" class="form-control" placeholder="Y-axis"><input type="text" class="form-control" placeholder="Z-axis"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span></div><input type="text" class="form-control" placeholder="R (0-255)"><input type="text" class="form-control" placeholder="G (0-255)"><input type="text" class="form-control" placeholder="B (0-255)"></div></div></form></div><div id="Section_for_Tetrahedron" style="display: none">    <form id="nodeIP" name="nodeIP" class="form-horizontal" role="form" onchange="check(this)" ><div style="width: 90%;float:center;"><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Coordinates of 4 Points</span></div><input type="text" class="form-control" placeholder="First One"><input type="text" class="form-control" placeholder="Second One"><input type="text" class="form-control" placeholder="Third One"><input type="text" class="form-control" placeholder="Fourth One"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span></div><input type="text" class="form-control" placeholder="R (0-255)"><input type="text" class="form-control" placeholder="G (0-255)"><input type="text" class="form-control" placeholder="B (0-255)"></div></div></form></div><div id="Section_for_Cylinder" style="display: none">    <form id="nodeIP" name="nodeIP" class="form-horizontal" role="form" onchange="check(this)" ><div style="width: 90%;float:center;"><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Coordinates of the Centre Point of the Buttom Circle</span></div><input type="text" class="form-control" placeholder="X"><input type="text" class="form-control" placeholder="Y"><input type="text" class="form-control" placeholder="Z"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Height</span></div><input type="text" class="form-control" placeholder="Please Input..."></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Radius of the Buttom Circle</span></div><input type="text" class="form-control" placeholder="Please Input..."></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Rotating Angle Between X,Y,Z-axises and a Slitting Line</span></div><input type="text" class="form-control" placeholder="X-axis"><input type="text" class="form-control" placeholder="Y-axis"><input type="text" class="form-control" placeholder="Z-axis"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span></div><input type="text" class="form-control" placeholder="R (0-255)"><input type="text" class="form-control" placeholder="G (0-255)"><input type="text" class="form-control" placeholder="B (0-255)"></div></div></form></div></div><br>'
+            newDiv.innerHTML += '<h3>Please select the features of Object '+count+':</h3><div class="input-group input-group-lg mb-3"><div class="input-group-prepend"><label class="input-group-text" for="inputGroupSelect01">Shape: </label></div><select class="custom-select custom-select-lg" id="inputGroupSelect01" name="inputGroupSelect01" onchange="check(this)"><option value="Default" selected>Please Choose...</option><option value="Sphere">Sphere</option>Sphere</option><option value="Cube">Cube</option><option value="Tetrahedron">Tetrahedron</option><option value="Cylinder">Cylinder</option></select></div><div class="container">  <div id="Section_for_Sphere" style="display: none">    <form id="nodeIP" name="nodeIP" class="form-horizontal" role="form" onchange="check(this)" ><div style="width: 90%;float:center;"><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Coordinates of Centre Point</span></div><input type="text" class="form-control" placeholder="X"><input type="text" class="form-control" placeholder="Y"><input type="text" class="form-control" placeholder="Z"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Radius</span></div><input type="text" class="form-control" placeholder="Please Input..."></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span></div><input type="text" class="form-control" placeholder="R (0-255)"><input type="text" class="form-control" placeholder="G (0-255)"><input type="text" class="form-control" placeholder="B (0-255)"></div></div></form></div><div id="Section_for_Cube" style="display: none">    <form id="nodeIP" name="nodeIP" class="form-horizontal" role="form" onchange="check(this)" ><div style="width: 90%;float:center;"><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Coordinates of an Endpoint</span></div><input type="text" class="form-control" placeholder="X"><input type="text" class="form-control" placeholder="Y"><input type="text" class="form-control" placeholder="Z"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Rotating Angle Between X,Y,Z-axises and a Side</span></div><input type="text" class="form-control" placeholder="X-axis"><input type="text" class="form-control" placeholder="Y-axis"><input type="text" class="form-control" placeholder="Z-axis"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span></div><input type="text" class="form-control" placeholder="R (0-255)"><input type="text" class="form-control" placeholder="G (0-255)"><input type="text" class="form-control" placeholder="B (0-255)"></div></div></form></div><div id="Section_for_Tetrahedron" style="display: none">    <form id="nodeIP" name="nodeIP" class="form-horizontal" role="form" onchange="check(this)" ><div style="width: 90%;float:center;"><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Coordinates of 4 Points</span></div><input type="text" class="form-control" placeholder="First One"><input type="text" class="form-control" placeholder="Second One"><input type="text" class="form-control" placeholder="Third One"><input type="text" class="form-control" placeholder="Fourth One"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span></div><input type="text" class="form-control" placeholder="R (0-255)"><input type="text" class="form-control" placeholder="G (0-255)"><input type="text" class="form-control" placeholder="B (0-255)"></div></div></form></div><div id="Section_for_Cylinder" style="display: none">    <form id="nodeIP" name="nodeIP" class="form-horizontal" role="form" onchange="check(this)" ><div style="width: 90%;float:center;"><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Coordinates of the Centre Point of the Buttom Circle</span></div><input type="text" class="form-control" placeholder="X"><input type="text" class="form-control" placeholder="Y"><input type="text" class="form-control" placeholder="Z"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Height</span></div><input type="text" class="form-control" placeholder="Please Input..."></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Radius of the Buttom Circle</span></div><input type="text" class="form-control" placeholder="Please Input..."></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Rotating Angle Between X,Y,Z-axises and a Slitting Line</span></div><input type="text" class="form-control" placeholder="X-axis"><input type="text" class="form-control" placeholder="Y-axis"><input type="text" class="form-control" placeholder="Z-axis"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span></div><input type="text" class="form-control" placeholder="R (0-255)"><input type="text" class="form-control" placeholder="G (0-255)"><input type="text" class="form-control" placeholder="B (0-255)"></div></div></form></div></div><br>';
             var currentDiv = document.getElementById("ObjectFeature"); 
             currentDiv.appendChild(newDiv);
             quant--;
@@ -75,7 +88,8 @@ function check(object)
 </script>
 
 </head>
-<body onload="myFunction()">
+<!-- <body onload="myFunction()"> -->
+<body>
 <div class="container">
     <br>
     <div class="jumbotron">
@@ -183,149 +197,214 @@ function check(object)
     </div>
     <br>
 </div>
-    <!-- <div class="input-group input-group-lg mb-3">
+    <div class="input-group input-group-lg mb-3">
         <div class="input-group-prepend">
             <label class="input-group-text" for="inputGroupSelect01">Shape: </label>
         </div>
         <select class="custom-select custom-select-lg" id="inputGroupSelect01" name="inputGroupSelect01" onchange="check(this)">
-            <option value="Default" selected>Please Choose...</option>
+            <option value="Default" selected>Please Choose...</option> <!-- !!! make user cannot choose this and click 'ok' !-->
             <option value="Sphere">Sphere</option>
             <option value="Cube">Cube</option>
             <option value="Tetrahedron">Tetrahedron</option>
             <option value="Cylinder">Cylinder</option>
-            <option value="Plane">Plane</option>
+            <option value="Cone">Cone</option>
         </select>
-    </div> -->
+    </div>
 
-<!-- <div class="container">  
+<form name="Object1" id="Object1" method="POST" action="{{url_for('ObjectFeature')}}">
+<div class="container">  
     <div id="Section_for_Sphere" style="display: none">    
-        <form id="nodeIP" name="nodeIP" class="form-horizontal" role="form" onchange="check(this)" >
-            <div style="width: 80%;float:left;">
-                <p>Discription for a Sphere!</p>
-                <div class="input-group input-group-lg">
-                    <div class="input-group-prepend">
-                        <span id="inputGroup-sizing-lg" class="input-group-text">Coordinates of Centre Point</span>
-                    </div>
-                    <input type="text" class="form-control" placeholder="X">
-                    <input type="text" class="form-control" placeholder="Y">
-                    <input type="text" class="form-control" placeholder="Z">
+        <div style="width: 90%;float:center">
+            <p>Discription for a Sphere!</p>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Coordinates of Centre Point</span>
                 </div>
-                <div class="input-group input-group-lg">
-                    <div class="input-group-prepend">
-                        <span id="inputGroup-sizing-lg" class="input-group-text">Radius</span>
-                    </div>
-                    <input type="text" class="form-control" placeholder="Please Input...">
-                </div>
-                <div class="input-group input-group-lg">
-                    <div class="input-group-prepend">
-                        <span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span>
-                    </div>
-                    <input type="text" class="form-control" placeholder="R (0-255)">
-                    <input type="text" class="form-control" placeholder="G (0-255)">
-                    <input type="text" class="form-control" placeholder="B (0-255)">
-                </div>
+                <input type="text" name="Sphere_x" class="form-control" placeholder="X">
+                <input type="text" name="Sphere_y" class="form-control" placeholder="Y">
+                <input type="text" name="Sphere_z" class="form-control" placeholder="Z">
             </div>
-        </form>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Radius</span>
+                </div>
+                <input type="text" name="Sphere_r" class="form-control" placeholder="Please Input...">
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span>
+                </div>
+                <input type="text" name="Sphere_cr" class="form-control" placeholder="R (0-255)">
+                <input type="text" name="Sphere_cg" class="form-control" placeholder="G (0-255)">
+                <input type="text" name="Sphere_cb" class="form-control" placeholder="B (0-255)">
+            </div>
+        </div>
     </div>
     <div id="Section_for_Cube" style="display: none">    
-        <form id="nodeIP" name="nodeIP" class="form-horizontal" role="form" onchange="check(this)" >
-            <div style="width: 80%;float:left;">
-                <p>Discription for a Cube!</p>
-                <div class="input-group input-group-lg">
-                    <div class="input-group-prepend">
-                        <span id="inputGroup-sizing-lg" class="input-group-text">Coordinates of an Endpoint</span>
-                    </div>
-                    <input type="text" class="form-control" placeholder="X">
-                    <input type="text" class="form-control" placeholder="Y">
-                    <input type="text" class="form-control" placeholder="Z">
+        <div style="width: 90%;float:center">
+            <p>Discription for a Cube!</p>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Coordinates of the Centre Point</span>
                 </div>
-                <div class="input-group input-group-lg">
-                    <div class="input-group-prepend">
-                        <span id="inputGroup-sizing-lg" class="input-group-text">Rotating Angle Between X,Y,Z-axises and a Side</span>
-                    </div>
-                    <input type="text" class="form-control" placeholder="X-axis">
-                    <input type="text" class="form-control" placeholder="Y-axis">
-                    <input type="text" class="form-control" placeholder="Z-axis">
-                </div>
-                <div class="input-group input-group-lg">
-                    <div class="input-group-prepend">
-                        <span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span>
-                    </div>
-                    <input type="text" class="form-control" placeholder="R (0-255)">
-                    <input type="text" class="form-control" placeholder="G (0-255)">
-                    <input type="text" class="form-control" placeholder="B (0-255)">
-                </div>
+                <input type="text" name="Cube_x" class="form-control" placeholder="X">
+                <input type="text" name="Cube_y" class="form-control" placeholder="Y">
+                <input type="text" name="Cube_z" class="form-control" placeholder="Z">
             </div>
-        </form>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Side Length</span>
+                </div>
+                <input type="text" name="Cube_l" class="form-control" placeholder="Please Input...">
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Rotating Angle</span>
+                </div>
+                <input type="text" name="Cube_rx" class="form-control" placeholder="X-axis">
+                <input type="text" name="Cube_ry" class="form-control" placeholder="Y-axis">
+                <input type="text" name="Cube_rz" class="form-control" placeholder="Z-axis">
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span>
+                </div>
+                <input type="text" name="Cube_cr" class="form-control" placeholder="R (0-255)">
+                <input type="text" name="Cube_cg" class="form-control" placeholder="G (0-255)">
+                <input type="text" name="Cube_cb" class="form-control" placeholder="B (0-255)">
+            </div>
+        </div>
     </div>
     <div id="Section_for_Tetrahedron" style="display: none">    
-        <form id="nodeIP" name="nodeIP" class="form-horizontal" role="form" onchange="check(this)" >
-            <div style="width: 80%;float:left;">
-                <p>Discription for a Tetrahedron!</p>
-                <div class="input-group input-group-lg">
-                    <div class="input-group-prepend">
-                        <span id="inputGroup-sizing-lg" class="input-group-text">Coordinates of 4 Points</span>
-                    </div>
-                    <input type="text" class="form-control" placeholder="First One">
-                    <input type="text" class="form-control" placeholder="Second One">
-                    <input type="text" class="form-control" placeholder="Third One">
-                    <input type="text" class="form-control" placeholder="Fourth One">
+        <div style="width: 90%;float:center">
+            <p>Discription for a Tetrahedron!</p>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Coordinates the First Point</span>
                 </div>
-                <div class="input-group input-group-lg">
-                    <div class="input-group-prepend">
-                        <span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span>
-                    </div>
-                    <input type="text" class="form-control" placeholder="R (0-255)">
-                    <input type="text" class="form-control" placeholder="G (0-255)">
-                    <input type="text" class="form-control" placeholder="B (0-255)">
-                </div>
+                <input type="text" name="Tetrahedron_x1" class="form-control" placeholder="x1">
+                <input type="text" name="Tetrahedron_y1" class="form-control" placeholder="y1">
+                <input type="text" name="Tetrahedron_z1" class="form-control" placeholder="z1">
             </div>
-        </form>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Coordinates the Second Point</span>
+                </div>
+                <input type="text" name="Tetrahedron_x2" class="form-control" placeholder="x2">
+                <input type="text" name="Tetrahedron_y2" class="form-control" placeholder="y2">
+                <input type="text" name="Tetrahedron_z2" class="form-control" placeholder="z2">
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Coordinates the Third Point</span>
+                </div>
+                <input type="text" name="Tetrahedron_x3" class="form-control" placeholder="x3">
+                <input type="text" name="Tetrahedron_y3" class="form-control" placeholder="y3">
+                <input type="text" name="Tetrahedron_z3" class="form-control" placeholder="z3">
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Coordinates the Fourth Point</span>
+                </div>
+                <input type="text" name="Tetrahedron_x4" class="form-control" placeholder="x4">
+                <input type="text" name="Tetrahedron_y4" class="form-control" placeholder="y4">
+                <input type="text" name="Tetrahedron_z4" class="form-control" placeholder="z4">
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span>
+                </div>
+                <input type="text" name="Tetrahedron_cr" class="form-control" placeholder="R (0-255)">
+                <input type="text" name="Tetrahedron_cg" class="form-control" placeholder="G (0-255)">
+                <input type="text" name="Tetrahedron_cb" class="form-control" placeholder="B (0-255)">
+            </div>
+        </div>
     </div>
     <div id="Section_for_Cylinder" style="display: none">    
-        <form id="nodeIP" name="nodeIP" class="form-horizontal" role="form" onchange="check(this)" >
-            <div style="width: 80%;float:left;">
-                <p>Discription for a Cylinder!</p>
-                <div class="input-group input-group-lg">
-                    <div class="input-group-prepend">
-                        <span id="inputGroup-sizing-lg" class="input-group-text">Coordinates of Centre Point</span>
-                    </div>
-                    <input type="text" class="form-control" placeholder="X">
-                    <input type="text" class="form-control" placeholder="Y">
-                    <input type="text" class="form-control" placeholder="Z">
+        <div style="width: 90%;float:center">
+            <p>Discription for a Cylinder!</p>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Coordinates of Centre Point</span>
                 </div>
-                <div class="input-group input-group-lg">
-                    <div class="input-group-prepend">
-                        <span id="inputGroup-sizing-lg" class="input-group-text">Height</span>
-                    </div>
-                    <input type="text" class="form-control" placeholder="Please Input...">
-                </div>
-                <div class="input-group input-group-lg">
-                    <div class="input-group-prepend">
-                        <span id="inputGroup-sizing-lg" class="input-group-text">Radius of the Buttom Circle</span>
-                    </div>
-                    <input type="text" class="form-control" placeholder="Please Input...">
-                </div>
-                <div class="input-group input-group-lg">
-                    <div class="input-group-prepend">
-                        <span id="inputGroup-sizing-lg" class="input-group-text">Rotating Angle Between X,Y,Z-axises and a Slitting Line</span>
-                    </div>
-                    <input type="text" class="form-control" placeholder="X-axis">
-                    <input type="text" class="form-control" placeholder="Y-axis">
-                    <input type="text" class="form-control" placeholder="Z-axis">
-                </div>
-                <div class="input-group input-group-lg">
-                    <div class="input-group-prepend">
-                        <span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span>
-                    </div>
-                    <input type="text" class="form-control" placeholder="R (0-255)">
-                    <input type="text" class="form-control" placeholder="G (0-255)">
-                    <input type="text" class="form-control" placeholder="B (0-255)">
-                </div>
+                <input type="text" name="Cylinder_x" class="form-control" placeholder="X">
+                <input type="text" name="Cylinder_y" class="form-control" placeholder="Y">
+                <input type="text" name="Cylinder_z" class="form-control" placeholder="Z">
             </div>
-        </form>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Height</span>
+                </div>
+                <input type="text" name="Cylinder_h" class="form-control" placeholder="Please Input...">
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Radius of the Buttom Circle</span>
+                </div>
+                <input type="text" name="Cylinder_r" class="form-control" placeholder="Please Input...">
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Rotating Angle Between X,Y,Z-axises and a Slitting Line</span>
+                </div>
+                <input type="text" name="Cylinder_rx" class="form-control" placeholder="X-axis">
+                <input type="text" name="Cylinder_ry" class="form-control" placeholder="Y-axis">
+                <input type="text" name="Cylinder_rg" class="form-control" placeholder="Z-axis">
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span>
+                </div>
+                <input type="text" name="Cylinder_cr" class="form-control" placeholder="R (0-255)">
+                <input type="text" name="Cylinder_cg" class="form-control" placeholder="G (0-255)">
+                <input type="text" name="Cylinder_cb" class="form-control" placeholder="B (0-255)">
+            </div>
+        </div>
     </div>
-</div> -->
+    <div id="Section_for_Cone" style="display: none">    
+        <div style="width: 90%;float:center">
+            <p>Discription for a Cone!</p>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Coordinates of Centre Point</span>
+                </div>
+                <input type="text" name="Cone_x" class="form-control" placeholder="X">
+                <input type="text" name="Cone_y" class="form-control" placeholder="Y">
+                <input type="text" name="Cone_z" class="form-control" placeholder="Z">
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Height</span>
+                </div>
+                <input type="text" name="Cone_h" class="form-control" placeholder="Please Input...">
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Radius</span>
+                </div>
+                <input type="text" name="Cone_r" class="form-control" placeholder="Please Input...">
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Rotating Angle</span>
+                </div>
+                <input type="text" name="Cone_rx" class="form-control" placeholder="X-axis">
+                <input type="text" name="Cone_ry" class="form-control" placeholder="Y-axis">
+                <input type="text" name="Cone_rz" class="form-control" placeholder="Z-axis">
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span>
+                </div>
+                <input type="text" name="Cone_cr" class="form-control" placeholder="R (0-255)">
+                <input type="text" name="Cone_cg" class="form-control" placeholder="G (0-255)">
+                <input type="text" name="Cone_cb" class="form-control" placeholder="B (0-255)">
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-success">&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;</button>
+</div>
+</form>
 
     
 </body>
