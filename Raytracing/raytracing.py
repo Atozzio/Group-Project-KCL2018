@@ -277,17 +277,17 @@ class cone():
         self.angel = math.atan(radius / (height/2))
         self.normal_vector = rotation_vector(np.array([0, 1, 0]), np.array(rotation_angle))
 
-        top_plane = circle_plane(self.position + self.normal_vector * (height / 2), 0.1, self.normal_vector)
+        top_plane = circle_plane(self.position + self.normal_vector * (height / 2), radius, self.normal_vector)
         bottom_plane = circle_plane(self.position - self.normal_vector * (height / 2), radius, -1 * self.normal_vector)
         self.top_bottom_plane = [top_plane, bottom_plane]
 
     def intersection(self, O, D):
         dist = np.inf
-        p = np.dot(D, self.normal_vector) * self.normal_vector - D
-        q = self.position - O - np.dot(self.position - O, self.normal_vector) * self.normal_vector
+        p = D - np.dot(D, self.normal_vector) * self.normal_vector
+        q = O-self.position - np.dot(O-self.position, self.normal_vector) * self.normal_vector
         a = math.cos(self.angel)**2 *np.dot(p, p) - math.sin(self.angel)**2 * (np.dot(D, self.normal_vector)**2)
-        b = 2 * math.cos(self.angel)**2 * np.dot(p, q) - 2* math.sin(self.angel)**2 * np.dot(D,self.normal_vector)*np.dot((self.position-O),self.normal_vector)
-        c = math.cos(self.angel)**2 * np.dot(q, q) -  math.sin(self.angel)**2 * (np.dot(self.position-O,self.normal_vector)**2)
+        b = 2 * math.cos(self.angel)**2 * np.dot(p, q) - 2* math.sin(self.angel)**2 * np.dot(D,self.normal_vector)*np.dot((O-self.position),self.normal_vector)
+        c = math.cos(self.angel)**2 * np.dot(q, q) -  math.sin(self.angel)**2 * (np.dot(O-self.position,self.normal_vector)**2)
 
         if a == 0:
             if b != 0:
@@ -310,6 +310,10 @@ class cone():
                         if (np.linalg.norm(O + D * t0 - self.position)) ** 2 < self.radius ** 2 + (
                                 self.height / 2) ** 2:
                             dist = t0
+                        elif (np.linalg.norm(O + D * t1 - self.position)) ** 2 < self.radius ** 2 + (
+                                self.height / 2) ** 2:
+                            dist = t1
+
 
         for i, plane in enumerate(self.top_bottom_plane):
             tmp_dist = intersect_plane(O, D, plane.position, plane.normal_vector)
@@ -661,6 +665,7 @@ def analyse_input(scene_input):
                 position = data[key][_]['position']
                 height = data[key][_]['height']
                 radius = data[key][_]['radius']
+                rotation_angle = data[key][_]['rotation_angle']
                 color = data[key][_]['color']
                 scene.append(add_cylinder(position, height, radius, rotation_angle, color))
 
@@ -669,6 +674,7 @@ def analyse_input(scene_input):
                 position = data[key][_]['position']
                 height = data[key][_]['height']
                 radius = data[key][_]['radius']
+                rotation_angle = data[key][_]['rotation_angle']
                 color = data[key][_]['color']
                 scene.append(add_cone(position, height, radius, rotation_angle, color))
 
