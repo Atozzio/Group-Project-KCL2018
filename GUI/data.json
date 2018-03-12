@@ -1,23 +1,100 @@
 {
-    "cube": [
+    "camera_point_to": [
+        0.0, 
+        0.35, 
+        -1.0
+    ], 
+    "camera_position": [
+        0.0, 
+        0.35, 
+        -1.0
+    ], 
+    "cylinder": [
+        {
+            "color": [
+                2.0, 
+                2.0, 
+                2.0
+            ], 
+            "height": 2.0, 
+            "position": [
+                1.0, 
+                1.0, 
+                1.0
+            ], 
+            "radius": 2.0, 
+            "rotation_angle": [
+                2.0, 
+                2.0, 
+                2.0
+            ], 
+            "transparency_level": 0
+        }
+    ], 
+    "light": [
+        0.0, 
+        5.0, 
+        -10.0
+    ], 
+    "plane": [
+        {
+            "normal": [
+                0.0, 
+                1.0, 
+                0.0
+            ], 
+            "position": [
+                0.0, 
+                -0.5, 
+                0.0
+            ], 
+            "transparency_level": 1
+        }
+    ], 
+    "sphere": [
         {
             "color": [
                 1.0, 
                 1.0, 
                 1.0
             ], 
-            "length": 1.0, 
             "position": [
                 1.0, 
                 1.0, 
                 1.0
             ], 
-            "rotation_angle": [
-                1.0, 
-                1.0, 
-                1.0
-            ]
+            "radius": 1.0, 
+            "transparency_level": 0
         }
     ], 
-    "plane": []
+    "tetrahedron": [
+        {
+            "color": [
+                3.0, 
+                3.0, 
+                3.0
+            ], 
+            "position1": [
+                3.0, 
+                3.0, 
+                3.0
+            ], 
+            "position2": [
+                3.0, 
+                3.0, 
+                3.0
+            ], 
+            "position3": [
+                3.0, 
+                3.0, 
+                3.0
+            ], 
+            "position4": [
+                3.0, 
+                3.0, 
+                3.0
+            ], 
+            "transparency_level": 0
+        }
+    ]
 }

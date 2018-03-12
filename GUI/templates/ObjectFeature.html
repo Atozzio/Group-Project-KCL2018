@@ -288,6 +288,581 @@ function check5(object)
 }
 </script>
 
+<script type="text/javascript">
+    function output_generate()
+    {
+        var flag = 1;
+        $.ajax({
+            type:"POST",
+            url:"{{url_for('File_Generate')}}",
+            data:{flag:flag},
+            datatype: "json",
+            success: function(data) {
+                if (data == "Grey_Hats")
+                {
+                    alert("Json file has been generated!");
+                    window.location.href = '../Figure';
+                }
+                else
+                {
+                    alert("Error occurs when generating file!");
+                }
+            }
+        });
+    }
+</script>
+
+<script type="text/javascript">
+    function form_submit()
+    {
+        var object_quantity = 0;
+        var form_data = {};
+        if ($("#inputGroupSelect1 option:selected").text())
+        {
+            var object_type1 = $("#inputGroupSelect1 option:selected").text();
+            object_quantity ++;
+            if (object_type1 == "Sphere")
+            {
+                form_data.Object1 = "Sphere";
+                form_data.Sphere_x1 = $("input[name=Sphere_x1]").val();
+                form_data.Sphere_y1 = $("input[name=Sphere_y1]").val();
+                form_data.Sphere_z1 = $("input[name=Sphere_z1]").val();
+                form_data.Sphere_cr1 = $("input[name=Sphere_cr1]").val();
+                form_data.Sphere_cg1 = $("input[name=Sphere_cg1]").val();
+                form_data.Sphere_cb1 = $("input[name=Sphere_cb1]").val();
+                form_data.Sphere_r1 = $("input[name=Sphere_r1]").val();
+                form_data.Transparency1 = $("#Transparency1 option:selected").text();
+            }
+            else if (object_type1 == "Cube")
+            {
+                form_data.Object1 = "Cube";
+                form_data.Cube_x1 = $("input[name=Cube_x1]").val();
+                form_data.Cube_y1 = $("input[name=Cube_y1]").val();
+                form_data.Cube_z1 = $("input[name=Cube_z1]").val();
+                form_data.Cube_cr1 = $("input[name=Cube_cr1]").val();
+                form_data.Cube_cg1 = $("input[name=Cube_cg1]").val();
+                form_data.Cube_cb1 = $("input[name=Cube_cb1]").val();
+                form_data.Cube_l1 = $("input[name=Cube_l1]").val();
+                form_data.Cube_rx1 = $("input[name=Cube_rx1]").val();
+                form_data.Cube_ry1 = $("input[name=Cube_ry1]").val();
+                form_data.Cube_rz1 = $("input[name=Cube_rz1]").val();
+                form_data.Transparency1 = $("#Transparency1 option:selected").text();
+            }
+            else if (object_type1 == "Tetrahedron")
+            {
+                form_data.Object1 = "Tetrahedron";
+                form_data.Tetrahedron_x11 = $("input[name=Tetrahedron_x11]").val();
+                form_data.Tetrahedron_y11 = $("input[name=Tetrahedron_y11]").val();
+                form_data.Tetrahedron_z11 = $("input[name=Tetrahedron_z11]").val();
+                form_data.Tetrahedron_x21 = $("input[name=Tetrahedron_x21]").val();
+                form_data.Tetrahedron_y21 = $("input[name=Tetrahedron_y21]").val();
+                form_data.Tetrahedron_z21 = $("input[name=Tetrahedron_z21]").val();
+                form_data.Tetrahedron_x31 = $("input[name=Tetrahedron_x31]").val();
+                form_data.Tetrahedron_y31 = $("input[name=Tetrahedron_y31]").val();
+                form_data.Tetrahedron_z31 = $("input[name=Tetrahedron_z31]").val();
+                form_data.Tetrahedron_x41 = $("input[name=Tetrahedron_x41]").val();
+                form_data.Tetrahedron_y41 = $("input[name=Tetrahedron_y41]").val();
+                form_data.Tetrahedron_z41 = $("input[name=Tetrahedron_z41]").val();
+                form_data.Tetrahedron_cr1 = $("input[name=Tetrahedron_cr1]").val();
+                form_data.Tetrahedron_cg1 = $("input[name=Tetrahedron_cg1]").val();
+                form_data.Tetrahedron_cb1 = $("input[name=Tetrahedron_cb1]").val();
+                form_data.Transparency1 = $("#Transparency1 option:selected").text();
+            }
+            else if (object_type1 == "Cylinder")
+            {
+                form_data.Object1 = "Cylinder";
+                form_data.Cylinder_x1 = $("input[name=Cylinder_x1]").val();
+                form_data.Cylinder_y1 = $("input[name=Cylinder_y1]").val();
+                form_data.Cylinder_z1 = $("input[name=Cylinder_z1]").val();
+                form_data.Cylinder_rx1 = $("input[name=Cylinder_rx1]").val();
+                form_data.Cylinder_ry1 = $("input[name=Cylinder_ry1]").val();
+                form_data.Cylinder_rz1 = $("input[name=Cylinder_rz1]").val();
+                form_data.Cylinder_cr1 = $("input[name=Cylinder_cr1]").val();
+                form_data.Cylinder_cg1 = $("input[name=Cylinder_cg1]").val();
+                form_data.Cylinder_cb1 = $("input[name=Cylinder_cb1]").val();
+                form_data.Cylinder_h1 = $("input[name=Cylinder_h1]").val();
+                form_data.Cylinder_r1 = $("input[name=Cylinder_r1]").val();
+                form_data.Transparency1 = $("#Transparency1 option:selected").text();
+            }
+            else if (object_type1 == "Cone")
+            {
+                form_data.Object1 = "Cone";
+                form_data.Cone_x1 = $("input[name=Cone_x1]").val();
+                form_data.Cone_y1 = $("input[name=Cone_y1]").val();
+                form_data.Cone_z1 = $("input[name=Cone_z1]").val();
+                form_data.Cone_rx1 = $("input[name=Cone_rx1]").val();
+                form_data.Cone_ry1 = $("input[name=Cone_ry1]").val();
+                form_data.Cone_rz1 = $("input[name=Cone_rz1]").val();
+                form_data.Cone_cr1 = $("input[name=Cone_cr1]").val();
+                form_data.Cone_cg1 = $("input[name=Cone_cg1]").val();
+                form_data.Cone_cb1 = $("input[name=Cone_cb1]").val();
+                form_data.Cone_h1 = $("input[name=Cone_h1]").val();
+                form_data.Cone_r1 = $("input[name=Cone_r1]").val();
+                form_data.Transparency1 = $("#Transparency1 option:selected").text();
+            }
+            else
+            {null}
+        }
+        if ($("#inputGroupSelect2 option:selected").text())
+        {
+            var object_type2 = $("#inputGroupSelect2 option:selected").text();
+            object_quantity ++;
+            if (object_type2 == "Sphere")
+            {
+                form_data.Object2 = "Sphere";
+                form_data.Sphere_x2 = $("input[name=Sphere_x2]").val();
+                form_data.Sphere_y2 = $("input[name=Sphere_y2]").val();
+                form_data.Sphere_z2 = $("input[name=Sphere_z2]").val();
+                form_data.Sphere_cr2 = $("input[name=Sphere_cr2]").val();
+                form_data.Sphere_cg2 = $("input[name=Sphere_cg2]").val();
+                form_data.Sphere_cb2 = $("input[name=Sphere_cb2]").val();
+                form_data.Sphere_r2 = $("input[name=Sphere_r2]").val();
+                form_data.Transparency2 = $("#Transparency2 option:selected").text();
+            }
+            else if (object_type2 == "Cube")
+            {
+                form_data.Object2 = "Cube";
+                form_data.Cube_x2 = $("input[name=Cube_x2]").val();
+                form_data.Cube_y2 = $("input[name=Cube_y2]").val();
+                form_data.Cube_z2 = $("input[name=Cube_z2]").val();
+                form_data.Cube_cr2 = $("input[name=Cube_cr2]").val();
+                form_data.Cube_cg2 = $("input[name=Cube_cg2]").val();
+                form_data.Cube_cb2 = $("input[name=Cube_cb2]").val();
+                form_data.Cube_l2 = $("input[name=Cube_l2]").val();
+                form_data.Cube_rx2 = $("input[name=Cube_rx2]").val();
+                form_data.Cube_ry2 = $("input[name=Cube_ry2]").val();
+                form_data.Cube_rz2 = $("input[name=Cube_rz2]").val();
+                form_data.Transparency2 = $("#Transparency2 option:selected").text();
+            }
+            else if (object_type2 == "Tetrahedron")
+            {
+                form_data.Object2 = "Tetrahedron";
+                form_data.Tetrahedron_x12 = $("input[name=Tetrahedron_x12]").val();
+                form_data.Tetrahedron_y12 = $("input[name=Tetrahedron_y12]").val();
+                form_data.Tetrahedron_z12 = $("input[name=Tetrahedron_z12]").val();
+                form_data.Tetrahedron_x22 = $("input[name=Tetrahedron_x22]").val();
+                form_data.Tetrahedron_y22 = $("input[name=Tetrahedron_y22]").val();
+                form_data.Tetrahedron_z22 = $("input[name=Tetrahedron_z22]").val();
+                form_data.Tetrahedron_x32 = $("input[name=Tetrahedron_x32]").val();
+                form_data.Tetrahedron_y32 = $("input[name=Tetrahedron_y32]").val();
+                form_data.Tetrahedron_z32 = $("input[name=Tetrahedron_z32]").val();
+                form_data.Tetrahedron_x42 = $("input[name=Tetrahedron_x42]").val();
+                form_data.Tetrahedron_y42 = $("input[name=Tetrahedron_y42]").val();
+                form_data.Tetrahedron_z42 = $("input[name=Tetrahedron_z42]").val();
+                form_data.Tetrahedron_cr2 = $("input[name=Tetrahedron_cr2]").val();
+                form_data.Tetrahedron_cg2 = $("input[name=Tetrahedron_cg2]").val();
+                form_data.Tetrahedron_cb2 = $("input[name=Tetrahedron_cb2]").val();
+                form_data.Transparency2 = $("#Transparency2 option:selected").text();
+            }
+            else if (object_type2 == "Cylinder")
+            {
+                form_data.Object2 = "Cylinder";
+                form_data.Cylinder_x2 = $("input[name=Cylinder_x2]").val();
+                form_data.Cylinder_y2 = $("input[name=Cylinder_y2]").val();
+                form_data.Cylinder_z2 = $("input[name=Cylinder_z2]").val();
+                form_data.Cylinder_rx2 = $("input[name=Cylinder_rx2]").val();
+                form_data.Cylinder_ry2 = $("input[name=Cylinder_ry2]").val();
+                form_data.Cylinder_rz2 = $("input[name=Cylinder_rz2]").val();
+                form_data.Cylinder_cr2 = $("input[name=Cylinder_cr2]").val();
+                form_data.Cylinder_cg2 = $("input[name=Cylinder_cg2]").val();
+                form_data.Cylinder_cb2 = $("input[name=Cylinder_cb2]").val();
+                form_data.Cylinder_h2 = $("input[name=Cylinder_h2]").val();
+                form_data.Cylinder_r2 = $("input[name=Cylinder_r2]").val();
+                form_data.Transparency2 = $("#Transparency2 option:selected").text();
+            }
+            else if (object_type2 == "Cone")
+            {
+                form_data.Object2 = "Cone";
+                form_data.Cone_x2 = $("input[name=Cone_x2]").val();
+                form_data.Cone_y2 = $("input[name=Cone_y2]").val();
+                form_data.Cone_z2 = $("input[name=Cone_z2]").val();
+                form_data.Cone_rx2 = $("input[name=Cone_rx2]").val();
+                form_data.Cone_ry2 = $("input[name=Cone_ry2]").val();
+                form_data.Cone_rz2 = $("input[name=Cone_rz2]").val();
+                form_data.Cone_cr2 = $("input[name=Cone_cr2]").val();
+                form_data.Cone_cg2 = $("input[name=Cone_cg2]").val();
+                form_data.Cone_cb2 = $("input[name=Cone_cb2]").val();
+                form_data.Cone_h2 = $("input[name=Cone_h2]").val();
+                form_data.Cone_r2 = $("input[name=Cone_r2]").val();
+                form_data.Transparency2 = $("#Transparency2 option:selected").text();
+            }
+            else
+            {null}
+        }
+        if ($("#inputGroupSelect3 option:selected").text())
+        {
+            var object_type3 = $("#inputGroupSelect3 option:selected").text();
+            object_quantity ++;
+            if (object_type3 == "Sphere")
+            {
+                form_data.Object3 = "Sphere";
+                form_data.Sphere_x3 = $("input[name=Sphere_x3]").val();
+                form_data.Sphere_y3 = $("input[name=Sphere_y3]").val();
+                form_data.Sphere_z3 = $("input[name=Sphere_z3]").val();
+                form_data.Sphere_cr3 = $("input[name=Sphere_cr3]").val();
+                form_data.Sphere_cg3 = $("input[name=Sphere_cg3]").val();
+                form_data.Sphere_cb3 = $("input[name=Sphere_cb3]").val();
+                form_data.Sphere_r3 = $("input[name=Sphere_r3]").val();
+                form_data.Transparency3 = $("#Transparency3 option:selected").text();
+            }
+            else if (object_type3 == "Cube")
+            {
+                form_data.Object3 = "Cube";
+                form_data.Cube_x3 = $("input[name=Cube_x3]").val();
+                form_data.Cube_y3 = $("input[name=Cube_y3]").val();
+                form_data.Cube_z3 = $("input[name=Cube_z3]").val();
+                form_data.Cube_cr3 = $("input[name=Cube_cr3]").val();
+                form_data.Cube_cg3 = $("input[name=Cube_cg3]").val();
+                form_data.Cube_cb3 = $("input[name=Cube_cb3]").val();
+                form_data.Cube_l3 = $("input[name=Cube_l3]").val();
+                form_data.Cube_rx3 = $("input[name=Cube_rx3]").val();
+                form_data.Cube_ry3 = $("input[name=Cube_ry3]").val();
+                form_data.Cube_rz3 = $("input[name=Cube_rz3]").val();
+                form_data.Transparency3 = $("#Transparency3 option:selected").text();
+            }
+            else if (object_type3 == "Tetrahedron")
+            {
+                form_data.Object3 = "Tetrahedron";
+                form_data.Tetrahedron_x13 = $("input[name=Tetrahedron_x13]").val();
+                form_data.Tetrahedron_y13 = $("input[name=Tetrahedron_y13]").val();
+                form_data.Tetrahedron_z13 = $("input[name=Tetrahedron_z13]").val();
+                form_data.Tetrahedron_x23 = $("input[name=Tetrahedron_x23]").val();
+                form_data.Tetrahedron_y23 = $("input[name=Tetrahedron_y23]").val();
+                form_data.Tetrahedron_z23 = $("input[name=Tetrahedron_z23]").val();
+                form_data.Tetrahedron_x33 = $("input[name=Tetrahedron_x33]").val();
+                form_data.Tetrahedron_y33 = $("input[name=Tetrahedron_y33]").val();
+                form_data.Tetrahedron_z33 = $("input[name=Tetrahedron_z33]").val();
+                form_data.Tetrahedron_x43 = $("input[name=Tetrahedron_x43]").val();
+                form_data.Tetrahedron_y43 = $("input[name=Tetrahedron_y43]").val();
+                form_data.Tetrahedron_z43 = $("input[name=Tetrahedron_z43]").val();
+                form_data.Tetrahedron_cr3 = $("input[name=Tetrahedron_cr3]").val();
+                form_data.Tetrahedron_cg3 = $("input[name=Tetrahedron_cg3]").val();
+                form_data.Tetrahedron_cb3 = $("input[name=Tetrahedron_cb3]").val();
+                form_data.Transparency3 = $("#Transparency3 option:selected").text();
+            }
+            else if (object_type3 == "Cylinder")
+            {
+                form_data.Object3 = "Cylinder";
+                form_data.Cylinder_x3 = $("input[name=Cylinder_x3]").val();
+                form_data.Cylinder_y3 = $("input[name=Cylinder_y3]").val();
+                form_data.Cylinder_z3 = $("input[name=Cylinder_z3]").val();
+                form_data.Cylinder_rx3 = $("input[name=Cylinder_rx3]").val();
+                form_data.Cylinder_ry3 = $("input[name=Cylinder_ry3]").val();
+                form_data.Cylinder_rz3 = $("input[name=Cylinder_rz3]").val();
+                form_data.Cylinder_cr3 = $("input[name=Cylinder_cr3]").val();
+                form_data.Cylinder_cg3 = $("input[name=Cylinder_cg3]").val();
+                form_data.Cylinder_cb3 = $("input[name=Cylinder_cb3]").val();
+                form_data.Cylinder_h3 = $("input[name=Cylinder_h3]").val();
+                form_data.Cylinder_r3 = $("input[name=Cylinder_r3]").val();
+                form_data.Transparency3 = $("#Transparency3 option:selected").text();
+            }
+            else if (object_type3 == "Cone")
+            {
+                form_data.Object3 = "Cone";
+                form_data.Cone_x3 = $("input[name=Cone_x3]").val();
+                form_data.Cone_y3 = $("input[name=Cone_y3]").val();
+                form_data.Cone_z3 = $("input[name=Cone_z3]").val();
+                form_data.Cone_rx3 = $("input[name=Cone_rx3]").val();
+                form_data.Cone_ry3 = $("input[name=Cone_ry3]").val();
+                form_data.Cone_rz3 = $("input[name=Cone_rz3]").val();
+                form_data.Cone_cr3 = $("input[name=Cone_cr3]").val();
+                form_data.Cone_cg3 = $("input[name=Cone_cg3]").val();
+                form_data.Cone_cb3 = $("input[name=Cone_cb3]").val();
+                form_data.Cone_h3 = $("input[name=Cone_h3]").val();
+                form_data.Cone_r3 = $("input[name=Cone_r3]").val();
+                form_data.Transparency3 = $("#Transparency3 option:selected").text();
+            }
+            else
+            {null}
+        }
+        if ($("#inputGroupSelect4 option:selected").text())
+        {
+            var object_type4 = $("#inputGroupSelect4 option:selected").text();
+            object_quantity ++;
+            if (object_type4 == "Sphere")
+            {
+                form_data.Object4 = "Sphere";
+                form_data.Sphere_x4 = $("input[name=Sphere_x4]").val();
+                form_data.Sphere_y4 = $("input[name=Sphere_y4]").val();
+                form_data.Sphere_z4 = $("input[name=Sphere_z4]").val();
+                form_data.Sphere_cr4 = $("input[name=Sphere_cr4]").val();
+                form_data.Sphere_cg4 = $("input[name=Sphere_cg4]").val();
+                form_data.Sphere_cb4 = $("input[name=Sphere_cb4]").val();
+                form_data.Sphere_r4 = $("input[name=Sphere_r4]").val();
+                form_data.Transparency4 = $("#Transparency4 option:selected").text();
+            }
+            else if (object_type4 == "Cube")
+            {
+                form_data.Object4 = "Cube";
+                form_data.Cube_x4 = $("input[name=Cube_x4]").val();
+                form_data.Cube_y4 = $("input[name=Cube_y4]").val();
+                form_data.Cube_z4 = $("input[name=Cube_z4]").val();
+                form_data.Cube_cr4 = $("input[name=Cube_cr4]").val();
+                form_data.Cube_cg4 = $("input[name=Cube_cg4]").val();
+                form_data.Cube_cb4 = $("input[name=Cube_cb4]").val();
+                form_data.Cube_l4 = $("input[name=Cube_l4]").val();
+                form_data.Cube_rx4 = $("input[name=Cube_rx4]").val();
+                form_data.Cube_ry4 = $("input[name=Cube_ry4]").val();
+                form_data.Cube_rz4 = $("input[name=Cube_rz4]").val();
+                form_data.Transparency4 = $("#Transparency4 option:selected").text();
+            }
+            else if (object_type4 == "Tetrahedron")
+            {
+                form_data.Object4 = "Tetrahedron";
+                form_data.Tetrahedron_x14 = $("input[name=Tetrahedron_x14]").val();
+                form_data.Tetrahedron_y14 = $("input[name=Tetrahedron_y14]").val();
+                form_data.Tetrahedron_z14 = $("input[name=Tetrahedron_z14]").val();
+                form_data.Tetrahedron_x24 = $("input[name=Tetrahedron_x24]").val();
+                form_data.Tetrahedron_y24 = $("input[name=Tetrahedron_y24]").val();
+                form_data.Tetrahedron_z24 = $("input[name=Tetrahedron_z24]").val();
+                form_data.Tetrahedron_x34 = $("input[name=Tetrahedron_x34]").val();
+                form_data.Tetrahedron_y34 = $("input[name=Tetrahedron_y34]").val();
+                form_data.Tetrahedron_z34 = $("input[name=Tetrahedron_z34]").val();
+                form_data.Tetrahedron_x44 = $("input[name=Tetrahedron_x44]").val();
+                form_data.Tetrahedron_y44 = $("input[name=Tetrahedron_y44]").val();
+                form_data.Tetrahedron_z44 = $("input[name=Tetrahedron_z44]").val();
+                form_data.Tetrahedron_cr4 = $("input[name=Tetrahedron_cr4]").val();
+                form_data.Tetrahedron_cg4 = $("input[name=Tetrahedron_cg4]").val();
+                form_data.Tetrahedron_cb4 = $("input[name=Tetrahedron_cb4]").val();
+                form_data.Transparency4 = $("#Transparency4 option:selected").text();
+            }
+            else if (object_type4 == "Cylinder")
+            {
+                form_data.Object4 = "Cylinder";
+                form_data.Cylinder_x4 = $("input[name=Cylinder_x4]").val();
+                form_data.Cylinder_y4 = $("input[name=Cylinder_y4]").val();
+                form_data.Cylinder_z4 = $("input[name=Cylinder_z4]").val();
+                form_data.Cylinder_rx4 = $("input[name=Cylinder_rx4]").val();
+                form_data.Cylinder_ry4 = $("input[name=Cylinder_ry4]").val();
+                form_data.Cylinder_rz4 = $("input[name=Cylinder_rz4]").val();
+                form_data.Cylinder_cr4 = $("input[name=Cylinder_cr4]").val();
+                form_data.Cylinder_cg4 = $("input[name=Cylinder_cg4]").val();
+                form_data.Cylinder_cb4 = $("input[name=Cylinder_cb4]").val();
+                form_data.Cylinder_h4 = $("input[name=Cylinder_h4]").val();
+                form_data.Cylinder_r4 = $("input[name=Cylinder_r4]").val();
+                form_data.Transparency4 = $("#Transparency4 option:selected").text();
+            }
+            else if (object_type4 == "Cone")
+            {
+                form_data.Object4 = "Cone";
+                form_data.Cone_x4 = $("input[name=Cone_x4]").val();
+                form_data.Cone_y4 = $("input[name=Cone_y4]").val();
+                form_data.Cone_z4 = $("input[name=Cone_z4]").val();
+                form_data.Cone_rx4 = $("input[name=Cone_rx4]").val();
+                form_data.Cone_ry4 = $("input[name=Cone_ry4]").val();
+                form_data.Cone_rz4 = $("input[name=Cone_rz4]").val();
+                form_data.Cone_cr4 = $("input[name=Cone_cr4]").val();
+                form_data.Cone_cg4 = $("input[name=Cone_cg4]").val();
+                form_data.Cone_cb4 = $("input[name=Cone_cb4]").val();
+                form_data.Cone_h4 = $("input[name=Cone_h4]").val();
+                form_data.Cone_r4 = $("input[name=Cone_r4]").val();
+                form_data.Transparency4 = $("#Transparency4 option:selected").text();
+            }
+            else
+            {null}
+        }
+        if ($("#inputGroupSelect5 option:selected").text())
+        {
+            var object_type5 = $("#inputGroupSelect5 option:selected").text();
+            object_quantity ++;
+            if (object_type5 == "Sphere")
+            {
+                form_data.Object5 = "Sphere";
+                form_data.Sphere_x5 = $("input[name=Sphere_x5]").val();
+                form_data.Sphere_y5 = $("input[name=Sphere_y5]").val();
+                form_data.Sphere_z5 = $("input[name=Sphere_z5]").val();
+                form_data.Sphere_cr5 = $("input[name=Sphere_cr5]").val();
+                form_data.Sphere_cg5 = $("input[name=Sphere_cg5]").val();
+                form_data.Sphere_cb5 = $("input[name=Sphere_cb5]").val();
+                form_data.Sphere_r5 = $("input[name=Sphere_r5]").val();
+                form_data.Transparency5 = $("#Transparency4 option:selected").text();
+            }
+            else if (object_type5 == "Cube")
+            {
+                form_data.Object5 = "Cube";
+                form_data.Cube_x5 = $("input[name=Cube_x5]").val();
+                form_data.Cube_y5 = $("input[name=Cube_y5]").val();
+                form_data.Cube_z5 = $("input[name=Cube_z5]").val();
+                form_data.Cube_cr5 = $("input[name=Cube_cr5]").val();
+                form_data.Cube_cg5 = $("input[name=Cube_cg5]").val();
+                form_data.Cube_cb5 = $("input[name=Cube_cb5]").val();
+                form_data.Cube_l5 = $("input[name=Cube_l5]").val();
+                form_data.Cube_rx5 = $("input[name=Cube_rx5]").val();
+                form_data.Cube_ry5 = $("input[name=Cube_ry5]").val();
+                form_data.Cube_rz5 = $("input[name=Cube_rz5]").val();
+                form_data.Transparency5 = $("#Transparency4 option:selected").text();
+            }
+            else if (object_type5 == "Tetrahedron")
+            {
+                form_data.Object5 = "Tetrahedron";
+                form_data.Tetrahedron_x15 = $("input[name=Tetrahedron_x15]").val();
+                form_data.Tetrahedron_y15 = $("input[name=Tetrahedron_y15]").val();
+                form_data.Tetrahedron_z15 = $("input[name=Tetrahedron_z15]").val();
+                form_data.Tetrahedron_x25 = $("input[name=Tetrahedron_x25]").val();
+                form_data.Tetrahedron_y25 = $("input[name=Tetrahedron_y25]").val();
+                form_data.Tetrahedron_z25 = $("input[name=Tetrahedron_z25]").val();
+                form_data.Tetrahedron_x35 = $("input[name=Tetrahedron_x35]").val();
+                form_data.Tetrahedron_y35 = $("input[name=Tetrahedron_y35]").val();
+                form_data.Tetrahedron_z35 = $("input[name=Tetrahedron_z35]").val();
+                form_data.Tetrahedron_x45 = $("input[name=Tetrahedron_x45]").val();
+                form_data.Tetrahedron_y45 = $("input[name=Tetrahedron_y45]").val();
+                form_data.Tetrahedron_z45 = $("input[name=Tetrahedron_z45]").val();
+                form_data.Tetrahedron_cr5 = $("input[name=Tetrahedron_cr5]").val();
+                form_data.Tetrahedron_cg5 = $("input[name=Tetrahedron_cg5]").val();
+                form_data.Tetrahedron_cb5 = $("input[name=Tetrahedron_cb5]").val();
+                form_data.Transparency5 = $("#Transparency4 option:selected").text();
+            }
+            else if (object_type5 == "Cylinder")
+            {
+                form_data.Object5 = "Cylinder";
+                form_data.Cylinder_x5 = $("input[name=Cylinder_x5]").val();
+                form_data.Cylinder_y5 = $("input[name=Cylinder_y5]").val();
+                form_data.Cylinder_z5 = $("input[name=Cylinder_z5]").val();
+                form_data.Cylinder_rx5 = $("input[name=Cylinder_rx5]").val();
+                form_data.Cylinder_ry5 = $("input[name=Cylinder_ry5]").val();
+                form_data.Cylinder_rz5 = $("input[name=Cylinder_rz5]").val();
+                form_data.Cylinder_cr5 = $("input[name=Cylinder_cr5]").val();
+                form_data.Cylinder_cg5 = $("input[name=Cylinder_cg5]").val();
+                form_data.Cylinder_cb5 = $("input[name=Cylinder_cb5]").val();
+                form_data.Cylinder_h5 = $("input[name=Cylinder_h5]").val();
+                form_data.Cylinder_r5 = $("input[name=Cylinder_r5]").val();
+                form_data.Transparency5 = $("#Transparency4 option:selected").text();
+            }
+            else if (object_type5 == "Cone")
+            {
+                form_data.Object5 = "Cone";
+                form_data.Cone_x5 = $("input[name=Cone_x5]").val();
+                form_data.Cone_y5 = $("input[name=Cone_y5]").val();
+                form_data.Cone_z5 = $("input[name=Cone_z5]").val();
+                form_data.Cone_rx5 = $("input[name=Cone_rx5]").val();
+                form_data.Cone_ry5 = $("input[name=Cone_ry5]").val();
+                form_data.Cone_rz5 = $("input[name=Cone_rz5]").val();
+                form_data.Cone_cr5 = $("input[name=Cone_cr5]").val();
+                form_data.Cone_cg5 = $("input[name=Cone_cg5]").val();
+                form_data.Cone_cb5 = $("input[name=Cone_cb5]").val();
+                form_data.Cone_h5 = $("input[name=Cone_h5]").val();
+                form_data.Cone_r5 = $("input[name=Cone_r5]").val();
+                form_data.Transparency5 = $("#Transparency4 option:selected").text();
+            }
+            else
+            {null}
+        }
+
+        //Scene Configuration
+        //Plane Position
+        if ($("input[name=Plane_Position_X]").val()){
+            form_data.Plane_Position_X = $("input[name=Plane_Position_X]").val();
+        }
+        else {
+            form_data.Plane_Position_X = 0;
+        }
+        if ($("input[name=Plane_Position_Y]").val()){
+            form_data.Plane_Position_Y = $("input[name=Plane_Position_Y]").val();
+        }
+        else {
+            form_data.Plane_Position_Y = -0.5;
+        }
+        if ($("input[name=Plane_Position_Z]").val()){
+            form_data.Plane_Position_Z = $("input[name=Plane_Position_Z]").val();
+        }
+        else {
+            form_data.Plane_Position_Z = 0;
+        }
+        //Plane Normal Vector
+        if ($("input[name=Plane_Normal_X]").val()){
+            form_data.Plane_Normal_X = $("input[name=Plane_Normal_X]").val();
+        }
+        else {
+            form_data.Plane_Normal_X = 0;
+        }
+        if ($("input[name=Plane_Normal_Y]").val()){
+            form_data.Plane_Normal_Y = $("input[name=Plane_Normal_Y]").val();
+        }
+        else {
+            form_data.Plane_Normal_Y = 1;
+        }
+        if ($("input[name=Plane_Normal_Z]").val()){
+            form_data.Plane_Normal_Z = $("input[name=Plane_Normal_Z]").val();
+        }
+        else {
+            form_data.Plane_Normal_Z = 0;
+        }
+        // Plane Transparency
+        form_data.Plane_Transparency = $("#Plane_Transparency option:selected").text();
+        // Camera Coordinates
+        if ($("input[name=Camera_C_X]").val()){
+            form_data.Camera_C_X = $("input[name=Camera_C_X]").val();
+        }
+        else {
+            form_data.Camera_C_X = 0;
+        }
+        if ($("input[name=Camera_C_Y]").val()){
+            form_data.Camera_C_Y = $("input[name=Camera_C_Y]").val();
+        }
+        else {
+            form_data.Camera_C_Y = 0.35;
+        }
+        if ($("input[name=Camera_C_Z]").val()){
+            form_data.Camera_C_Z = $("input[name=Camera_C_Z]").val();
+        }
+        else {
+            form_data.Camera_C_Z = -1;
+        }
+        // Camera Looking Points
+        if ($("input[name=Camera_L_X]").val()){
+            form_data.Camera_L_X = $("input[name=Camera_L_X]").val();
+        }
+        else {
+            form_data.Camera_L_X = 0;
+        }
+        if ($("input[name=Camera_L_Y]").val()){
+            form_data.Camera_L_Y = $("input[name=Camera_L_Y]").val();
+        }
+        else {
+            form_data.Camera_L_Y = 0.35;
+        }
+        if ($("input[name=Camera_L_Z]").val()){
+            form_data.Camera_L_Z = $("input[name=Camera_L_Z]").val();
+        }
+        else {
+            form_data.Camera_L_Z = 0;
+        }
+        // Light Source
+        if ($("input[name=Light_X]").val()){
+            form_data.Light_X = $("input[name=Light_X]").val();
+        }
+        else {
+            form_data.Light_X = 0;
+        }
+        if ($("input[name=Light_Y]").val()){
+            form_data.Light_Y = $("input[name=Light_Y]").val();
+        }
+        else {
+            form_data.Light_Y = 5;
+        }
+        if ($("input[name=Light_Z]").val()){
+            form_data.Light_Z = $("input[name=Light_Z]").val();
+        }
+        else {
+            form_data.Light_Z = -10;
+        }
+
+        form_data.object_quantity = object_quantity;
+        console.log(form_data);
+
+        $.ajax({
+        type: 'POST',
+        contentType: 'application/json',
+        url:'{{url_for('ObjectFeature')}}',
+        data:JSON.stringify(form_data),
+        success: function(reply) { 
+            alert(reply);
+            if (reply == "Object saved successfully!")
+                {window.location.reload();}
+        }
+        });
+    }
+</script>
 
 <script type="text/javascript">
     function myFunction() {
@@ -297,9 +872,9 @@ function check5(object)
         {
             var newDiv = document.createElement("div");
             newDiv.id = "Object" + count;
-            newDiv.innerHTML += '<h3>Please select the features of Object'+count+':</h3><div class="input-group input-group-lg mb-3"><div class="input-group-prepend"><label class="input-group-text" for="inputGroupSelect01">Shape: </label></div><select class="custom-select custom-select-lg" id="inputGroupSelect01" name="inputGroupSelect01" onchange="check'+count+'(this)"><option value="Default" selected>Please Choose...</option><option value="Sphere">Sphere</option><option value="Cube">Cube</option><option value="Tetrahedron">Tetrahedron</option><option value="Cylinder">Cylinder</option><option value="Cone">Cone</option></select></div><form name="Object'+count+'" id="Object'+count+'" method="POST" action="{{url_for("ObjectFeature")}}"<div class="container">  <div id="Section_for_Sphere'+count+'" style="display: none">    <div style="width: 100%;float:center"><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Coordinates of Centre Point</span></div><input type="text" name="Sphere_x" class="form-control" placeholder="X"><input type="text" name="Sphere_y" class="form-control" placeholder="Y"><input type="text" name="Sphere_z" class="form-control" placeholder="Z"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Radius</span></div><input type="text" name="Sphere_r" class="form-control" placeholder="Please Input..."></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span></div><input type="text" name="Sphere_cr" class="form-control" placeholder="R (0-255)"><input type="text" name="Sphere_cg" class="form-control" placeholder="G (0-255)"><input type="text" name="Sphere_cb" class="form-control" placeholder="B (0-255)"></div></div></div><div id="Section_for_Cube'+count+'" style="display: none">    <div style="width: 100%;float:left;"><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Coordinates of the Center Point</span></div><input type="text" name="Sphere_x" class="form-control" placeholder="X"><input type="text" name="Sphere_y" class="form-control" placeholder="Y"><input type="text" name="Sphere_z" class="form-control" placeholder="Z"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Side Length</span></div><input type="text" name="Cube_l" class="form-control" placeholder="Please Input..."></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Rotating Angle</span></div><input type="text" name="Cube_rx" class="form-control" placeholder="X-axis"><input type="text" name="Cube_ry" class="form-control" placeholder="Y-axis"><input type="text" name="Cube_rz" class="form-control" placeholder="Z-axis"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span></div><input type="text" name="Cube_cr" class="form-control" placeholder="R (0-255)"><input type="text" name="Cube_cg" class="form-control" placeholder="G (0-255)"><input type="text" name="Cube_cb" class="form-control" placeholder="B (0-255)"></div></div></div><div id="Section_for_Tetrahedron'+count+'" style="display: none">    <div style="width: 100%;float:left;"><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Coordinates the First Point</span></div><input type="text" name="Tetrahedron_x1" class="form-control" placeholder="x1"><input type="text" name="Tetrahedron_y1" class="form-control" placeholder="y1"><input type="text" name="Tetrahedron_z1" class="form-control" placeholder="z1"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Coordinates the Second Point</span></div><input type="text" name="Tetrahedron_x2" class="form-control" placeholder="x2"><input type="text" name="Tetrahedron_y2" class="form-control" placeholder="y2"><input type="text" name="Tetrahedron_z2" class="form-control" placeholder="z2"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Coordinates the Third Point</span></div><input type="text" name="Tetrahedron_x3" class="form-control" placeholder="x3"><input type="text" name="Tetrahedron_y3" class="form-control" placeholder="y3"><input type="text" name="Tetrahedron_z3" class="form-control" placeholder="z3"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Coordinates the Fourth Point</span></div><input type="text" name="Tetrahedron_x4" class="form-control" placeholder="x4"><input type="text" name="Tetrahedron_y4" class="form-control" placeholder="y4"><input type="text" name="Tetrahedron_z4" class="form-control" placeholder="z4"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span></div><input type="text" name="Tetrahedron_cr" class="form-control" placeholder="R (0-255)"><input type="text" name="Tetrahedron_cg" class="form-control" placeholder="G (0-255)"><input type="text" name="Tetrahedron_cb" class="form-control" placeholder="B (0-255)"></div></div></div><div id="Section_for_Cylinder'+count+'" style="display: none">    <div style="width: 100%;float:left;"><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Coordinates of Centre Point</span></div><input type="text" name="Cylinder_x" class="form-control" placeholder="X"><input type="text" name="Cylinder_y" class="form-control" placeholder="Y"><input type="text" name="Cylinder_z" class="form-control" placeholder="Z"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Height</span></div><input type="text" name="Cylinder_h" class="form-control" placeholder="Please Input..."></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Radius of the Bottom Circle</span></div><input type="text" name="Cylinder_r" class="form-control" placeholder="Please Input..."></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Rotating Angle</span></div><input type="text" name="Cylinder_rx" class="form-control" placeholder="X-axis"><input type="text" name="Cylinder_ry" class="form-control" placeholder="Y-axis"><input type="text" name="Cylinder_rg" class="form-control" placeholder="Z-axis"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span></div><input type="text" name="Cylinder_cr" class="form-control" placeholder="R (0-255)"><input type="text" name="Cylinder_cg" class="form-control" placeholder="G (0-255)"><input type="text" name="Cylinder_cb" class="form-control" placeholder="B (0-255)"></div></div></div><div id="Section_for_Cone'+count+'" style="display: none">    <div style="width: 100%;float:center"><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Coordinates of Centre Point</span></div><input type="text" name="Cone_x" class="form-control" placeholder="X"><input type="text" name="Cone_y" class="form-control" placeholder="Y"><input type="text" name="Cone_z" class="form-control" placeholder="Z"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Height</span></div><input type="text" name="Cone_h" class="form-control" placeholder="Please Input..."></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Radius</span></div><input type="text" name="Cone_r" class="form-control" placeholder="Please Input..."></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Rotating Angle</span></div><input type="text" name="Cone_rx" class="form-control" placeholder="X-axis"><input type="text" name="Cone_ry" class="form-control" placeholder="Y-axis"><input type="text" name="Cone_rz" class="form-control" placeholder="Z-axis"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span></div><input type="text" name="Cone_cr" class="form-control" placeholder="R (0-255)"><input type="text" name="Cone_cg" class="form-control" placeholder="G (0-255)"><input type="text" name="Cone_cb" class="form-control" placeholder="B (0-255)"></div></div></div><br>'
+            newDiv.innerHTML += '<h3>Please select the features of Object'+count+':</h3><div class="input-group input-group-lg mb-3"><div class="input-group-prepend"><label class="input-group-text" for="inputGroupSelect'+count+'">Shape: </label></div><select class="custom-select custom-select-lg" id="inputGroupSelect'+count+'" name="inputGroupSelect'+count+'" onchange="check'+count+'(this)"><option value="Default" selected>Please Choose...</option><option value="Sphere">Sphere</option><option value="Cube">Cube</option><option value="Tetrahedron">Tetrahedron</option><option value="Cylinder">Cylinder</option><option value="Cone">Cone</option></select></div><form name="Object'+count+'" id="Object'+count+'" method="POST"><div class="container">  <div id="Section_for_Sphere'+count+'" style="display: none">    <div style="width: 100%;float:center"><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Coordinates of Centre Point</span></div><input type="text" name="Sphere_x'+count+'" class="form-control" placeholder="X"><input type="text" name="Sphere_y'+count+'" class="form-control" placeholder="Y"><input type="text" name="Sphere_z'+count+'" class="form-control" placeholder="Z"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Radius</span></div><input type="text" name="Sphere_r'+count+'" class="form-control" placeholder="Please Input..."></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span></div><input type="text" name="Sphere_cr'+count+'" class="form-control" placeholder="R (0-255)"><input type="text" name="Sphere_cg'+count+'" class="form-control" placeholder="G (0-255)"><input type="text" name="Sphere_cb'+count+'" class="form-control" placeholder="B (0-255)"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><label class="input-group-text" for="Transparency'+count+'">Transparency Level </label></div><select class="custom-select custom-select-lg" id="Transparency'+count+'" name="Transparency'+count+'"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></div></div></div><div id="Section_for_Cube'+count+'" style="display: none">    <div style="width: 100%;float:left;"><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Coordinates of the Center Point</span></div><input type="text" name="Cube_x'+count+'" class="form-control" placeholder="X"><input type="text" name="Cube_y'+count+'" class="form-control" placeholder="Y"><input type="text" name="Cube_z'+count+'" class="form-control" placeholder="Z"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Side Length</span></div><input type="text" name="Cube_l'+count+'" class="form-control" placeholder="Please Input..."></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Rotating Angle</span></div><input type="text" name="Cube_rx'+count+'" class="form-control" placeholder="X-axis"><input type="text" name="Cube_ry'+count+'" class="form-control" placeholder="Y-axis"><input type="text" name="Cube_rz'+count+'" class="form-control" placeholder="Z-axis"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span></div><input type="text" name="Cube_cr'+count+'" class="form-control" placeholder="R (0-255)"><input type="text" name="Cube_cg'+count+'" class="form-control" placeholder="G (0-255)"><input type="text" name="Cube_cb'+count+'" class="form-control" placeholder="B (0-255)"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><label class="input-group-text" for="Transparency'+count+'">Transparency Level </label></div><select class="custom-select custom-select-lg" id="Transparency'+count+'" name="Transparency'+count+'"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></div></div></div></div><div id="Section_for_Tetrahedron'+count+'" style="display: none">    <div style="width: 100%;float:left;"><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Coordinates the First Point</span></div><input type="text" name="Tetrahedron_x1'+count+'" class="form-control" placeholder="x1"><input type="text" name="Tetrahedron_y1'+count+'" class="form-control" placeholder="y1"><input type="text" name="Tetrahedron_z1'+count+'" class="form-control" placeholder="z1"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Coordinates the Second Point</span></div><input type="text" name="Tetrahedron_x2'+count+'" class="form-control" placeholder="x2"><input type="text" name="Tetrahedron_y2'+count+'" class="form-control" placeholder="y2"><input type="text" name="Tetrahedron_z2'+count+'" class="form-control" placeholder="z2"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Coordinates the Third Point</span></div><input type="text" name="Tetrahedron_x3'+count+'" class="form-control" placeholder="x3"><input type="text" name="Tetrahedron_y3'+count+'" class="form-control" placeholder="y3"><input type="text" name="Tetrahedron_z3'+count+'" class="form-control" placeholder="z3"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Coordinates the Fourth Point</span></div><input type="text" name="Tetrahedron_x4'+count+'" class="form-control" placeholder="x4"><input type="text" name="Tetrahedron_y4'+count+'" class="form-control" placeholder="y4"><input type="text" name="Tetrahedron_z4'+count+'" class="form-control" placeholder="z4"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span></div><input type="text" name="Tetrahedron_cr'+count+'" class="form-control" placeholder="R (0-255)"><input type="text" name="Tetrahedron_cg'+count+'" class="form-control" placeholder="G (0-255)"><input type="text" name="Tetrahedron_cb'+count+'" class="form-control" placeholder="B (0-255)"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><label class="input-group-text" for="Transparency'+count+'">Transparency Level </label></div><select class="custom-select custom-select-lg" id="Transparency'+count+'" name="Transparency'+count+'"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></div></div></div></div><div id="Section_for_Cylinder'+count+'" style="display: none">    <div style="width: 100%;float:left;"><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Coordinates of Centre Point</span></div><input type="text" name="Cylinder_x'+count+'" class="form-control" placeholder="X"><input type="text" name="Cylinder_y'+count+'" class="form-control" placeholder="Y"><input type="text" name="Cylinder_z'+count+'" class="form-control" placeholder="Z"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Height</span></div><input type="text" name="Cylinder_h'+count+'" class="form-control" placeholder="Please Input..."></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Radius of the Bottom Circle</span></div><input type="text" name="Cylinder_r'+count+'" class="form-control" placeholder="Please Input..."></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Rotating Angle</span></div><input type="text" name="Cylinder_rx'+count+'" class="form-control" placeholder="X-axis"><input type="text" name="Cylinder_ry'+count+'" class="form-control" placeholder="Y-axis"><input type="text" name="Cylinder_rz'+count+'" class="form-control" placeholder="Z-axis"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span></div><input type="text" name="Cylinder_cr'+count+'" class="form-control" placeholder="R (0-255)"><input type="text" name="Cylinder_cg'+count+'" class="form-control" placeholder="G (0-255)"><input type="text" name="Cylinder_cb'+count+'" class="form-control" placeholder="B (0-255)"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><label class="input-group-text" for="Transparency'+count+'">Transparency Level </label></div><select class="custom-select custom-select-lg" id="Transparency'+count+'" name="Transparency'+count+'"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></div></div></div></div><div id="Section_for_Cone'+count+'" style="display: none">    <div style="width: 100%;float:center"><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Coordinates of Centre Point</span></div><input type="text" name="Cone_x'+count+'" class="form-control" placeholder="X"><input type="text" name="Cone_y'+count+'" class="form-control" placeholder="Y"><input type="text" name="Cone_z'+count+'" class="form-control" placeholder="Z"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Height</span></div><input type="text" name="Cone_h'+count+'" class="form-control" placeholder="Please Input..."></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Radius</span></div><input type="text" name="Cone_r'+count+'" class="form-control" placeholder="Please Input..."></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Rotating Angle</span></div><input type="text" name="Cone_rx'+count+'" class="form-control" placeholder="X-axis"><input type="text" name="Cone_ry'+count+'" class="form-control" placeholder="Y-axis"><input type="text" name="Cone_rz'+count+'" class="form-control" placeholder="Z-axis"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span></div><input type="text" name="Cone_cr'+count+'" class="form-control" placeholder="R (0-255)"><input type="text" name="Cone_cg'+count+'" class="form-control" placeholder="G (0-255)"><input type="text" name="Cone_cb'+count+'" class="form-control" placeholder="B (0-255)"></div><div class="input-group input-group-lg"><div class="input-group-prepend"><label class="input-group-text" for="Transparency'+count+'">Transparency Level </label></div><select class="custom-select custom-select-lg" id="Transparency'+count+'" name="Transparency'+count+'"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></div></div></div></div></form><br>'
 
-            var currentDiv = document.getElementById("ObjectFeature"); 
+            var currentDiv = document.getElementById("ObjectDetails"); 
             currentDiv.appendChild(newDiv);
             quant--;
             count++;
@@ -317,77 +892,76 @@ function check5(object)
             <div style="width: 80%;float:left;">
             
             <h1>Object Features</h1>
-            <div id="ObjectFeature">
+            <div id="ObjectDetails">
             </div>
 
             <h3>Please describe the scene:</h3>
+            <h4>You do not have to input if you do not want to because default values are provided.</h4>
             <div class="input-group input-group-lg">
                 <div class="input-group-prepend">
                     <span id="inputGroup-sizing-lg" class="input-group-text">Plane Position</span>
                 </div>
-                <input type="text" class="form-control" placeholder="0">
-                <input type="text" class="form-control" placeholder="-0.5">
-                <input type="text" class="form-control" placeholder="0">
+                <input type="text" name="Plane_Position_X" class="form-control" placeholder="0">
+                <input type="text" name="Plane_Position_Y" class="form-control" placeholder="-0.5">
+                <input type="text" name="Plane_Position_Z" class="form-control" placeholder="0">
             </div>
             <div class="input-group input-group-lg">
                 <div class="input-group-prepend">
                     <span id="inputGroup-sizing-lg" class="input-group-text">Plane Normal Vector</span>
                 </div>
-                <input type="text" class="form-control" placeholder="0">
-                <input type="text" class="form-control" placeholder="1">
-                <input type="text" class="form-control" placeholder="0">
+                <input type="text" name="Plane_Normal_X" class="form-control" placeholder="0">
+                <input type="text" name="Plane_Normal_Y" class="form-control" placeholder="1">
+                <input type="text" name="Plane_Normal_Z" class="form-control" placeholder="0">
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="Plane_Transparency">Plane Transparency Level </label>
+                </div>
+                <select class="custom-select custom-select-lg" id="Plane_Transparency" name="Plane_Transparency">
+                    <option value="0" selected>0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
             </div>
             <div class="input-group input-group-lg">
                 <div class="input-group-prepend">
                     <span id="inputGroup-sizing-lg" class="input-group-text">Camera Coordinates</span>
                 </div>
-                <input type="text" class="form-control" placeholder="X">
-                <input type="text" class="form-control" placeholder="Y">
-                <input type="text" class="form-control" placeholder="Z">
+                <input type="text" name="Camera_C_X" class="form-control" placeholder="0">
+                <input type="text" name="Camera_C_Y" class="form-control" placeholder="0.35">
+                <input type="text" name="Camera_C_Z" class="form-control" placeholder="-1">
             </div>
             <div class="input-group input-group-lg">
                 <div class="input-group-prepend">
                     <span id="inputGroup-sizing-lg" class="input-group-text">Camera Looking Point</span>
                 </div>
-                <input type="text" class="form-control" placeholder="X">
-                <input type="text" class="form-control" placeholder="Y">
-                <input type="text" class="form-control" placeholder="Z">
+                <input type="text" name="Camera_L_X" class="form-control" placeholder="0">
+                <input type="text" name="Camera_L_Y" class="form-control" placeholder="0.35">
+                <input type="text" name="Camera_L_Z" class="form-control" placeholder="0">
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Light Source Position</span>
+                </div>
+                <input type="text" name="Light_X" class="form-control" placeholder="0">
+                <input type="text" name="Light_Y" class="form-control" placeholder="5">
+                <input type="text" name="Light_Z" class="form-control" placeholder="-10">
             </div>
             </div>
         </div>
-        
+        <button type="submit" class="btn btn-success" onclick="form_submit()">&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;</button></div>
         <div align="right">
             <button type="button" onclick="location.href = 'ObjectQuantity';" class="btn btn-primary btn-lg">Previous</button>
-            <button type="button" onclick="location.href = '#';" class="btn btn-success btn-lg">&nbsp;&nbsp;&nbsp;Next&nbsp;&nbsp;&nbsp;</button>
+            <button type="button" onclick="output_generate()" class="btn btn-success btn-lg">Next</button>
         </div>
     </div>
     <br>
 </div>
 
-    <!--<h3>Please select the features of Object'+count+':</h3>
-
-        <div class="input-group input-group-lg mb-3">
-          <div class="input-group-prepend">
-            <label class="input-group-text" for="inputGroupSelect01">Shape: </label>
-          </div>
-          <select class="custom-select custom-select-lg" id="inputGroupSelect01">
-            <option value="Sphere" selected>Sphere</option>
-            <option value="Cube">Cube</option>
-            <option value="Tetrahedron">Tetrahedron</option>
-            <option value="Cylinder">Cylinder</option>
-            <option value="Plane">Plane</option>
-          </select>
-        </div>
-
-        <div class="input-group input-group-lg">
-            <div class="input-group-prepend">
-                <span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span>
-            </div>
-            <input type="text" class="form-control" placeholder="R (0-255)">
-            <input type="text" class="form-control" placeholder="G (0-255)">
-            <input type="text" class="form-control" placeholder="B (0-255)">
-        </div>-->
-
+<!-- 
 <h3>Please select the features of Object'+count+':</h3>
 <div class="input-group input-group-lg mb-3">
     <div class="input-group-prepend">
@@ -428,6 +1002,19 @@ function check5(object)
                 <input type="text" name="Sphere_cr" class="form-control" placeholder="R (0-255)">
                 <input type="text" name="Sphere_cg" class="form-control" placeholder="G (0-255)">
                 <input type="text" name="Sphere_cb" class="form-control" placeholder="B (0-255)">
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="Transparency1">Transparency Level </label>
+                </div>
+                <select class="custom-select custom-select-lg" id="Transparency1" name="Transparency1">
+                    <option value="0" selected>0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
             </div>
         </div>
     </div>
@@ -590,12 +1177,218 @@ function check5(object)
         </div>
     </div>
     
+    <button type="submit" class="btn btn-success" onclick='this.disabled=true'>&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;</button>
+
+
+</div>
+</form> -->
+
+
+<!-- <div class="input-group input-group-lg mb-3">
+    <div class="input-group-prepend">
+        <label class="input-group-text" for="inputGroupSelect1">Shape: </label>
+    </div>
+    <select class="custom-select custom-select-lg" id="inputGroupSelect01" name="inputGroupSelect01" onchange="check1(this)">
+        <option value="Default" selected>Please Choose...</option>
+        <option value="Sphere">Sphere</option>
+        <option value="Cube">Cube</option>
+        <option value="Tetrahedron">Tetrahedron</option>
+        <option value="Cylinder">Cylinder</option>
+        <option value="Cone">Cone</option>
+    </select>
+</div>
+
+<form name="Object1" id="Object1" method="POST">
+<div class="container">  
+    <div id="Section_for_Sphere1" style="display: none">    
+        <div style="width: 100%;float:center">
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Coordinates of Centre Point</span>
+                </div>
+                <input type="text" name="Sphere_x" class="form-control" placeholder="X">
+                <input type="text" name="Sphere_y" class="form-control" placeholder="Y">
+                <input type="text" name="Sphere_z" class="form-control" placeholder="Z">
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Radius</span>
+                </div>
+                <input type="text" name="Sphere_r" class="form-control" placeholder="Please Input...">
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span>
+                </div>
+                <input type="text" name="Sphere_cr" class="form-control" placeholder="R (0-255)">
+                <input type="text" name="Sphere_cg" class="form-control" placeholder="G (0-255)">
+                <input type="text" name="Sphere_cb" class="form-control" placeholder="B (0-255)">
+            </div>
+        </div>
+    </div>
+    <div id="Section_for_Cube1" style="display: none">    
+        <div style="width: 100%;float:left;">
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Coordinates of the Center Point</span>
+                </div>
+                <input type="text" name="Sphere_x" class="form-control" placeholder="X">
+                <input type="text" name="Sphere_y" class="form-control" placeholder="Y">
+                <input type="text" name="Sphere_z" class="form-control" placeholder="Z">
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Side Length</span>
+                </div>
+                <input type="text" name="Cube_l" class="form-control" placeholder="Please Input...">
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Rotating Angle</span>
+                </div>
+                <input type="text" name="Cube_rx" class="form-control" placeholder="X-axis">
+                <input type="text" name="Cube_ry" class="form-control" placeholder="Y-axis">
+                <input type="text" name="Cube_rz" class="form-control" placeholder="Z-axis">
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span>
+                </div>
+                <input type="text" name="Cube_cr" class="form-control" placeholder="R (0-255)">
+                <input type="text" name="Cube_cg" class="form-control" placeholder="G (0-255)">
+                <input type="text" name="Cube_cb" class="form-control" placeholder="B (0-255)">
+            </div>
+        </div>
+    </div>
+    <div id="Section_for_Tetrahedron1" style="display: none">    
+        <div style="width: 100%;float:left;">
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Coordinates the First Point</span>
+                </div>
+                <input type="text" name="Tetrahedron_x1" class="form-control" placeholder="x1">
+                <input type="text" name="Tetrahedron_y1" class="form-control" placeholder="y1">
+                <input type="text" name="Tetrahedron_z1" class="form-control" placeholder="z1">
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Coordinates the Second Point</span>
+                </div>
+                <input type="text" name="Tetrahedron_x2" class="form-control" placeholder="x2">
+                <input type="text" name="Tetrahedron_y2" class="form-control" placeholder="y2">
+                <input type="text" name="Tetrahedron_z2" class="form-control" placeholder="z2">
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Coordinates the Third Point</span>
+                </div>
+                <input type="text" name="Tetrahedron_x3" class="form-control" placeholder="x3">
+                <input type="text" name="Tetrahedron_y3" class="form-control" placeholder="y3">
+                <input type="text" name="Tetrahedron_z3" class="form-control" placeholder="z3">
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Coordinates the Fourth Point</span>
+                </div>
+                <input type="text" name="Tetrahedron_x4" class="form-control" placeholder="x4">
+                <input type="text" name="Tetrahedron_y4" class="form-control" placeholder="y4">
+                <input type="text" name="Tetrahedron_z4" class="form-control" placeholder="z4">
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span>
+                </div>
+                <input type="text" name="Tetrahedron_cr" class="form-control" placeholder="R (0-255)">
+                <input type="text" name="Tetrahedron_cg" class="form-control" placeholder="G (0-255)">
+                <input type="text" name="Tetrahedron_cb" class="form-control" placeholder="B (0-255)">
+            </div>
+        </div>
+    </div>
+    <div id="Section_for_Cylinder1" style="display: none">    
+        <div style="width: 100%;float:left;">
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Coordinates of Centre Point</span>
+                </div>
+                <input type="text" name="Cylinder_x" class="form-control" placeholder="X">
+                <input type="text" name="Cylinder_y" class="form-control" placeholder="Y">
+                <input type="text" name="Cylinder_z" class="form-control" placeholder="Z">
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Height</span>
+                </div>
+                <input type="text" name="Cylinder_h" class="form-control" placeholder="Please Input...">
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Radius of the Bottom Circle</span>
+                </div>
+                <input type="text" name="Cylinder_r" class="form-control" placeholder="Please Input...">
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Rotating Angle</span>
+                </div>
+                <input type="text" name="Cylinder_rx" class="form-control" placeholder="X-axis">
+                <input type="text" name="Cylinder_ry" class="form-control" placeholder="Y-axis">
+                <input type="text" name="Cylinder_rg" class="form-control" placeholder="Z-axis">
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span>
+                </div>
+                <input type="text" name="Cylinder_cr" class="form-control" placeholder="R (0-255)">
+                <input type="text" name="Cylinder_cg" class="form-control" placeholder="G (0-255)">
+                <input type="text" name="Cylinder_cb" class="form-control" placeholder="B (0-255)">
+            </div>
+        </div>
+    </div>
+    <div id="Section_for_Cone1" style="display: none">    
+        <div style="width: 100%;float:center">
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Coordinates of Centre Point</span>
+                </div>
+                <input type="text" name="Cone_x" class="form-control" placeholder="X">
+                <input type="text" name="Cone_y" class="form-control" placeholder="Y">
+                <input type="text" name="Cone_z" class="form-control" placeholder="Z">
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Height</span>
+                </div>
+                <input type="text" name="Cone_h" class="form-control" placeholder="Please Input...">
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Radius</span>
+                </div>
+                <input type="text" name="Cone_r" class="form-control" placeholder="Please Input...">
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Rotating Angle</span>
+                </div>
+                <input type="text" name="Cone_rx" class="form-control" placeholder="X-axis">
+                <input type="text" name="Cone_ry" class="form-control" placeholder="Y-axis">
+                <input type="text" name="Cone_rz" class="form-control" placeholder="Z-axis">
+            </div>
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span id="inputGroup-sizing-lg" class="input-group-text">Color in RGB</span>
+                </div>
+                <input type="text" name="Cone_cr" class="form-control" placeholder="R (0-255)">
+                <input type="text" name="Cone_cg" class="form-control" placeholder="G (0-255)">
+                <input type="text" name="Cone_cb" class="form-control" placeholder="B (0-255)">
+            </div>
+        </div>
+    </div>
+    
     <button type="submit" class="btn btn-success">&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;</button>
 
 
 </div>
-</form>
-
-
+</form> -->
 </body>
 </html>
