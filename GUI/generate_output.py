@@ -47,13 +47,12 @@ class OutputGenerator:
         Cube_dict_temp["transparency_level"] = transparency
         self.Cube_list.append(Cube_dict_temp)
 
-    def Add_Tetrahedron(self,position1,position2,position3,position4,color,transparency):
+    def Add_Tetrahedron(self,position,length,rotation_angle,color,transparency):
         self.object_count += 1
         Tetrahedron_dict_temp = {}
-        Tetrahedron_dict_temp["position1"] = position1
-        Tetrahedron_dict_temp["position2"] = position2
-        Tetrahedron_dict_temp["position3"] = position3
-        Tetrahedron_dict_temp["position4"] = position4
+        Tetrahedron_dict_temp["position"] = position
+        Tetrahedron_dict_temp["length"] = length
+        Tetrahedron_dict_temp["rotation_angle"] = rotation_angle
         Tetrahedron_dict_temp["color"] = color
         Tetrahedron_dict_temp["transparency_level"] = transparency
         self.Tetrahedron_list.append(Tetrahedron_dict_temp)

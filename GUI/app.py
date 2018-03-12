@@ -179,66 +179,26 @@ def ObjectFeature():
             
             #user choose to have a Tetrahedron
             elif post_data["Object1"]=="Tetrahedron":
-                if post_data["Tetrahedron_x11"]:
-                    Tetrahedron_x1 = float(post_data["Tetrahedron_x11"])
+                if post_data["Tetrahedron_x1"]:
+                    Tetrahedron_x = float(post_data['Tetrahedron_x1'])
                 else:
                     flag = 0
-                    return  "Please input value for X coordinate of the First Point of the Tetrahedron!"
-                if post_data["Tetrahedron_y11"]:
-                    Tetrahedron_y1 = float(post_data['Tetrahedron_y11'])
+                    return  "Please input value for X coordinate of the Tetrahedron Centre Point!"
+                if post_data["Tetrahedron_y1"]:
+                    Tetrahedron_y = float(post_data['Tetrahedron_y1'])
                 else:
                     flag = 0
-                    return "Please input value for Y coordinate of the First Point of the Tetrahedron!"
-                if post_data["Tetrahedron_z11"]:
-                    Tetrahedron_z1 = float(post_data['Tetrahedron_z11'])
+                    return "Please input value for Y coordinate of the Tetrahedron Centre Point!"
+                if post_data["Tetrahedron_z1"]:
+                    Tetrahedron_z = float(post_data['Tetrahedron_z1'])
                 else:
                     flag = 0
-                    return "Please input value for Z coordinate of the First Point of the Tetrahedron!"
-                if post_data["Tetrahedron_x21"]:
-                    Tetrahedron_x2 = float(post_data['Tetrahedron_x21'])
+                    return "Please input value for Z coordinate of the Tetrahedron Centre Point!"
+                if post_data["Tetrahedron_l1"]:
+                    Tetrahedron_SideLength = float(post_data['Tetrahedron_l1'])
                 else:
                     flag = 0
-                    return "Please input value for X coordinate of the Second Point of the Tetrahedron!"
-                if post_data["Tetrahedron_y21"]:
-                    Tetrahedron_y2 = float(post_data['Tetrahedron_y21'])
-                else:
-                    flag = 0
-                    return "Please input value for Y coordinate of the Second Point of the Tetrahedron!"
-                if post_data["Tetrahedron_z21"]:
-                    Tetrahedron_z2 = float(post_data['Tetrahedron_z21'])
-                else:
-                    flag = 0
-                    return "Please input value for Z coordinate of the Second Point of the Tetrahedron!"
-                if post_data["Tetrahedron_x31"]:
-                    Tetrahedron_x3 = float(post_data['Tetrahedron_x31'])
-                else:
-                    flag = 0
-                    return "Please input value for X coordinate of the Third Point of the Tetrahedron!"
-                if post_data["Tetrahedron_y31"]:
-                    Tetrahedron_y3 = float(post_data['Tetrahedron_y31'])
-                else:
-                    flag = 0
-                    return "Please input value for Y coordinate of the Third Point of the Tetrahedron!"
-                if post_data["Tetrahedron_z31"]:
-                    Tetrahedron_z3 = float(post_data['Tetrahedron_z31'])
-                else:
-                    flag = 0
-                    return "Please input value for Z coordinate of the Third Point of the Tetrahedron!"
-                if post_data["Tetrahedron_x41"]:
-                    Tetrahedron_x4 = float(post_data['Tetrahedron_x41'])
-                else:
-                    flag = 0
-                    return "Please input value for X coordinate of the Fourth Point of the Tetrahedron!"
-                if post_data["Tetrahedron_y41"]:
-                    Tetrahedron_y4 = float(post_data['Tetrahedron_y41'])
-                else:
-                    flag = 0
-                    return "Please input value for Y coordinate of the Fourth Point of the Tetrahedron!"
-                if post_data["Tetrahedron_z41"]:
-                    Tetrahedron_z4 = float(post_data['Tetrahedron_z41'])
-                else:
-                    flag = 0
-                    return "Please input value for Z coordinate of the Fourth Point of the Tetrahedron!"
+                    return "Please input value for the Tetrahedron Side Length!"
                 if post_data["Tetrahedron_cr1"]:
                     Tetrahedron_Color_R = float(post_data['Tetrahedron_cr1'])
                 else:
@@ -254,14 +214,27 @@ def ObjectFeature():
                 else:
                     flag = 0
                     return "Please complete the color input of the Tetrahedron!"
+                if post_data["Tetrahedron_rx1"]:
+                    Tetrahedron_Rotate_x = float(post_data['Tetrahedron_rx1'])
+                else:
+                    flag = 0
+                    return "Please input value for X coordinate of the Tetrahedron Rotation!"
+                if post_data["Tetrahedron_ry1"]:
+                    Tetrahedron_Rotate_y = float(post_data['Tetrahedron_ry1'])
+                else:
+                    flag = 0
+                    return "Please input value for Y coordinate of the Tetrahedron Rotation!"
+                if post_data["Tetrahedron_rz1"]:
+                    Tetrahedron_Rotate_z = float(post_data['Tetrahedron_rz1'])
+                else:
+                    flag = 0
+                    return "Please input value for Z coordinate of the Tetrahedron Rotation!"
                 if flag == 1:
                     object_quantity += 1
-                    Tetrahedron_1st = [Tetrahedron_x1,Tetrahedron_y1,Tetrahedron_z1]
-                    Tetrahedron_2nd = [Tetrahedron_x2,Tetrahedron_y2,Tetrahedron_z2]
-                    Tetrahedron_3rd = [Tetrahedron_x3,Tetrahedron_y3,Tetrahedron_z3]
-                    Tetrahedron_4th = [Tetrahedron_x4,Tetrahedron_y4,Tetrahedron_z4]
+                    Tetrahedron_Coordinates = [Tetrahedron_x,Tetrahedron_y,Tetrahedron_z]
+                    Tetrahedron_Rotation = [Tetrahedron_Rotate_x,Tetrahedron_Rotate_y,Tetrahedron_Rotate_z]
                     Tetrahedron_Color = [Tetrahedron_Color_R,Tetrahedron_Color_G,Tetrahedron_Color_B]
-                    OutputFile.Add_Tetrahedron(Tetrahedron_1st,Tetrahedron_2nd,Tetrahedron_3rd,Tetrahedron_4th,Tetrahedron_Color,Transparency1)
+                    OutputFile.Add_Tetrahedron(Tetrahedron_Coordinates,Tetrahedron_SideLength,Tetrahedron_Rotation,Tetrahedron_Color,Transparency1)
             
             #user choose to have a Cylinder
             elif post_data["Object1"]=="Cylinder":
@@ -504,66 +477,26 @@ def ObjectFeature():
             
             #user choose to have a Tetrahedron
             elif post_data["Object2"]=="Tetrahedron":
-                if post_data["Tetrahedron_x12"]:
-                    Tetrahedron_x1 = float(post_data["Tetrahedron_x12"])
+                if post_data["Tetrahedron_x2"]:
+                    Tetrahedron_x = float(post_data['Tetrahedron_x2'])
                 else:
                     flag = 0
-                    return  "Please input value for X coordinate of the First Point of the Tetrahedron!"
-                if post_data["Tetrahedron_y12"]:
-                    Tetrahedron_y1 = float(post_data['Tetrahedron_y12'])
+                    return  "Please input value for X coordinate of the Tetrahedron Centre Point!"
+                if post_data["Tetrahedron_y2"]:
+                    Tetrahedron_y = float(post_data['Tetrahedron_y2'])
                 else:
                     flag = 0
-                    return "Please input value for Y coordinate of the First Point of the Tetrahedron!"
-                if post_data["Tetrahedron_z12"]:
-                    Tetrahedron_z1 = float(post_data['Tetrahedron_z12'])
+                    return "Please input value for Y coordinate of the Tetrahedron Centre Point!"
+                if post_data["Tetrahedron_z2"]:
+                    Tetrahedron_z = float(post_data['Tetrahedron_z2'])
                 else:
                     flag = 0
-                    return "Please input value for Z coordinate of the First Point of the Tetrahedron!"
-                if post_data["Tetrahedron_x22"]:
-                    Tetrahedron_x2 = float(post_data['Tetrahedron_x22'])
+                    return "Please input value for Z coordinate of the Tetrahedron Centre Point!"
+                if post_data["Tetrahedron_l2"]:
+                    Tetrahedron_SideLength = float(post_data['Tetrahedron_l2'])
                 else:
                     flag = 0
-                    return "Please input value for X coordinate of the Second Point of the Tetrahedron!"
-                if post_data["Tetrahedron_y22"]:
-                    Tetrahedron_y2 = float(post_data['Tetrahedron_y22'])
-                else:
-                    flag = 0
-                    return "Please input value for Y coordinate of the Second Point of the Tetrahedron!"
-                if post_data["Tetrahedron_z22"]:
-                    Tetrahedron_z2 = float(post_data['Tetrahedron_z22'])
-                else:
-                    flag = 0
-                    return "Please input value for Z coordinate of the Second Point of the Tetrahedron!"
-                if post_data["Tetrahedron_x32"]:
-                    Tetrahedron_x3 = float(post_data['Tetrahedron_x32'])
-                else:
-                    flag = 0
-                    return "Please input value for X coordinate of the Third Point of the Tetrahedron!"
-                if post_data["Tetrahedron_y32"]:
-                    Tetrahedron_y3 = float(post_data['Tetrahedron_y32'])
-                else:
-                    flag = 0
-                    return "Please input value for Y coordinate of the Third Point of the Tetrahedron!"
-                if post_data["Tetrahedron_z32"]:
-                    Tetrahedron_z3 = float(post_data['Tetrahedron_z32'])
-                else:
-                    flag = 0
-                    return "Please input value for Z coordinate of the Third Point of the Tetrahedron!"
-                if post_data["Tetrahedron_x42"]:
-                    Tetrahedron_x4 = float(post_data['Tetrahedron_x42'])
-                else:
-                    flag = 0
-                    return "Please input value for X coordinate of the Fourth Point of the Tetrahedron!"
-                if post_data["Tetrahedron_y42"]:
-                    Tetrahedron_y4 = float(post_data['Tetrahedron_y42'])
-                else:
-                    flag = 0
-                    return "Please input value for Y coordinate of the Fourth Point of the Tetrahedron!"
-                if post_data["Tetrahedron_z42"]:
-                    Tetrahedron_z4 = float(post_data['Tetrahedron_z42'])
-                else:
-                    flag = 0
-                    return "Please input value for Z coordinate of the Fourth Point of the Tetrahedron!"
+                    return "Please input value for the Tetrahedron Side Length!"
                 if post_data["Tetrahedron_cr2"]:
                     Tetrahedron_Color_R = float(post_data['Tetrahedron_cr2'])
                 else:
@@ -579,14 +512,27 @@ def ObjectFeature():
                 else:
                     flag = 0
                     return "Please complete the color input of the Tetrahedron!"
+                if post_data["Tetrahedron_rx2"]:
+                    Tetrahedron_Rotate_x = float(post_data['Tetrahedron_rx2'])
+                else:
+                    flag = 0
+                    return "Please input value for X coordinate of the Tetrahedron Rotation!"
+                if post_data["Tetrahedron_ry2"]:
+                    Tetrahedron_Rotate_y = float(post_data['Tetrahedron_ry2'])
+                else:
+                    flag = 0
+                    return "Please input value for Y coordinate of the Tetrahedron Rotation!"
+                if post_data["Tetrahedron_rz2"]:
+                    Tetrahedron_Rotate_z = float(post_data['Tetrahedron_rz2'])
+                else:
+                    flag = 0
+                    return "Please input value for Z coordinate of the Tetrahedron Rotation!"
                 if flag == 1:
                     object_quantity += 1
-                    Tetrahedron_1st = [Tetrahedron_x1,Tetrahedron_y1,Tetrahedron_z1]
-                    Tetrahedron_2nd = [Tetrahedron_x2,Tetrahedron_y2,Tetrahedron_z2]
-                    Tetrahedron_3rd = [Tetrahedron_x3,Tetrahedron_y3,Tetrahedron_z3]
-                    Tetrahedron_4th = [Tetrahedron_x4,Tetrahedron_y4,Tetrahedron_z4]
+                    Tetrahedron_Coordinates = [Tetrahedron_x,Tetrahedron_y,Tetrahedron_z]
+                    Tetrahedron_Rotation = [Tetrahedron_Rotate_x,Tetrahedron_Rotate_y,Tetrahedron_Rotate_z]
                     Tetrahedron_Color = [Tetrahedron_Color_R,Tetrahedron_Color_G,Tetrahedron_Color_B]
-                    OutputFile.Add_Tetrahedron(Tetrahedron_1st,Tetrahedron_2nd,Tetrahedron_3rd,Tetrahedron_4th,Tetrahedron_Color,Transparency2)
+                    OutputFile.Add_Tetrahedron(Tetrahedron_Coordinates,Tetrahedron_SideLength,Tetrahedron_Rotation,Tetrahedron_Color,Transparency2)
             
             #user choose to have a Cylinder
             elif post_data["Object2"]=="Cylinder":
@@ -829,66 +775,26 @@ def ObjectFeature():
             
             #user choose to have a Tetrahedron
             elif post_data["Object3"]=="Tetrahedron":
-                if post_data["Tetrahedron_x13"]:
-                    Tetrahedron_x1 = float(post_data["Tetrahedron_x13"])
+                if post_data["Tetrahedron_x3"]:
+                    Tetrahedron_x = float(post_data['Tetrahedron_x3'])
                 else:
                     flag = 0
-                    return  "Please input value for X coordinate of the First Point of the Tetrahedron!"
-                if post_data["Tetrahedron_y13"]:
-                    Tetrahedron_y1 = float(post_data['Tetrahedron_y13'])
+                    return  "Please input value for X coordinate of the Tetrahedron Centre Point!"
+                if post_data["Tetrahedron_y3"]:
+                    Tetrahedron_y = float(post_data['Tetrahedron_y3'])
                 else:
                     flag = 0
-                    return "Please input value for Y coordinate of the First Point of the Tetrahedron!"
-                if post_data["Tetrahedron_z13"]:
-                    Tetrahedron_z1 = float(post_data['Tetrahedron_z13'])
+                    return "Please input value for Y coordinate of the Tetrahedron Centre Point!"
+                if post_data["Tetrahedron_z3"]:
+                    Tetrahedron_z = float(post_data['Tetrahedron_z3'])
                 else:
                     flag = 0
-                    return "Please input value for Z coordinate of the First Point of the Tetrahedron!"
-                if post_data["Tetrahedron_x23"]:
-                    Tetrahedron_x2 = float(post_data['Tetrahedron_x23'])
+                    return "Please input value for Z coordinate of the Tetrahedron Centre Point!"
+                if post_data["Tetrahedron_l3"]:
+                    Tetrahedron_SideLength = float(post_data['Tetrahedron_l3'])
                 else:
                     flag = 0
-                    return "Please input value for X coordinate of the Second Point of the Tetrahedron!"
-                if post_data["Tetrahedron_y23"]:
-                    Tetrahedron_y2 = float(post_data['Tetrahedron_y23'])
-                else:
-                    flag = 0
-                    return "Please input value for Y coordinate of the Second Point of the Tetrahedron!"
-                if post_data["Tetrahedron_z23"]:
-                    Tetrahedron_z2 = float(post_data['Tetrahedron_z23'])
-                else:
-                    flag = 0
-                    return "Please input value for Z coordinate of the Second Point of the Tetrahedron!"
-                if post_data["Tetrahedron_x33"]:
-                    Tetrahedron_x3 = float(post_data['Tetrahedron_x33'])
-                else:
-                    flag = 0
-                    return "Please input value for X coordinate of the Third Point of the Tetrahedron!"
-                if post_data["Tetrahedron_y33"]:
-                    Tetrahedron_y3 = float(post_data['Tetrahedron_y33'])
-                else:
-                    flag = 0
-                    return "Please input value for Y coordinate of the Third Point of the Tetrahedron!"
-                if post_data["Tetrahedron_z33"]:
-                    Tetrahedron_z3 = float(post_data['Tetrahedron_z33'])
-                else:
-                    flag = 0
-                    return "Please input value for Z coordinate of the Third Point of the Tetrahedron!"
-                if post_data["Tetrahedron_x43"]:
-                    Tetrahedron_x4 = float(post_data['Tetrahedron_x43'])
-                else:
-                    flag = 0
-                    return "Please input value for X coordinate of the Fourth Point of the Tetrahedron!"
-                if post_data["Tetrahedron_y43"]:
-                    Tetrahedron_y4 = float(post_data['Tetrahedron_y43'])
-                else:
-                    flag = 0
-                    return "Please input value for Y coordinate of the Fourth Point of the Tetrahedron!"
-                if post_data["Tetrahedron_z43"]:
-                    Tetrahedron_z4 = float(post_data['Tetrahedron_z43'])
-                else:
-                    flag = 0
-                    return "Please input value for Z coordinate of the Fourth Point of the Tetrahedron!"
+                    return "Please input value for the Tetrahedron Side Length!"
                 if post_data["Tetrahedron_cr3"]:
                     Tetrahedron_Color_R = float(post_data['Tetrahedron_cr3'])
                 else:
@@ -904,14 +810,27 @@ def ObjectFeature():
                 else:
                     flag = 0
                     return "Please complete the color input of the Tetrahedron!"
+                if post_data["Tetrahedron_rx3"]:
+                    Tetrahedron_Rotate_x = float(post_data['Tetrahedron_rx3'])
+                else:
+                    flag = 0
+                    return "Please input value for X coordinate of the Tetrahedron Rotation!"
+                if post_data["Tetrahedron_ry3"]:
+                    Tetrahedron_Rotate_y = float(post_data['Tetrahedron_ry3'])
+                else:
+                    flag = 0
+                    return "Please input value for Y coordinate of the Tetrahedron Rotation!"
+                if post_data["Tetrahedron_rz3"]:
+                    Tetrahedron_Rotate_z = float(post_data['Tetrahedron_rz3'])
+                else:
+                    flag = 0
+                    return "Please input value for Z coordinate of the Tetrahedron Rotation!"
                 if flag == 1:
                     object_quantity += 1
-                    Tetrahedron_1st = [Tetrahedron_x1,Tetrahedron_y1,Tetrahedron_z1]
-                    Tetrahedron_2nd = [Tetrahedron_x2,Tetrahedron_y2,Tetrahedron_z2]
-                    Tetrahedron_3rd = [Tetrahedron_x3,Tetrahedron_y3,Tetrahedron_z3]
-                    Tetrahedron_4th = [Tetrahedron_x4,Tetrahedron_y4,Tetrahedron_z4]
+                    Tetrahedron_Coordinates = [Tetrahedron_x,Tetrahedron_y,Tetrahedron_z]
+                    Tetrahedron_Rotation = [Tetrahedron_Rotate_x,Tetrahedron_Rotate_y,Tetrahedron_Rotate_z]
                     Tetrahedron_Color = [Tetrahedron_Color_R,Tetrahedron_Color_G,Tetrahedron_Color_B]
-                    OutputFile.Add_Tetrahedron(Tetrahedron_1st,Tetrahedron_2nd,Tetrahedron_3rd,Tetrahedron_4th,Tetrahedron_Color,Transparency3)
+                    OutputFile.Add_Tetrahedron(Tetrahedron_Coordinates,Tetrahedron_SideLength,Tetrahedron_Rotation,Tetrahedron_Color,Transparency3)
             
             #user choose to have a Cylinder
             elif post_data["Object3"]=="Cylinder":
@@ -1153,66 +1072,26 @@ def ObjectFeature():
             
             #user choose to have a Tetrahedron
             elif post_data["Object4"]=="Tetrahedron":
-                if post_data["Tetrahedron_x14"]:
-                    Tetrahedron_x1 = float(post_data["Tetrahedron_x14"])
+                if post_data["Tetrahedron_x4"]:
+                    Tetrahedron_x = float(post_data['Tetrahedron_x4'])
                 else:
                     flag = 0
-                    return  "Please input value for X coordinate of the First Point of the Tetrahedron!"
-                if post_data["Tetrahedron_y14"]:
-                    Tetrahedron_y1 = float(post_data['Tetrahedron_y14'])
+                    return  "Please input value for X coordinate of the Tetrahedron Centre Point!"
+                if post_data["Tetrahedron_y4"]:
+                    Tetrahedron_y = float(post_data['Tetrahedron_y4'])
                 else:
                     flag = 0
-                    return "Please input value for Y coordinate of the First Point of the Tetrahedron!"
-                if post_data["Tetrahedron_z14"]:
-                    Tetrahedron_z1 = float(post_data['Tetrahedron_z14'])
+                    return "Please input value for Y coordinate of the Tetrahedron Centre Point!"
+                if post_data["Tetrahedron_z4"]:
+                    Tetrahedron_z = float(post_data['Tetrahedron_z4'])
                 else:
                     flag = 0
-                    return "Please input value for Z coordinate of the First Point of the Tetrahedron!"
-                if post_data["Tetrahedron_x24"]:
-                    Tetrahedron_x2 = float(post_data['Tetrahedron_x24'])
+                    return "Please input value for Z coordinate of the Tetrahedron Centre Point!"
+                if post_data["Tetrahedron_l4"]:
+                    Tetrahedron_SideLength = float(post_data['Tetrahedron_l4'])
                 else:
                     flag = 0
-                    return "Please input value for X coordinate of the Second Point of the Tetrahedron!"
-                if post_data["Tetrahedron_y24"]:
-                    Tetrahedron_y2 = float(post_data['Tetrahedron_y24'])
-                else:
-                    flag = 0
-                    return "Please input value for Y coordinate of the Second Point of the Tetrahedron!"
-                if post_data["Tetrahedron_z24"]:
-                    Tetrahedron_z2 = float(post_data['Tetrahedron_z24'])
-                else:
-                    flag = 0
-                    return "Please input value for Z coordinate of the Second Point of the Tetrahedron!"
-                if post_data["Tetrahedron_x34"]:
-                    Tetrahedron_x3 = float(post_data['Tetrahedron_x34'])
-                else:
-                    flag = 0
-                    return "Please input value for X coordinate of the Third Point of the Tetrahedron!"
-                if post_data["Tetrahedron_y34"]:
-                    Tetrahedron_y3 = float(post_data['Tetrahedron_y34'])
-                else:
-                    flag = 0
-                    return "Please input value for Y coordinate of the Third Point of the Tetrahedron!"
-                if post_data["Tetrahedron_z34"]:
-                    Tetrahedron_z3 = float(post_data['Tetrahedron_z34'])
-                else:
-                    flag = 0
-                    return "Please input value for Z coordinate of the Third Point of the Tetrahedron!"
-                if post_data["Tetrahedron_x44"]:
-                    Tetrahedron_x4 = float(post_data['Tetrahedron_x44'])
-                else:
-                    flag = 0
-                    return "Please input value for X coordinate of the Fourth Point of the Tetrahedron!"
-                if post_data["Tetrahedron_y44"]:
-                    Tetrahedron_y4 = float(post_data['Tetrahedron_y44'])
-                else:
-                    flag = 0
-                    return "Please input value for Y coordinate of the Fourth Point of the Tetrahedron!"
-                if post_data["Tetrahedron_z44"]:
-                    Tetrahedron_z4 = float(post_data['Tetrahedron_z44'])
-                else:
-                    flag = 0
-                    return "Please input value for Z coordinate of the Fourth Point of the Tetrahedron!"
+                    return "Please input value for the Tetrahedron Side Length!"
                 if post_data["Tetrahedron_cr4"]:
                     Tetrahedron_Color_R = float(post_data['Tetrahedron_cr4'])
                 else:
@@ -1228,14 +1107,27 @@ def ObjectFeature():
                 else:
                     flag = 0
                     return "Please complete the color input of the Tetrahedron!"
+                if post_data["Tetrahedron_rx4"]:
+                    Tetrahedron_Rotate_x = float(post_data['Tetrahedron_rx4'])
+                else:
+                    flag = 0
+                    return "Please input value for X coordinate of the Tetrahedron Rotation!"
+                if post_data["Tetrahedron_ry4"]:
+                    Tetrahedron_Rotate_y = float(post_data['Tetrahedron_ry4'])
+                else:
+                    flag = 0
+                    return "Please input value for Y coordinate of the Tetrahedron Rotation!"
+                if post_data["Tetrahedron_rz4"]:
+                    Tetrahedron_Rotate_z = float(post_data['Tetrahedron_rz4'])
+                else:
+                    flag = 0
+                    return "Please input value for Z coordinate of the Tetrahedron Rotation!"
                 if flag == 1:
                     object_quantity += 1
-                    Tetrahedron_1st = [Tetrahedron_x1,Tetrahedron_y1,Tetrahedron_z1]
-                    Tetrahedron_2nd = [Tetrahedron_x2,Tetrahedron_y2,Tetrahedron_z2]
-                    Tetrahedron_3rd = [Tetrahedron_x3,Tetrahedron_y3,Tetrahedron_z3]
-                    Tetrahedron_4th = [Tetrahedron_x4,Tetrahedron_y4,Tetrahedron_z4]
+                    Tetrahedron_Coordinates = [Tetrahedron_x,Tetrahedron_y,Tetrahedron_z]
+                    Tetrahedron_Rotation = [Tetrahedron_Rotate_x,Tetrahedron_Rotate_y,Tetrahedron_Rotate_z]
                     Tetrahedron_Color = [Tetrahedron_Color_R,Tetrahedron_Color_G,Tetrahedron_Color_B]
-                    OutputFile.Add_Tetrahedron(Tetrahedron_1st,Tetrahedron_2nd,Tetrahedron_3rd,Tetrahedron_4th,Tetrahedron_Color,Transparency4)
+                    OutputFile.Add_Tetrahedron(Tetrahedron_Coordinates,Tetrahedron_SideLength,Tetrahedron_Rotation,Tetrahedron_Color,Transparency4)
             
             #user choose to have a Cylinder
             elif post_data["Object4"]=="Cylinder":
@@ -1477,66 +1369,26 @@ def ObjectFeature():
             
             #user choose to have a Tetrahedron
             elif post_data["Object5"]=="Tetrahedron":
-                if post_data["Tetrahedron_x15"]:
-                    Tetrahedron_x1 = float(post_data["Tetrahedron_x15"])
+                if post_data["Tetrahedron_x5"]:
+                    Tetrahedron_x = float(post_data['Tetrahedron_x5'])
                 else:
                     flag = 0
-                    return  "Please input value for X coordinate of the First Point of the Tetrahedron!"
-                if post_data["Tetrahedron_y15"]:
-                    Tetrahedron_y1 = float(post_data['Tetrahedron_y15'])
+                    return  "Please input value for X coordinate of the Tetrahedron Centre Point!"
+                if post_data["Tetrahedron_y5"]:
+                    Tetrahedron_y = float(post_data['Tetrahedron_y5'])
                 else:
                     flag = 0
-                    return "Please input value for Y coordinate of the First Point of the Tetrahedron!"
-                if post_data["Tetrahedron_z15"]:
-                    Tetrahedron_z1 = float(post_data['Tetrahedron_z15'])
+                    return "Please input value for Y coordinate of the Tetrahedron Centre Point!"
+                if post_data["Tetrahedron_z5"]:
+                    Tetrahedron_z = float(post_data['Tetrahedron_z5'])
                 else:
                     flag = 0
-                    return "Please input value for Z coordinate of the First Point of the Tetrahedron!"
-                if post_data["Tetrahedron_x25"]:
-                    Tetrahedron_x2 = float(post_data['Tetrahedron_x25'])
+                    return "Please input value for Z coordinate of the Tetrahedron Centre Point!"
+                if post_data["Tetrahedron_l5"]:
+                    Tetrahedron_SideLength = float(post_data['Tetrahedron_l5'])
                 else:
                     flag = 0
-                    return "Please input value for X coordinate of the Second Point of the Tetrahedron!"
-                if post_data["Tetrahedron_y25"]:
-                    Tetrahedron_y2 = float(post_data['Tetrahedron_y25'])
-                else:
-                    flag = 0
-                    return "Please input value for Y coordinate of the Second Point of the Tetrahedron!"
-                if post_data["Tetrahedron_z25"]:
-                    Tetrahedron_z2 = float(post_data['Tetrahedron_z25'])
-                else:
-                    flag = 0
-                    return "Please input value for Z coordinate of the Second Point of the Tetrahedron!"
-                if post_data["Tetrahedron_x35"]:
-                    Tetrahedron_x3 = float(post_data['Tetrahedron_x35'])
-                else:
-                    flag = 0
-                    return "Please input value for X coordinate of the Third Point of the Tetrahedron!"
-                if post_data["Tetrahedron_y35"]:
-                    Tetrahedron_y3 = float(post_data['Tetrahedron_y35'])
-                else:
-                    flag = 0
-                    return "Please input value for Y coordinate of the Third Point of the Tetrahedron!"
-                if post_data["Tetrahedron_z35"]:
-                    Tetrahedron_z3 = float(post_data['Tetrahedron_z35'])
-                else:
-                    flag = 0
-                    return "Please input value for Z coordinate of the Third Point of the Tetrahedron!"
-                if post_data["Tetrahedron_x45"]:
-                    Tetrahedron_x4 = float(post_data['Tetrahedron_x45'])
-                else:
-                    flag = 0
-                    return "Please input value for X coordinate of the Fourth Point of the Tetrahedron!"
-                if post_data["Tetrahedron_y45"]:
-                    Tetrahedron_y4 = float(post_data['Tetrahedron_y45'])
-                else:
-                    flag = 0
-                    return "Please input value for Y coordinate of the Fourth Point of the Tetrahedron!"
-                if post_data["Tetrahedron_z45"]:
-                    Tetrahedron_z4 = float(post_data['Tetrahedron_z45'])
-                else:
-                    flag = 0
-                    return "Please input value for Z coordinate of the Fourth Point of the Tetrahedron!"
+                    return "Please input value for the Tetrahedron Side Length!"
                 if post_data["Tetrahedron_cr5"]:
                     Tetrahedron_Color_R = float(post_data['Tetrahedron_cr5'])
                 else:
@@ -1552,14 +1404,27 @@ def ObjectFeature():
                 else:
                     flag = 0
                     return "Please complete the color input of the Tetrahedron!"
+                if post_data["Tetrahedron_rx5"]:
+                    Tetrahedron_Rotate_x = float(post_data['Tetrahedron_rx5'])
+                else:
+                    flag = 0
+                    return "Please input value for X coordinate of the Tetrahedron Rotation!"
+                if post_data["Tetrahedron_ry5"]:
+                    Tetrahedron_Rotate_y = float(post_data['Tetrahedron_ry5'])
+                else:
+                    flag = 0
+                    return "Please input value for Y coordinate of the Tetrahedron Rotation!"
+                if post_data["Tetrahedron_rz5"]:
+                    Tetrahedron_Rotate_z = float(post_data['Tetrahedron_rz5'])
+                else:
+                    flag = 0
+                    return "Please input value for Z coordinate of the Tetrahedron Rotation!"
                 if flag == 1:
                     object_quantity += 1
-                    Tetrahedron_1st = [Tetrahedron_x1,Tetrahedron_y1,Tetrahedron_z1]
-                    Tetrahedron_2nd = [Tetrahedron_x2,Tetrahedron_y2,Tetrahedron_z2]
-                    Tetrahedron_3rd = [Tetrahedron_x3,Tetrahedron_y3,Tetrahedron_z3]
-                    Tetrahedron_4th = [Tetrahedron_x4,Tetrahedron_y4,Tetrahedron_z4]
+                    Tetrahedron_Coordinates = [Tetrahedron_x,Tetrahedron_y,Tetrahedron_z]
+                    Tetrahedron_Rotation = [Tetrahedron_Rotate_x,Tetrahedron_Rotate_y,Tetrahedron_Rotate_z]
                     Tetrahedron_Color = [Tetrahedron_Color_R,Tetrahedron_Color_G,Tetrahedron_Color_B]
-                    OutputFile.Add_Tetrahedron(Tetrahedron_1st,Tetrahedron_2nd,Tetrahedron_3rd,Tetrahedron_4th,Tetrahedron_Color,Transparency5)
+                    OutputFile.Add_Tetrahedron(Tetrahedron_Coordinates,Tetrahedron_SideLength,Tetrahedron_Rotation,Tetrahedron_Color,Transparency5)
             
             #user choose to have a Cylinder
             elif post_data["Object5"]=="Cylinder":
