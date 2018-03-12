@@ -24,6 +24,11 @@ def ObjectQuantity():
             print "something went wrong"
     return render_template('ObjectQuantity.html')
 
+@app.route('/Figure')
+def Figure():
+    pass
+    return render_template('Figure.html')
+
 @app.route('/ObjectFeature', methods=['POST', 'GET'])
 def ObjectFeature():
     global OutputFile
@@ -43,6 +48,8 @@ def ObjectFeature():
         Plane_Normal_X = float(post_data['Plane_Normal_X'])
         Plane_Normal_Y = float(post_data['Plane_Normal_Y'])
         Plane_Normal_Z = float(post_data['Plane_Normal_Z'])
+    #Plane Transparency
+        Plane_Transparency = int(post_data['Plane_Transparency'])
     #Camera Coordinates
         Camera_C_X = float(post_data['Camera_C_X'])
         Camera_C_Y = float(post_data['Camera_C_Y'])
@@ -61,12 +68,13 @@ def ObjectFeature():
         Camera_Coordinates = [Camera_C_X,Camera_C_Y,Camera_C_Z]
         Camera_Looking = [Camera_L_X,Camera_L_Y,Camera_L_Z]
         Light_Source = [Light_X,Light_Y,Light_Z]
-        OutputFile.Add_Plane(Plane_Position,Plane_Normal)
+        OutputFile.Add_Plane(Plane_Position,Plane_Normal,Plane_Transparency)
         OutputFile.Scene_Config(Camera_Coordinates,Camera_Looking,Light_Source)
         
 #   First Object
         if 'Object1' in post_data:
             flag = 1 # If user fills in all the blank for this object, otherwise flag == 0.
+            Transparency1 = int(post_data["Transparency1"])
             # user choose to have a Sphere
             if post_data["Object1"]=="Sphere":
                 if post_data["Sphere_x1"]:
@@ -108,7 +116,7 @@ def ObjectFeature():
                     object_quantity += 1
                     Sphere_Coordinates = [Sphere_x,Sphere_y,Sphere_z]
                     Sphere_Color = [Sphere_Color_R,Sphere_Color_G,Sphere_Color_B]
-                    OutputFile.Add_Sphere(Sphere_Coordinates,Sphere_Radius,Sphere_Color)
+                    OutputFile.Add_Sphere(Sphere_Coordinates,Sphere_Radius,Sphere_Color,Transparency1)
             
             # user choose to have a Cube
             elif post_data["Object1"]=="Cube":
@@ -167,7 +175,7 @@ def ObjectFeature():
                     Cube_Coordinates = [Cube_x,Cube_y,Cube_z]
                     Cube_Rotation = [Cube_Rotate_x,Cube_Rotate_y,Cube_Rotate_z]
                     Cube_Color = [Cube_Color_R,Cube_Color_G,Cube_Color_B]
-                    OutputFile.Add_Cube(Cube_Coordinates,Cube_SideLength,Cube_Rotation,Cube_Color)
+                    OutputFile.Add_Cube(Cube_Coordinates,Cube_SideLength,Cube_Rotation,Cube_Color,Transparency1)
             
             #user choose to have a Tetrahedron
             elif post_data["Object1"]=="Tetrahedron":
@@ -253,7 +261,7 @@ def ObjectFeature():
                     Tetrahedron_3rd = [Tetrahedron_x3,Tetrahedron_y3,Tetrahedron_z3]
                     Tetrahedron_4th = [Tetrahedron_x4,Tetrahedron_y4,Tetrahedron_z4]
                     Tetrahedron_Color = [Tetrahedron_Color_R,Tetrahedron_Color_G,Tetrahedron_Color_B]
-                    OutputFile.Add_Tetrahedron(Tetrahedron_1st,Tetrahedron_2nd,Tetrahedron_3rd,Tetrahedron_4th,Tetrahedron_Color)
+                    OutputFile.Add_Tetrahedron(Tetrahedron_1st,Tetrahedron_2nd,Tetrahedron_3rd,Tetrahedron_4th,Tetrahedron_Color,Transparency1)
             
             #user choose to have a Cylinder
             elif post_data["Object1"]=="Cylinder":
@@ -317,7 +325,7 @@ def ObjectFeature():
                     Cylinder_Coordinates = [Cylinder_x,Cylinder_y,Cylinder_z]
                     Cylinder_Rotation = [Cylinder_Rotate_x,Cylinder_Rotate_y,Cylinder_Rotate_z]
                     Cylinder_Color = [Cylinder_Color_R,Cylinder_Color_G,Cylinder_Color_B]
-                    OutputFile.Add_Cylinder(Cylinder_Coordinates,Cylinder_Height,Cylinder_Radius,Cylinder_Rotation,Cylinder_Color)
+                    OutputFile.Add_Cylinder(Cylinder_Coordinates,Cylinder_Height,Cylinder_Radius,Cylinder_Rotation,Cylinder_Color,Transparency1)
             
             #user choose to have a Cone
             elif post_data["Object1"]=="Cone":
@@ -381,16 +389,17 @@ def ObjectFeature():
                     Cone_Coordinates = [Cone_x,Cone_y,Cone_z]
                     Cone_Rotation = [Cone_Rotate_x,Cone_Rotate_y,Cone_Rotate_z]
                     Cone_Color = [Cone_Color_R,Cone_Color_G,Cone_Color_B]
-                    OutputFile.Add_Cone(Cone_Coordinates,Cone_Height,Cone_Radius,Cone_Rotation,Cone_Color)
+                    OutputFile.Add_Cone(Cone_Coordinates,Cone_Height,Cone_Radius,Cone_Rotation,Cone_Color,Transparency1)
             else:
                 return "Input did not complete!"
-        else:
+        elif object_quantity_web>0:
             return "Please at least choose one object then press 'Save'! "
 
 
 #  Second Object
         if 'Object2' in post_data:
             flag = 1 # If user fills in all the blank for this object, otherwise flag == 0.
+            Transparency2 = int(post_data["Transparency2"])
             # user choose to have a Sphere
             if post_data["Object2"]=="Sphere":
                 if post_data["Sphere_x2"]:
@@ -432,7 +441,7 @@ def ObjectFeature():
                     object_quantity += 1
                     Sphere_Coordinates = [Sphere_x,Sphere_y,Sphere_z]
                     Sphere_Color = [Sphere_Color_R,Sphere_Color_G,Sphere_Color_B]
-                    OutputFile.Add_Sphere(Sphere_Coordinates,Sphere_Radius,Sphere_Color)
+                    OutputFile.Add_Sphere(Sphere_Coordinates,Sphere_Radius,Sphere_Color,Transparency2)
             
             # user choose to have a Cube
             elif post_data["Object2"]=="Cube":
@@ -491,7 +500,7 @@ def ObjectFeature():
                     Cube_Coordinates = [Cube_x,Cube_y,Cube_z]
                     Cube_Rotation = [Cube_Rotate_x,Cube_Rotate_y,Cube_Rotate_z]
                     Cube_Color = [Cube_Color_R,Cube_Color_G,Cube_Color_B]
-                    OutputFile.Add_Cube(Cube_Coordinates,Cube_SideLength,Cube_Rotation,Cube_Color)
+                    OutputFile.Add_Cube(Cube_Coordinates,Cube_SideLength,Cube_Rotation,Cube_Color,Transparency2)
             
             #user choose to have a Tetrahedron
             elif post_data["Object2"]=="Tetrahedron":
@@ -577,7 +586,7 @@ def ObjectFeature():
                     Tetrahedron_3rd = [Tetrahedron_x3,Tetrahedron_y3,Tetrahedron_z3]
                     Tetrahedron_4th = [Tetrahedron_x4,Tetrahedron_y4,Tetrahedron_z4]
                     Tetrahedron_Color = [Tetrahedron_Color_R,Tetrahedron_Color_G,Tetrahedron_Color_B]
-                    OutputFile.Add_Tetrahedron(Tetrahedron_1st,Tetrahedron_2nd,Tetrahedron_3rd,Tetrahedron_4th,Tetrahedron_Color)
+                    OutputFile.Add_Tetrahedron(Tetrahedron_1st,Tetrahedron_2nd,Tetrahedron_3rd,Tetrahedron_4th,Tetrahedron_Color,Transparency2)
             
             #user choose to have a Cylinder
             elif post_data["Object2"]=="Cylinder":
@@ -641,7 +650,7 @@ def ObjectFeature():
                     Cylinder_Coordinates = [Cylinder_x,Cylinder_y,Cylinder_z]
                     Cylinder_Rotation = [Cylinder_Rotate_x,Cylinder_Rotate_y,Cylinder_Rotate_z]
                     Cylinder_Color = [Cylinder_Color_R,Cylinder_Color_G,Cylinder_Color_B]
-                    OutputFile.Add_Cylinder(Cylinder_Coordinates,Cylinder_Height,Cylinder_Radius,Cylinder_Rotation,Cylinder_Color)
+                    OutputFile.Add_Cylinder(Cylinder_Coordinates,Cylinder_Height,Cylinder_Radius,Cylinder_Rotation,Cylinder_Color,Transparency2)
             
             #user choose to have a Cone
             elif post_data["Object2"]=="Cone":
@@ -705,14 +714,17 @@ def ObjectFeature():
                     Cone_Coordinates = [Cone_x,Cone_y,Cone_z]
                     Cone_Rotation = [Cone_Rotate_x,Cone_Rotate_y,Cone_Rotate_z]
                     Cone_Color = [Cone_Color_R,Cone_Color_G,Cone_Color_B]
-                    OutputFile.Add_Cone(Cone_Coordinates,Cone_Height,Cone_Radius,Cone_Rotation,Cone_Color)
+                    OutputFile.Add_Cone(Cone_Coordinates,Cone_Height,Cone_Radius,Cone_Rotation,Cone_Color,Transparency2)
             else:
                 return "Input did not complete!"
+        elif object_quantity_web>1:
+            return "Please select the second object! "
 
 
 #  Third Object
         if 'Object3' in post_data:
             flag = 1 # If user fills in all the blank for this object, otherwise flag == 0.
+            Transparency3 = int(post_data["Transparency3"])
             # user choose to have a Sphere
             if post_data["Object3"]=="Sphere":
                 if post_data["Sphere_x3"]:
@@ -754,7 +766,7 @@ def ObjectFeature():
                     object_quantity += 1
                     Sphere_Coordinates = [Sphere_x,Sphere_y,Sphere_z]
                     Sphere_Color = [Sphere_Color_R,Sphere_Color_G,Sphere_Color_B]
-                    OutputFile.Add_Sphere(Sphere_Coordinates,Sphere_Radius,Sphere_Color)
+                    OutputFile.Add_Sphere(Sphere_Coordinates,Sphere_Radius,Sphere_Color,Transparency3)
             
             # user choose to have a Cube
             elif post_data["Object3"]=="Cube":
@@ -813,7 +825,7 @@ def ObjectFeature():
                     Cube_Coordinates = [Cube_x,Cube_y,Cube_z]
                     Cube_Rotation = [Cube_Rotate_x,Cube_Rotate_y,Cube_Rotate_z]
                     Cube_Color = [Cube_Color_R,Cube_Color_G,Cube_Color_B]
-                    OutputFile.Add_Cube(Cube_Coordinates,Cube_SideLength,Cube_Rotation,Cube_Color)
+                    OutputFile.Add_Cube(Cube_Coordinates,Cube_SideLength,Cube_Rotation,Cube_Color,Transparency3)
             
             #user choose to have a Tetrahedron
             elif post_data["Object3"]=="Tetrahedron":
@@ -899,7 +911,7 @@ def ObjectFeature():
                     Tetrahedron_3rd = [Tetrahedron_x3,Tetrahedron_y3,Tetrahedron_z3]
                     Tetrahedron_4th = [Tetrahedron_x4,Tetrahedron_y4,Tetrahedron_z4]
                     Tetrahedron_Color = [Tetrahedron_Color_R,Tetrahedron_Color_G,Tetrahedron_Color_B]
-                    OutputFile.Add_Tetrahedron(Tetrahedron_1st,Tetrahedron_2nd,Tetrahedron_3rd,Tetrahedron_4th,Tetrahedron_Color)
+                    OutputFile.Add_Tetrahedron(Tetrahedron_1st,Tetrahedron_2nd,Tetrahedron_3rd,Tetrahedron_4th,Tetrahedron_Color,Transparency3)
             
             #user choose to have a Cylinder
             elif post_data["Object3"]=="Cylinder":
@@ -963,7 +975,7 @@ def ObjectFeature():
                     Cylinder_Coordinates = [Cylinder_x,Cylinder_y,Cylinder_z]
                     Cylinder_Rotation = [Cylinder_Rotate_x,Cylinder_Rotate_y,Cylinder_Rotate_z]
                     Cylinder_Color = [Cylinder_Color_R,Cylinder_Color_G,Cylinder_Color_B]
-                    OutputFile.Add_Cylinder(Cylinder_Coordinates,Cylinder_Height,Cylinder_Radius,Cylinder_Rotation,Cylinder_Color)
+                    OutputFile.Add_Cylinder(Cylinder_Coordinates,Cylinder_Height,Cylinder_Radius,Cylinder_Rotation,Cylinder_Color,Transparency3)
             
             #user choose to have a Cone
             elif post_data["Object3"]=="Cone":
@@ -1027,14 +1039,16 @@ def ObjectFeature():
                     Cone_Coordinates = [Cone_x,Cone_y,Cone_z]
                     Cone_Rotation = [Cone_Rotate_x,Cone_Rotate_y,Cone_Rotate_z]
                     Cone_Color = [Cone_Color_R,Cone_Color_G,Cone_Color_B]
-                    OutputFile.Add_Cone(Cone_Coordinates,Cone_Height,Cone_Radius,Cone_Rotation,Cone_Color)
+                    OutputFile.Add_Cone(Cone_Coordinates,Cone_Height,Cone_Radius,Cone_Rotation,Cone_Color,Transparency3)
             else:
                 return "Input did not complete!"
-
+        elif object_quantity_web>2:
+            return "Please select the third object! "
 
 #  Fourth Object
         if 'Object4' in post_data:
             flag = 1 # If user fills in all the blank for this object, otherwise flag == 0.
+            Transparency4 = int(post_data["Transparency4"])
             # user choose to have a Sphere
             if post_data["Object4"]=="Sphere":
                 if post_data["Sphere_x4"]:
@@ -1076,7 +1090,7 @@ def ObjectFeature():
                     object_quantity += 1
                     Sphere_Coordinates = [Sphere_x,Sphere_y,Sphere_z]
                     Sphere_Color = [Sphere_Color_R,Sphere_Color_G,Sphere_Color_B]
-                    OutputFile.Add_Sphere(Sphere_Coordinates,Sphere_Radius,Sphere_Color)
+                    OutputFile.Add_Sphere(Sphere_Coordinates,Sphere_Radius,Sphere_Color,Transparency4)
             
             # user choose to have a Cube
             elif post_data["Object4"]=="Cube":
@@ -1135,7 +1149,7 @@ def ObjectFeature():
                     Cube_Coordinates = [Cube_x,Cube_y,Cube_z]
                     Cube_Rotation = [Cube_Rotate_x,Cube_Rotate_y,Cube_Rotate_z]
                     Cube_Color = [Cube_Color_R,Cube_Color_G,Cube_Color_B]
-                    OutputFile.Add_Cube(Cube_Coordinates,Cube_SideLength,Cube_Rotation,Cube_Color)
+                    OutputFile.Add_Cube(Cube_Coordinates,Cube_SideLength,Cube_Rotation,Cube_Color,Transparency4)
             
             #user choose to have a Tetrahedron
             elif post_data["Object4"]=="Tetrahedron":
@@ -1221,7 +1235,7 @@ def ObjectFeature():
                     Tetrahedron_3rd = [Tetrahedron_x3,Tetrahedron_y3,Tetrahedron_z3]
                     Tetrahedron_4th = [Tetrahedron_x4,Tetrahedron_y4,Tetrahedron_z4]
                     Tetrahedron_Color = [Tetrahedron_Color_R,Tetrahedron_Color_G,Tetrahedron_Color_B]
-                    OutputFile.Add_Tetrahedron(Tetrahedron_1st,Tetrahedron_2nd,Tetrahedron_3rd,Tetrahedron_4th,Tetrahedron_Color)
+                    OutputFile.Add_Tetrahedron(Tetrahedron_1st,Tetrahedron_2nd,Tetrahedron_3rd,Tetrahedron_4th,Tetrahedron_Color,Transparency4)
             
             #user choose to have a Cylinder
             elif post_data["Object4"]=="Cylinder":
@@ -1285,7 +1299,7 @@ def ObjectFeature():
                     Cylinder_Coordinates = [Cylinder_x,Cylinder_y,Cylinder_z]
                     Cylinder_Rotation = [Cylinder_Rotate_x,Cylinder_Rotate_y,Cylinder_Rotate_z]
                     Cylinder_Color = [Cylinder_Color_R,Cylinder_Color_G,Cylinder_Color_B]
-                    OutputFile.Add_Cylinder(Cylinder_Coordinates,Cylinder_Height,Cylinder_Radius,Cylinder_Rotation,Cylinder_Color)
+                    OutputFile.Add_Cylinder(Cylinder_Coordinates,Cylinder_Height,Cylinder_Radius,Cylinder_Rotation,Cylinder_Color,Transparency4)
             
             #user choose to have a Cone
             elif post_data["Object4"]=="Cone":
@@ -1349,13 +1363,16 @@ def ObjectFeature():
                     Cone_Coordinates = [Cone_x,Cone_y,Cone_z]
                     Cone_Rotation = [Cone_Rotate_x,Cone_Rotate_y,Cone_Rotate_z]
                     Cone_Color = [Cone_Color_R,Cone_Color_G,Cone_Color_B]
-                    OutputFile.Add_Cone(Cone_Coordinates,Cone_Height,Cone_Radius,Cone_Rotation,Cone_Color)
+                    OutputFile.Add_Cone(Cone_Coordinates,Cone_Height,Cone_Radius,Cone_Rotation,Cone_Color,Transparency4)
             else:
                 return "Input did not complete!"
+        elif object_quantity_web>3:
+            return "Please select the Fourth object! "
 
-        if 'Object5' in post_data:
 #  Fifth Object
+        if 'Object5' in post_data:
             flag = 1 # If user fills in all the blank for this object, otherwise flag == 0.
+            Transparency5 = int(post_data["Transparency5"])
             # user choose to have a Sphere
             if post_data["Object5"]=="Sphere":
                 if post_data["Sphere_x5"]:
@@ -1397,7 +1414,7 @@ def ObjectFeature():
                     object_quantity += 1
                     Sphere_Coordinates = [Sphere_x,Sphere_y,Sphere_z]
                     Sphere_Color = [Sphere_Color_R,Sphere_Color_G,Sphere_Color_B]
-                    OutputFile.Add_Sphere(Sphere_Coordinates,Sphere_Radius,Sphere_Color)
+                    OutputFile.Add_Sphere(Sphere_Coordinates,Sphere_Radius,Sphere_Color,Transparency5)
             
             # user choose to have a Cube
             elif post_data["Object5"]=="Cube":
@@ -1456,7 +1473,7 @@ def ObjectFeature():
                     Cube_Coordinates = [Cube_x,Cube_y,Cube_z]
                     Cube_Rotation = [Cube_Rotate_x,Cube_Rotate_y,Cube_Rotate_z]
                     Cube_Color = [Cube_Color_R,Cube_Color_G,Cube_Color_B]
-                    OutputFile.Add_Cube(Cube_Coordinates,Cube_SideLength,Cube_Rotation,Cube_Color)
+                    OutputFile.Add_Cube(Cube_Coordinates,Cube_SideLength,Cube_Rotation,Cube_Color,Transparency5)
             
             #user choose to have a Tetrahedron
             elif post_data["Object5"]=="Tetrahedron":
@@ -1542,7 +1559,7 @@ def ObjectFeature():
                     Tetrahedron_3rd = [Tetrahedron_x3,Tetrahedron_y3,Tetrahedron_z3]
                     Tetrahedron_4th = [Tetrahedron_x4,Tetrahedron_y4,Tetrahedron_z4]
                     Tetrahedron_Color = [Tetrahedron_Color_R,Tetrahedron_Color_G,Tetrahedron_Color_B]
-                    OutputFile.Add_Tetrahedron(Tetrahedron_1st,Tetrahedron_2nd,Tetrahedron_3rd,Tetrahedron_4th,Tetrahedron_Color)
+                    OutputFile.Add_Tetrahedron(Tetrahedron_1st,Tetrahedron_2nd,Tetrahedron_3rd,Tetrahedron_4th,Tetrahedron_Color,Transparency5)
             
             #user choose to have a Cylinder
             elif post_data["Object5"]=="Cylinder":
@@ -1606,7 +1623,7 @@ def ObjectFeature():
                     Cylinder_Coordinates = [Cylinder_x,Cylinder_y,Cylinder_z]
                     Cylinder_Rotation = [Cylinder_Rotate_x,Cylinder_Rotate_y,Cylinder_Rotate_z]
                     Cylinder_Color = [Cylinder_Color_R,Cylinder_Color_G,Cylinder_Color_B]
-                    OutputFile.Add_Cylinder(Cylinder_Coordinates,Cylinder_Height,Cylinder_Radius,Cylinder_Rotation,Cylinder_Color)
+                    OutputFile.Add_Cylinder(Cylinder_Coordinates,Cylinder_Height,Cylinder_Radius,Cylinder_Rotation,Cylinder_Color,Transparency5)
             
             #user choose to have a Cone
             elif post_data["Object5"]=="Cone":
@@ -1670,9 +1687,12 @@ def ObjectFeature():
                     Cone_Coordinates = [Cone_x,Cone_y,Cone_z]
                     Cone_Rotation = [Cone_Rotate_x,Cone_Rotate_y,Cone_Rotate_z]
                     Cone_Color = [Cone_Color_R,Cone_Color_G,Cone_Color_B]
-                    OutputFile.Add_Cone(Cone_Coordinates,Cone_Height,Cone_Radius,Cone_Rotation,Cone_Color)
+                    OutputFile.Add_Cone(Cone_Coordinates,Cone_Height,Cone_Radius,Cone_Rotation,Cone_Color,Transparency5)
             else:
                 return "Input did not complete!"
+        elif object_quantity_web>4:
+            return "Please select the fifth object! "
+
     if int(object_quantity) == int(object_quantity_web):
         return "Object saved successfully!"
 

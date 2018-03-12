@@ -21,30 +21,33 @@ class OutputGenerator:
         self.camera_point_to = camera_l
         self.light = light
 
-    def Add_Plane(self,plane_position,plane_normal):
+    def Add_Plane(self,plane_position,plane_normal,transparency):
         Plane_dict_temp = {}
         Plane_dict_temp["position"] = plane_position
         Plane_dict_temp["normal"] = plane_normal
+        Plane_dict_temp["transparency_level"] = transparency
         self.Plane_list.append(Plane_dict_temp)
 
-    def Add_Sphere(self,position,radius,color):
+    def Add_Sphere(self,position,radius,color,transparency):
         self.object_count += 1
         Sphere_dict_temp = {}
         Sphere_dict_temp["position"] = position
         Sphere_dict_temp["radius"] = radius
         Sphere_dict_temp["color"] = color
+        Sphere_dict_temp["transparency_level"] = transparency
         self.Sphere_list.append(Sphere_dict_temp)
 
-    def Add_Cube(self,position,length,rotation_angle,color):
+    def Add_Cube(self,position,length,rotation_angle,color,transparency):
         self.object_count += 1
         Cube_dict_temp = {}
         Cube_dict_temp["position"] = position
         Cube_dict_temp["length"] = length
         Cube_dict_temp["rotation_angle"] = rotation_angle
         Cube_dict_temp["color"] = color
+        Cube_dict_temp["transparency_level"] = transparency
         self.Cube_list.append(Cube_dict_temp)
 
-    def Add_Tetrahedron(self,position1,position2,position3,position4,color):
+    def Add_Tetrahedron(self,position1,position2,position3,position4,color,transparency):
         self.object_count += 1
         Tetrahedron_dict_temp = {}
         Tetrahedron_dict_temp["position1"] = position1
@@ -52,9 +55,10 @@ class OutputGenerator:
         Tetrahedron_dict_temp["position3"] = position3
         Tetrahedron_dict_temp["position4"] = position4
         Tetrahedron_dict_temp["color"] = color
+        Tetrahedron_dict_temp["transparency_level"] = transparency
         self.Tetrahedron_list.append(Tetrahedron_dict_temp)
 
-    def Add_Cylinder(self,position,height,radius,rotation_angle,color):
+    def Add_Cylinder(self,position,height,radius,rotation_angle,color,transparency):
         self.object_count += 1
         Cylinder_dict_temp = {}
         Cylinder_dict_temp["position"] = position
@@ -62,9 +66,10 @@ class OutputGenerator:
         Cylinder_dict_temp["radius"] = radius
         Cylinder_dict_temp["rotation_angle"] = rotation_angle
         Cylinder_dict_temp["color"] = color
+        Cylinder_dict_temp["transparency_level"] = transparency
         self.Cylinder_list.append(Cylinder_dict_temp)
 
-    def Add_Cone(self,position,height,radius,rotation_angle,color):
+    def Add_Cone(self,position,height,radius,rotation_angle,color,transparency):
         self.object_count += 1
         Cone_dict_temp = {}
         Cone_dict_temp["position"] = position
@@ -72,6 +77,7 @@ class OutputGenerator:
         Cone_dict_temp["radius"] = radius
         Cone_dict_temp["rotation_angle"] = rotation_angle
         Cone_dict_temp["color"] = color
+        Cone_dict_temp["transparency_level"] = transparency
         self.Cone_list.append(Cone_dict_temp)
 
     def Generate_File(self):
