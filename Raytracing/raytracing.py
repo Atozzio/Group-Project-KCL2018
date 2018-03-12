@@ -428,8 +428,6 @@ class cone():
                     else:
                         if (np.linalg.norm(ray.origin + ray.direction * t0 - self.position)) ** 2 < self.radius ** 2 + (self.height / 2) ** 2:
                             dist = t0
-                        elif (np.linalg.norm(ray.origin + ray.direction * t1 - self.position)) ** 2 < self.radius ** 2 + (self.height / 2) ** 2:
-                            dist = t1
 
 
         for i, plane in enumerate(self.top_bottom_plane):
@@ -448,7 +446,11 @@ class cone():
 
         project_point = self.position - np.dot((self.position - intersected_point),
                                                self.normal_vector) * self.normal_vector
-        return normalize(intersected_point - project_point)
+
+
+        p = project_point + (project_point - self.position) * (self.radius / (self.height / 2))**2
+
+        return normalize(intersected_point - p)
 
 
 def normalize(x):
@@ -729,28 +731,34 @@ def analyse_input(scene_input):
     camera_seeting = camera(camera_position, camera_point_to)
 
     objTetrahedron = data.get("tetrahedron")
-    for i, obj in enumerate(objTetrahedron):
-        scene.append(add_tetrahedron(obj['position'], obj['length'], obj['rotation_angle'], obj['color'], obj['transparency_level']))
+    if objTetrahedron is not None:
+        for i, obj in enumerate(objTetrahedron):
+            scene.append(add_tetrahedron(obj['position'], obj['length'], obj['rotation_angle'], obj['color'], obj['transparency_level']))
 
     objCube = data.get("cube")
-    for i, obj in enumerate(objCube):
-        scene.append(add_cube(obj['position'], obj['length'], obj['rotation_angle'], obj['color'], obj['transparency_level']))
+    if objCube is not None:
+        for i, obj in enumerate(objCube):
+            scene.append(add_cube(obj['position'], obj['length'], obj['rotation_angle'], obj['color'], obj['transparency_level']))
 
     objCylinder = data.get("cylinder")
-    for i, obj in enumerate(objCylinder):
-        scene.append(add_cylinder(obj['position'], obj['height'], obj['radius'], obj['rotation_angle'], obj['color'],obj['transparency_level']))
+    if objCylinder is not None:
+        for i, obj in enumerate(objCylinder):
+            scene.append(add_cylinder(obj['position'], obj['height'], obj['radius'], obj['rotation_angle'], obj['color'],obj['transparency_level']))
  
     objCone = data.get("cone")
-    for i, obj in enumerate(objCone):
-        scene.append(add_cone(obj['position'], obj['height'], obj['radius'], obj['rotation_angle'], obj['color'],obj['transparency_level']))
+    if objCone is not None:
+        for i, obj in enumerate(objCone):
+            scene.append(add_cone(obj['position'], obj['height'], obj['radius'], obj['rotation_angle'], obj['color'],obj['transparency_level']))
 
     objSphere = data.get("sphere")
-    for i, obj in enumerate(objSphere):
-        scene.append(add_sphere(obj['position'], obj['radius'], obj['color'],obj['transparency_level']))
+    if objSphere is not None:
+        for i, obj in enumerate(objSphere):
+            scene.append(add_sphere(obj['position'], obj['radius'], obj['color'],obj['transparency_level']))
 
     objPlane = data.get("plane")
-    for i, obj in enumerate(objPlane):
-        scene.append(add_plane(obj['position'], obj['normal'],obj['transparency_level']))
+    if objPlane is not None:
+        for i, obj in enumerate(objPlane):
+            scene.append(add_plane(obj['position'], obj['normal'],obj['transparency_level']))
 
     return camera_seeting, scene
 
