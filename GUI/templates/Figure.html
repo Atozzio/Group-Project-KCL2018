@@ -8,9 +8,52 @@
 <link href="../static/bootstrap-3.3.5/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css"/>
 <link rel="stylesheet" href="../static/bootstrap_select/css/bootstrap-select.css">
 <link href="../static/bootstrap-4.0/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+<link href="../../static/progress-bar/ui.progress-bar.css" rel="stylesheet" type="text/css"/>
+
 
 <script src="../static/bootstrap-3.3.5/js/jquery-1.11.3.min.js" type="text/javascript"></script>
 <script src="../static/bootstrap-3.3.5/js/bootstrap.min.js" type="text/javascript"></script>
+
+<!-- <script>
+    function toPercent(data){
+    // var strData = parseFloat(data)*100;
+    var strData = parseFloat(data.toFixed(2)*100);
+    var ret = strData.toString()+"%";
+    return ret;
+    }
+    $(function(){
+//按钮单击时执行
+    $("#getfigure").click(function(){
+        var timeTicket;
+        var flag = 1;
+        clearInterval(timeTicket);
+        timeTicket = setInterval(function (){
+                $.ajax({
+                type:"get",
+                url:"{{url_for('Figure')}}",
+                cache:false,
+                contentType: "application/json;charset=UTF-8",
+                dataType:"json",
+                success:function(msg)
+                {
+                    var rate = msg['now']/msg['total'];
+                    rate = toPercent(rate);
+                    var r = "width:" + rate + ";";
+                    var div1 = document.getElementById('bar');  
+                    div1.style=r;
+                    // $('.ui-label').text(rate);
+                    $('.value').text(rate);
+                }
+
+                })
+
+    }, 2000);
+    });
+});
+    
+
+    </script> -->
+
 
 </head>
 <body>
@@ -24,9 +67,17 @@
             <p>By GrayHats</p>
             </div>
         </div>
-    <h1>Progress bar here</h1> 
-    <h1>Import back-end </h1>
-    <h1>Display the final Ray-tracing figure</h1>   
+    <form name="Figure_Generating" method="GET" action='{{url_for('Figure')}}'>
+    <legend>File generated, please wait...</legend>
+        <!-- Progress bar -->
+        <div id="progress_bar" class="ui-progress-bar ui-container">
+        <div class="ui-progress" id="bar" style="width: 0.00%;">
+        <span class="ui-label" > <b class="value">0%</b> </span>
+        </div>
+        <!-- /Progress bar -->
+    </div>
+    <button type="button" class="btn btn-success" id="getfigure" name="getfigure">&nbsp;Submit&nbsp;</button>
+    </form>  
     <br>
     
 </div>
