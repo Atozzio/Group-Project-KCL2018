@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import multiprocessing as mp
 import json
 import math
+import os
 
 class PositionType:
 	IN, OUT = 1, -1
@@ -716,7 +717,7 @@ def analyse_input(scene_input):
     data = json.loads(scene_input)
     scene = []
     camera_position = [0, 0.35, -1]
-    camera_point_to = [0,0.35,0]
+    camera_point_to = [0,2,0]
     global L
 
     if data.get("light") is not None:
@@ -779,8 +780,8 @@ depth_max = 4  # Maximum number of light reflections.
 processes_divided = 8
 
 if __name__ == '__main__':
-
-    with open('data.json', 'r') as inputFile:
+    path = os.path.abspath('..')
+    with open(os.path.abspath(path + '\GUI\data.json'), 'r') as inputFile:
         scene_input = inputFile.read()  
 
     result_queue = mp.Queue()
