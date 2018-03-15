@@ -41,27 +41,43 @@ def ObjectFeature():
             return "Object_quantity receiving error!"
 # Scene Parameters
     #Plane Starting Point
-        Plane_Position_X = float(post_data['Plane_Position_X'])
-        Plane_Position_Y = float(post_data['Plane_Position_Y'])
-        Plane_Position_Z = float(post_data['Plane_Position_Z'])
+        try:
+            Plane_Position_X = float(post_data['Plane_Position_X'])
+            Plane_Position_Y = float(post_data['Plane_Position_Y'])
+            Plane_Position_Z = float(post_data['Plane_Position_Z'])
+        except:
+            return "Please enter ONLY numbers for Plane Position!"
+        
     #Plane Normal Vector
-        Plane_Normal_X = float(post_data['Plane_Normal_X'])
-        Plane_Normal_Y = float(post_data['Plane_Normal_Y'])
-        Plane_Normal_Z = float(post_data['Plane_Normal_Z'])
+        try:
+            Plane_Normal_X = float(post_data['Plane_Normal_X'])
+            Plane_Normal_Y = float(post_data['Plane_Normal_Y'])
+            Plane_Normal_Z = float(post_data['Plane_Normal_Z'])
+        except:
+            return "Please enter ONLY numbers for Plane Normal Vector!"
     #Plane Transparency
         Plane_Transparency = int(post_data['Plane_Transparency'])
     #Camera Coordinates
-        Camera_C_X = float(post_data['Camera_C_X'])
-        Camera_C_Y = float(post_data['Camera_C_Y'])
-        Camera_C_Z = float(post_data['Camera_C_Z'])
+        try:
+            Camera_C_X = float(post_data['Camera_C_X'])
+            Camera_C_Y = float(post_data['Camera_C_Y'])
+            Camera_C_Z = float(post_data['Camera_C_Z'])
+        except:
+            return "Please enter ONLY numbers for Camera Coordinates!"
     #Camera Looking Point
-        Camera_L_X = float(post_data['Camera_C_X'])
-        Camera_L_Y = float(post_data['Camera_C_Y'])
-        Camera_L_Z = float(post_data['Camera_C_Z'])
+        try:
+            Camera_L_X = float(post_data['Camera_C_X'])
+            Camera_L_Y = float(post_data['Camera_C_Y'])
+            Camera_L_Z = float(post_data['Camera_C_Z'])
+        except:
+            return "Please enter ONLY numbers for Camera Looking Points"
     #Light source
-        Light_X = float(post_data['Light_X'])
-        Light_Y = float(post_data['Light_Y'])
-        Light_Z = float(post_data['Light_Z'])
+        try:
+            Light_X = float(post_data['Light_X'])
+            Light_Y = float(post_data['Light_Y'])
+            Light_Z = float(post_data['Light_Z'])
+        except:
+            return "Please enter ONLY numbers for Camera Looking Points" 
     #Constructing Proper Data Structure
         Plane_Position = [Plane_Position_X,Plane_Position_Y,Plane_Position_Z]
         Plane_Normal = [Plane_Normal_X,Plane_Normal_Y,Plane_Normal_Z]
@@ -78,37 +94,64 @@ def ObjectFeature():
             # user choose to have a Sphere
             if post_data["Object1"]=="Sphere":
                 if post_data["Sphere_x1"]:
-                    Sphere_x = float(post_data['Sphere_x1']) 
+                    try:
+                        Sphere_x = float(post_data['Sphere_x1']) 
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return  "Please input value for X coordinate of the Sphere!"
                 if post_data["Sphere_y1"]:
-                    Sphere_y = float(post_data['Sphere_y1'])
+                    try:
+                        Sphere_y = float(post_data['Sphere_y1'])
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Sphere!"
                 if post_data["Sphere_z1"]:
-                    Sphere_z = float(post_data['Sphere_z1'])
+                    try:
+                        Sphere_z = float(post_data['Sphere_z1'])
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Sphere!"
                 if post_data["Sphere_cr1"]:
-                    Sphere_Color_R = float(post_data['Sphere_cr1'])
+                    try:
+                        Sphere_Color_R = float(post_data['Sphere_cr1'])/255
+                        if Sphere_Color_R < 0 or Sphere_Color_R > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Sphere!"
                 if post_data["Sphere_cg1"]:
-                    Sphere_Color_G = float(post_data['Sphere_cg1'])
+                    try:
+                        Sphere_Color_G = float(post_data['Sphere_cg1'])/255
+                        if Sphere_Color_G < 0 or Sphere_Color_G > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Sphere!"
                 if post_data["Sphere_cb1"]:
-                    Sphere_Color_B = float(post_data['Sphere_cb1'])
+                    try:
+                        Sphere_Color_B = float(post_data['Sphere_cb1'])/255
+                        if Sphere_Color_B < 0 or Sphere_Color_B > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Sphere!"
                 if post_data["Sphere_r1"]:
-                    Sphere_Radius = float(post_data["Sphere_r1"])
+                    try:
+                        Sphere_Radius = float(post_data["Sphere_r1"])
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please input the radius of the Sphere!"
@@ -121,52 +164,88 @@ def ObjectFeature():
             # user choose to have a Cube
             elif post_data["Object1"]=="Cube":
                 if post_data["Cube_x1"]:
-                    Cube_x = float(post_data['Cube_x1'])
+                    try:
+                        Cube_x = float(post_data['Cube_x1'])
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return  "Please input value for X coordinate of the Cube!"
                 if post_data["Cube_y1"]:
-                    Cube_y = float(post_data['Cube_y1'])
+                    try:
+                        Cube_y = float(post_data['Cube_y1'])
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Cube!"
                 if post_data["Cube_z1"]:
-                    Cube_z = float(post_data['Cube_z1'])
+                    try:
+                        Cube_z = float(post_data['Cube_z1'])
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Cube!"
                 if post_data["Cube_l1"]:
-                    Cube_SideLength = float(post_data['Cube_l1'])
+                    try:
+                        Cube_SideLength = float(post_data['Cube_l1'])
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please input value for the Cube Side Length!"
                 if post_data["Cube_cr1"]:
-                    Cube_Color_R = float(post_data['Cube_cr1'])
+                    try:
+                        Cube_Color_R = float(post_data['Cube_cr1'])/255
+                        if Cube_Color_R < 0 or Cube_Color_R > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cube!"
                 if post_data["Cube_cg1"]:
-                    Cube_Color_G = float(post_data['Cube_cg1'])
+                    try:
+                        Cube_Color_G = float(post_data['Cube_cg1'])/255
+                        if Cube_Color_G < 0 or Cube_Color_G > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cube!"
                 if post_data["Cube_cb1"]:
-                    Cube_Color_B = float(post_data['Cube_cb1'])
+                    try:
+                        Cube_Color_B = float(post_data['Cube_cb1'])/255
+                        if Cube_Color_B < 0 or Cube_Color_B > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cube!"
                 if post_data["Cube_rx1"]:
-                    Cube_Rotate_x = float(post_data['Cube_rx1'])
+                    try:
+                        Cube_Rotate_x = float(post_data['Cube_rx1'])
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please input value for X coordinate of the Cube Rotation!"
                 if post_data["Cube_ry1"]:
-                    Cube_Rotate_y = float(post_data['Cube_ry1'])
+                    try:
+                        Cube_Rotate_y = float(post_data['Cube_ry1'])
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Cube Rotation!"
                 if post_data["Cube_rz1"]:
-                    Cube_Rotate_z = float(post_data['Cube_rz1'])
+                    try:
+                        Cube_Rotate_z = float(post_data['Cube_rz1'])
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Cube Rotation!"
@@ -180,52 +259,88 @@ def ObjectFeature():
             #user choose to have a Tetrahedron
             elif post_data["Object1"]=="Tetrahedron":
                 if post_data["Tetrahedron_x1"]:
-                    Tetrahedron_x = float(post_data['Tetrahedron_x1'])
+                    try:
+                        Tetrahedron_x = float(post_data['Tetrahedron_x1'])
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return  "Please input value for X coordinate of the Tetrahedron Centre Point!"
                 if post_data["Tetrahedron_y1"]:
-                    Tetrahedron_y = float(post_data['Tetrahedron_y1'])
+                    try:
+                        Tetrahedron_y = float(post_data['Tetrahedron_y1'])
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Tetrahedron Centre Point!"
                 if post_data["Tetrahedron_z1"]:
-                    Tetrahedron_z = float(post_data['Tetrahedron_z1'])
+                    try:
+                        Tetrahedron_z = float(post_data['Tetrahedron_z1'])
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Tetrahedron Centre Point!"
                 if post_data["Tetrahedron_l1"]:
-                    Tetrahedron_SideLength = float(post_data['Tetrahedron_l1'])
+                    try:
+                        Tetrahedron_SideLength = float(post_data['Tetrahedron_l1'])
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please input value for the Tetrahedron Side Length!"
                 if post_data["Tetrahedron_cr1"]:
-                    Tetrahedron_Color_R = float(post_data['Tetrahedron_cr1'])
+                    try:
+                        Tetrahedron_Color_R = float(post_data['Tetrahedron_cr1'])/255
+                        if Tetrahedron_Color_R < 0 or Tetrahedron_Color_R > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Tetrahedron!"
                 if post_data["Tetrahedron_cg1"]:
-                    Tetrahedron_Color_G = float(post_data['Tetrahedron_cg1'])
+                    try:
+                        Tetrahedron_Color_G = float(post_data['Tetrahedron_cg1'])/255
+                        if Tetrahedron_Color_G < 0 or Tetrahedron_Color_G > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Tetrahedron!"
                 if post_data["Tetrahedron_cb1"]:
-                    Tetrahedron_Color_B = float(post_data['Tetrahedron_cb1'])
+                    try:
+                        Tetrahedron_Color_B = float(post_data['Tetrahedron_cb1'])/255
+                        if Tetrahedron_Color_B < 0 or Tetrahedron_Color_B > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Tetrahedron!"
                 if post_data["Tetrahedron_rx1"]:
-                    Tetrahedron_Rotate_x = float(post_data['Tetrahedron_rx1'])
+                    try:
+                        Tetrahedron_Rotate_x = float(post_data['Tetrahedron_rx1'])
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please input value for X coordinate of the Tetrahedron Rotation!"
                 if post_data["Tetrahedron_ry1"]:
-                    Tetrahedron_Rotate_y = float(post_data['Tetrahedron_ry1'])
+                    try:
+                        Tetrahedron_Rotate_y = float(post_data['Tetrahedron_ry1'])
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Tetrahedron Rotation!"
                 if post_data["Tetrahedron_rz1"]:
-                    Tetrahedron_Rotate_z = float(post_data['Tetrahedron_rz1'])
+                    try:
+                        Tetrahedron_Rotate_z = float(post_data['Tetrahedron_rz1'])
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Tetrahedron Rotation!"
@@ -239,57 +354,96 @@ def ObjectFeature():
             #user choose to have a Cylinder
             elif post_data["Object1"]=="Cylinder":
                 if post_data["Cylinder_x1"]:
-                    Cylinder_x = float(post_data["Cylinder_x1"])
+                    try:
+                        Cylinder_x = float(post_data["Cylinder_x1"])
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return  "Please input value for X coordinate of the Cylinder!"
                 if post_data["Cylinder_y1"]:
-                    Cylinder_y = float(post_data['Cylinder_y1'])
+                    try:
+                        Cylinder_y = float(post_data['Cylinder_y1'])
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Cylinder!"
                 if post_data["Cylinder_z1"]:
-                    Cylinder_z = float(post_data['Cylinder_z1'])
+                    try:
+                        Cylinder_z = float(post_data['Cylinder_z1'])
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Cylinder!"
                 if post_data["Cylinder_rx1"]:
-                    Cylinder_Rotate_x = float(post_data['Cylinder_rx1'])
+                    try:
+                        Cylinder_Rotate_x = float(post_data['Cylinder_rx1'])
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please input value for X coordinate of the Cylinder Rotation!"
                 if post_data["Cylinder_ry1"]:
-                    Cylinder_Rotate_y = float(post_data['Cylinder_ry1'])
+                    try:
+                        Cylinder_Rotate_y = float(post_data['Cylinder_ry1'])
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Cylinder Rotation!"
                 if post_data["Cylinder_rz1"]:
-                    Cylinder_Rotate_z = float(post_data['Cylinder_rz1'])
+                    try:
+                        Cylinder_Rotate_z = float(post_data['Cylinder_rz1'])
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Cylinder Rotation!"
                 if post_data["Cylinder_cr1"]:
-                    Cylinder_Color_R = float(post_data['Cylinder_cr1'])
+                    try:
+                        Cylinder_Color_R = float(post_data['Cylinder_cr1'])/255
+                        if Cylinder_Color_R < 0 or Cylinder_Color_R > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cylinder!"
                 if post_data["Cylinder_cg1"]:
-                    Cylinder_Color_G = float(post_data['Cylinder_cg1'])
+                    try:
+                        Cylinder_Color_G = float(post_data['Cylinder_cg1'])/255
+                        if Cylinder_Color_G < 0 or Cylinder_Color_G > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cylinder!"
                 if post_data["Cylinder_cb1"]:
-                    Cylinder_Color_B = float(post_data['Cylinder_cb1'])
+                    try:
+                        Cylinder_Color_B = float(post_data['Cylinder_cb1'])/255
+                        if Cylinder_Color_B < 0 or Cylinder_Color_B > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cylinder!"
                 if post_data["Cylinder_h1"]:
-                    Cylinder_Height = float(post_data['Cylinder_h1'])
+                    try:
+                        Cylinder_Height = float(post_data['Cylinder_h1'])
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please input value for the Cylinder Height!"
                 if post_data["Cylinder_r1"]:
-                    Cylinder_Radius = float(post_data['Cylinder_r1'])
+                    try:
+                        Cylinder_Radius = float(post_data['Cylinder_r1'])
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please input value for the Cylinder Radius!"
@@ -303,57 +457,95 @@ def ObjectFeature():
             #user choose to have a Cone
             elif post_data["Object1"]=="Cone":
                 if post_data["Cone_x1"]:
-                    Cone_x = float(post_data["Cone_x1"])
+                    try:
+                        Cone_x = float(post_data["Cone_x1"])
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return  "Please input value for X coordinate of the Cone!"
                 if post_data["Cone_y1"]:
-                    Cone_y = float(post_data['Cone_y1'])
+                    try:
+                        Cone_y = float(post_data['Cone_y1'])
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Cone!"
                 if post_data["Cone_z1"]:
-                    Cone_z = float(post_data['Cone_z1'])
-                else:
+                    try:
+                        Cone_z = float(post_data['Cone_z1'])
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                     flag = 0
                     return "Please input value for Z coordinate of the Cone!"
                 if post_data["Cone_rx1"]:
-                    Cone_Rotate_x = float(post_data['Cone_rx1'])
+                    try:
+                        Cone_Rotate_x = float(post_data['Cone_rx1'])
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please input value for X coordinate of the Cone Rotation!"
                 if post_data["Cone_ry1"]:
-                    Cone_Rotate_y = float(post_data['Cone_ry1'])
+                    try:
+                        Cone_Rotate_y = float(post_data['Cone_ry1'])
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Cone Rotation!"
                 if post_data["Cone_rz1"]:
-                    Cone_Rotate_z = float(post_data['Cone_rz1'])
+                    try:
+                        Cone_Rotate_z = float(post_data['Cone_rz1'])
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Cone Rotation!"
                 if post_data["Cone_cr1"]:
-                    Cone_Color_R = float(post_data['Cone_cr1'])
+                    try:
+                        Cone_Color_R = float(post_data['Cone_cr1'])/255
+                        if Cone_Color_R < 0 or Cone_Color_R > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cone!"
                 if post_data["Cone_cg1"]:
-                    Cone_Color_G = float(post_data['Cone_cg1'])
+                    try:
+                        Cone_Color_G = float(post_data['Cone_cg1'])/255
+                        if Cone_Color_G < 0 or Cone_Color_G > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cone!"
                 if post_data["Cone_cb1"]:
-                    Cone_Color_B = float(post_data['Cone_cb1'])
+                    try:
+                        Cone_Color_B = float(post_data['Cone_cb1'])/255
+                        if Cone_Color_B < 0 or Cone_Color_B > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cone!"
                 if post_data["Cone_h1"]:
-                    Cone_Height = float(post_data['Cone_h1'])
+                    try:
+                        Cone_Height = float(post_data['Cone_h1'])
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please input value for the Cone Height!"
                 if post_data["Cone_r1"]:
-                    Cone_Radius = float(post_data['Cone_r1'])
+                    try:
+                        Cone_Radius = float(post_data['Cone_r1'])
+                    except:
+                        return "Please enter ONLY numbers for the first object!"
                 else:
                     flag = 0
                     return "Please input value for the Cone Radius!"
@@ -376,37 +568,64 @@ def ObjectFeature():
             # user choose to have a Sphere
             if post_data["Object2"]=="Sphere":
                 if post_data["Sphere_x2"]:
-                    Sphere_x = float(post_data['Sphere_x2']) 
+                    try:
+                        Sphere_x = float(post_data['Sphere_x2']) 
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return  "Please input value for X coordinate of the Sphere!"  
                 if post_data["Sphere_y2"]:
-                    Sphere_y = float(post_data['Sphere_y2'])
+                    try:
+                        Sphere_y = float(post_data['Sphere_y2'])
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Sphere!"
                 if post_data["Sphere_z2"]:
-                    Sphere_z = float(post_data['Sphere_z2'])
+                    try:
+                        Sphere_z = float(post_data['Sphere_z2'])
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Sphere!"
                 if post_data["Sphere_cr2"]:
-                    Sphere_Color_R = float(post_data['Sphere_cr2'])
+                    try:
+                        Sphere_Color_R = float(post_data['Sphere_cr2'])/255
+                        if Sphere_Color_R < 0 or Sphere_Color_R > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Sphere!"
                 if post_data["Sphere_cg2"]:
-                    Sphere_Color_G = float(post_data['Sphere_cg2'])
+                    try:
+                        Sphere_Color_G = float(post_data['Sphere_cg2'])/255
+                        if Sphere_Color_G < 0 or Sphere_Color_G > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Sphere!"
                 if post_data["Sphere_cb2"]:
-                    Sphere_Color_B = float(post_data['Sphere_cb2'])
+                    try:
+                        Sphere_Color_B = float(post_data['Sphere_cb2'])/255
+                        if Sphere_Color_B < 0 or Sphere_Color_B > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Sphere!"
                 if post_data["Sphere_r2"]:
-                    Sphere_Radius = float(post_data["Sphere_r2"])
+                    try:
+                        Sphere_Radius = float(post_data["Sphere_r2"])
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please input the radius of the Sphere!"
@@ -419,52 +638,88 @@ def ObjectFeature():
             # user choose to have a Cube
             elif post_data["Object2"]=="Cube":
                 if post_data["Cube_x2"]:
-                    Cube_x = float(post_data['Cube_x2'])
+                    try:
+                        Cube_x = float(post_data['Cube_x2'])
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return  "Please input value for X coordinate of the Cube!"
                 if post_data["Cube_y2"]:
-                    Cube_y = float(post_data['Cube_y2'])
+                    try:
+                        Cube_y = float(post_data['Cube_y2'])
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Cube!"
                 if post_data["Cube_z2"]:
-                    Cube_z = float(post_data['Cube_z2'])
+                    try:
+                        Cube_z = float(post_data['Cube_z2'])
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Cube!"
                 if post_data["Cube_l2"]:
-                    Cube_SideLength = float(post_data['Cube_l2'])
+                    try:
+                        Cube_SideLength = float(post_data['Cube_l2'])
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please input value for the Cube Side Length!"
                 if post_data["Cube_cr2"]:
-                    Cube_Color_R = float(post_data['Cube_cr2'])
+                    try:
+                        Cube_Color_R = float(post_data['Cube_cr2'])/255
+                        if Cube_Color_R < 0 or Cube_Color_R > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cube!"
                 if post_data["Cube_cg2"]:
-                    Cube_Color_G = float(post_data['Cube_cg2'])
+                    try:
+                        Cube_Color_G = float(post_data['Cube_cg2'])/255
+                        if Cube_Color_G < 0 or Cube_Color_G > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cube!"
                 if post_data["Cube_cb2"]:
-                    Cube_Color_B = float(post_data['Cube_cb2'])
+                    try:
+                        Cube_Color_B = float(post_data['Cube_cb2'])/255
+                        if Cube_Color_B < 0 or Cube_Color_B > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cube!"
                 if post_data["Cube_rx2"]:
-                    Cube_Rotate_x = float(post_data['Cube_rx2'])
+                    try:
+                        Cube_Rotate_x = float(post_data['Cube_rx2'])
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please input value for X coordinate of the Cube Rotation!"
                 if post_data["Cube_ry2"]:
-                    Cube_Rotate_y = float(post_data['Cube_ry2'])
+                    try:
+                        Cube_Rotate_y = float(post_data['Cube_ry2'])
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Cube Rotation!"
                 if post_data["Cube_rz2"]:
-                    Cube_Rotate_z = float(post_data['Cube_rz2'])
+                    try:
+                        Cube_Rotate_z = float(post_data['Cube_rz2'])
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Cube Rotation!"
@@ -478,52 +733,88 @@ def ObjectFeature():
             #user choose to have a Tetrahedron
             elif post_data["Object2"]=="Tetrahedron":
                 if post_data["Tetrahedron_x2"]:
-                    Tetrahedron_x = float(post_data['Tetrahedron_x2'])
+                    try:
+                        Tetrahedron_x = float(post_data['Tetrahedron_x2'])
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return  "Please input value for X coordinate of the Tetrahedron Centre Point!"
                 if post_data["Tetrahedron_y2"]:
-                    Tetrahedron_y = float(post_data['Tetrahedron_y2'])
+                    try:
+                        Tetrahedron_y = float(post_data['Tetrahedron_y2'])
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Tetrahedron Centre Point!"
                 if post_data["Tetrahedron_z2"]:
-                    Tetrahedron_z = float(post_data['Tetrahedron_z2'])
+                    try:
+                        Tetrahedron_z = float(post_data['Tetrahedron_z2'])
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Tetrahedron Centre Point!"
                 if post_data["Tetrahedron_l2"]:
-                    Tetrahedron_SideLength = float(post_data['Tetrahedron_l2'])
+                    try:
+                        Tetrahedron_SideLength = float(post_data['Tetrahedron_l2'])
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please input value for the Tetrahedron Side Length!"
                 if post_data["Tetrahedron_cr2"]:
-                    Tetrahedron_Color_R = float(post_data['Tetrahedron_cr2'])
+                    try:
+                        Tetrahedron_Color_R = float(post_data['Tetrahedron_cr2'])/255
+                        if Tetrahedron_Color_R < 0 or Tetrahedron_Color_R > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Tetrahedron!"
                 if post_data["Tetrahedron_cg2"]:
-                    Tetrahedron_Color_G = float(post_data['Tetrahedron_cg2'])
+                    try:
+                        Tetrahedron_Color_G = float(post_data['Tetrahedron_cg2'])/255
+                        if Tetrahedron_Color_G < 0 or Tetrahedron_Color_G > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Tetrahedron!"
                 if post_data["Tetrahedron_cb2"]:
-                    Tetrahedron_Color_B = float(post_data['Tetrahedron_cb2'])
+                    try:
+                        Tetrahedron_Color_B = float(post_data['Tetrahedron_cb2'])/255
+                        if Tetrahedron_Color_B < 0 or Tetrahedron_Color_B > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Tetrahedron!"
                 if post_data["Tetrahedron_rx2"]:
-                    Tetrahedron_Rotate_x = float(post_data['Tetrahedron_rx2'])
+                    try:
+                        Tetrahedron_Rotate_x = float(post_data['Tetrahedron_rx2'])
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please input value for X coordinate of the Tetrahedron Rotation!"
                 if post_data["Tetrahedron_ry2"]:
-                    Tetrahedron_Rotate_y = float(post_data['Tetrahedron_ry2'])
+                    try:
+                        Tetrahedron_Rotate_y = float(post_data['Tetrahedron_ry2'])
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Tetrahedron Rotation!"
                 if post_data["Tetrahedron_rz2"]:
-                    Tetrahedron_Rotate_z = float(post_data['Tetrahedron_rz2'])
+                    try:
+                        Tetrahedron_Rotate_z = float(post_data['Tetrahedron_rz2'])
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Tetrahedron Rotation!"
@@ -537,57 +828,96 @@ def ObjectFeature():
             #user choose to have a Cylinder
             elif post_data["Object2"]=="Cylinder":
                 if post_data["Cylinder_x2"]:
-                    Cylinder_x = float(post_data["Cylinder_x2"])
+                    try:
+                        Cylinder_x = float(post_data["Cylinder_x2"])
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return  "Please input value for X coordinate of the Cylinder!"
                 if post_data["Cylinder_y2"]:
-                    Cylinder_y = float(post_data['Cylinder_y2'])
+                    try:
+                        Cylinder_y = float(post_data['Cylinder_y2'])
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Cylinder!"
                 if post_data["Cylinder_z2"]:
-                    Cylinder_z = float(post_data['Cylinder_z2'])
+                    try:
+                        Cylinder_z = float(post_data['Cylinder_z2'])
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Cylinder!"
                 if post_data["Cylinder_rx2"]:
-                    Cylinder_Rotate_x = float(post_data['Cylinder_rx2'])
+                    try:
+                        Cylinder_Rotate_x = float(post_data['Cylinder_rx2'])
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please input value for X coordinate of the Cylinder Rotation!"
                 if post_data["Cylinder_ry2"]:
-                    Cylinder_Rotate_y = float(post_data['Cylinder_ry2'])
+                    try:
+                        Cylinder_Rotate_y = float(post_data['Cylinder_ry2'])
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Cylinder Rotation!"
                 if post_data["Cylinder_rz2"]:
-                    Cylinder_Rotate_z = float(post_data['Cylinder_rz2'])
+                    try:
+                        Cylinder_Rotate_z = float(post_data['Cylinder_rz2'])
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Cylinder Rotation!"
                 if post_data["Cylinder_cr2"]:
-                    Cylinder_Color_R = float(post_data['Cylinder_cr2'])
+                    try:
+                        Cylinder_Color_R = float(post_data['Cylinder_cr2'])/255
+                        if Cylinder_Color_R < 0 or Cylinder_Color_R > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cylinder!"
                 if post_data["Cylinder_cg2"]:
-                    Cylinder_Color_G = float(post_data['Cylinder_cg2'])
+                    try:
+                        Cylinder_Color_G = float(post_data['Cylinder_cg2'])/255
+                        if Cylinder_Color_G < 0 or Cylinder_Color_G > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cylinder!"
                 if post_data["Cylinder_cb2"]:
-                    Cylinder_Color_B = float(post_data['Cylinder_cb2'])
+                    try:
+                        Cylinder_Color_B = float(post_data['Cylinder_cb2'])/255
+                        if Cylinder_Color_B < 0 or Cylinder_Color_B > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cylinder!"
                 if post_data["Cylinder_h2"]:
-                    Cylinder_Height = float(post_data['Cylinder_h2'])
+                    try:
+                        Cylinder_Height = float(post_data['Cylinder_h2'])
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please input value for the Cylinder Height!"
                 if post_data["Cylinder_r2"]:
-                    Cylinder_Radius = float(post_data['Cylinder_r2'])
+                    try:
+                        Cylinder_Radius = float(post_data['Cylinder_r2'])
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please input value for the Cylinder Radius!"
@@ -601,57 +931,96 @@ def ObjectFeature():
             #user choose to have a Cone
             elif post_data["Object2"]=="Cone":
                 if post_data["Cone_x2"]:
-                    Cone_x = float(post_data["Cone_x2"])
+                    try:
+                        Cone_x = float(post_data["Cone_x2"])
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return  "Please input value for X coordinate of the Cone!"
                 if post_data["Cone_y2"]:
-                    Cone_y = float(post_data['Cone_y2'])
+                    try:
+                        Cone_y = float(post_data['Cone_y2'])
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Cone!"
                 if post_data["Cone_z2"]:
-                    Cone_z = float(post_data['Cone_z2'])
+                    try:
+                        Cone_z = float(post_data['Cone_z2'])
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Cone!"
                 if post_data["Cone_rx2"]:
-                    Cone_Rotate_x = float(post_data['Cone_rx2'])
+                    try:
+                        Cone_Rotate_x = float(post_data['Cone_rx2'])
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please input value for X coordinate of the Cone Rotation!"
                 if post_data["Cone_ry2"]:
-                    Cone_Rotate_y = float(post_data['Cone_ry2'])
+                    try:
+                        Cone_Rotate_y = float(post_data['Cone_ry2'])
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Cone Rotation!"
                 if post_data["Cone_rz2"]:
-                    Cone_Rotate_z = float(post_data['Cone_rz2'])
+                    try:
+                        Cone_Rotate_z = float(post_data['Cone_rz2'])
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Cone Rotation!"
                 if post_data["Cone_cr2"]:
-                    Cone_Color_R = float(post_data['Cone_cr2'])
+                    try:
+                        Cone_Color_R = float(post_data['Cone_cr2'])/255
+                        if Cone_Color_R < 0 or Cone_Color_R > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cone!"
                 if post_data["Cone_cg2"]:
-                    Cone_Color_G = float(post_data['Cone_cg2'])
+                    try:
+                        Cone_Color_G = float(post_data['Cone_cg2'])/255
+                        if Cone_Color_G < 0 or Cone_Color_G > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cone!"
                 if post_data["Cone_cb2"]:
-                    Cone_Color_B = float(post_data['Cone_cb2'])
+                    try:
+                        Cone_Color_B = float(post_data['Cone_cb2'])/255
+                        if Cone_Color_B < 0 or Cone_Color_B > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cone!"
                 if post_data["Cone_h2"]:
-                    Cone_Height = float(post_data['Cone_h2'])
+                    try:
+                        Cone_Height = float(post_data['Cone_h2'])
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please input value for the Cone Height!"
                 if post_data["Cone_r2"]:
-                    Cone_Radius = float(post_data['Cone_r2'])
+                    try:
+                        Cone_Radius = float(post_data['Cone_r2'])
+                    except:
+                        return "Please enter ONLY numbers for the second object!"
                 else:
                     flag = 0
                     return "Please input value for the Cone Radius!"
@@ -674,37 +1043,64 @@ def ObjectFeature():
             # user choose to have a Sphere
             if post_data["Object3"]=="Sphere":
                 if post_data["Sphere_x3"]:
-                    Sphere_x = float(post_data['Sphere_x3']) 
+                    try:
+                        Sphere_x = float(post_data['Sphere_x3']) 
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return  "Please input value for X coordinate of the Sphere!" 
                 if post_data["Sphere_y3"]:
-                    Sphere_y = float(post_data['Sphere_y3'])
+                    try:
+                        Sphere_y = float(post_data['Sphere_y3'])
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Sphere!"
                 if post_data["Sphere_z3"]:
-                    Sphere_z = float(post_data['Sphere_z3'])
+                    try:
+                        Sphere_z = float(post_data['Sphere_z3'])
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Sphere!"
                 if post_data["Sphere_cr3"]:
-                    Sphere_Color_R = float(post_data['Sphere_cr3'])
+                    try:
+                        Sphere_Color_R = float(post_data['Sphere_cr3'])/255
+                        if Sphere_Color_R < 0 or Sphere_Color_R > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Sphere!"
                 if post_data["Sphere_cg3"]:
-                    Sphere_Color_G = float(post_data['Sphere_cg3'])
+                    try:
+                        Sphere_Color_G = float(post_data['Sphere_cg3'])/255
+                        if Sphere_Color_G < 0 or Sphere_Color_G > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Sphere!"
                 if post_data["Sphere_cb3"]:
-                    Sphere_Color_B = float(post_data['Sphere_cb3'])
+                    try:
+                        Sphere_Color_B = float(post_data['Sphere_cb3'])/255
+                        if Sphere_Color_B < 0 or Sphere_Color_B > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Sphere!"
                 if post_data["Sphere_r3"]:
-                    Sphere_Radius = float(post_data["Sphere_r3"])
+                    try:
+                        Sphere_Radius = float(post_data["Sphere_r3"])
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please input the radius of the Sphere!"
@@ -717,52 +1113,88 @@ def ObjectFeature():
             # user choose to have a Cube
             elif post_data["Object3"]=="Cube":
                 if post_data["Cube_x3"]:
-                    Cube_x = float(post_data['Cube_x3'])
+                    try:
+                        Cube_x = float(post_data['Cube_x3'])
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return  "Please input value for X coordinate of the Cube!"
                 if post_data["Cube_y3"]:
-                    Cube_y = float(post_data['Cube_y3'])
+                    try:
+                        Cube_y = float(post_data['Cube_y3'])
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Cube!"
                 if post_data["Cube_z3"]:
-                    Cube_z = float(post_data['Cube_z3'])
+                    try:
+                        Cube_z = float(post_data['Cube_z3'])
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Cube!"
                 if post_data["Cube_l3"]:
-                    Cube_SideLength = float(post_data['Cube_l3'])
+                    try:
+                        Cube_SideLength = float(post_data['Cube_l3'])
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please input value for the Cube Side Length!"
                 if post_data["Cube_cr3"]:
-                    Cube_Color_R = float(post_data['Cube_cr3'])
+                    try:
+                        Cube_Color_R = float(post_data['Cube_cr3'])/255
+                        if Cube_Color_R < 0 or Cube_Color_R > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cube!"
                 if post_data["Cube_cg3"]:
-                    Cube_Color_G = float(post_data['Cube_cg3'])
+                    try:
+                        Cube_Color_G = float(post_data['Cube_cg3'])/255
+                        if Cube_Color_G < 0 or Cube_Color_G > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cube!"
                 if post_data["Cube_cb3"]:
-                    Cube_Color_B = float(post_data['Cube_cb3'])
+                    try:
+                        Cube_Color_B = float(post_data['Cube_cb3'])/255
+                        if Cube_Color_B < 0 or Cube_Color_B > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cube!"
                 if post_data["Cube_rx3"]:
-                    Cube_Rotate_x = float(post_data['Cube_rx3'])
+                    try:
+                        Cube_Rotate_x = float(post_data['Cube_rx3'])
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please input value for X coordinate of the Cube Rotation!"
                 if post_data["Cube_ry3"]:
-                    Cube_Rotate_y = float(post_data['Cube_ry3'])
+                    try:
+                        Cube_Rotate_y = float(post_data['Cube_ry3'])
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Cube Rotation!"
                 if post_data["Cube_rz3"]:
-                    Cube_Rotate_z = float(post_data['Cube_rz3'])
+                    try:
+                        Cube_Rotate_z = float(post_data['Cube_rz3'])
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Cube Rotation!"
@@ -776,52 +1208,89 @@ def ObjectFeature():
             #user choose to have a Tetrahedron
             elif post_data["Object3"]=="Tetrahedron":
                 if post_data["Tetrahedron_x3"]:
-                    Tetrahedron_x = float(post_data['Tetrahedron_x3'])
+                    try:
+                        Tetrahedron_x = float(post_data['Tetrahedron_x3'])
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return  "Please input value for X coordinate of the Tetrahedron Centre Point!"
                 if post_data["Tetrahedron_y3"]:
-                    Tetrahedron_y = float(post_data['Tetrahedron_y3'])
+                    try:
+                        Tetrahedron_y = float(post_data['Tetrahedron_y3'])
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Tetrahedron Centre Point!"
                 if post_data["Tetrahedron_z3"]:
-                    Tetrahedron_z = float(post_data['Tetrahedron_z3'])
+                    try:
+                        Tetrahedron_z = float(post_data['Tetrahedron_z3'])
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Tetrahedron Centre Point!"
                 if post_data["Tetrahedron_l3"]:
-                    Tetrahedron_SideLength = float(post_data['Tetrahedron_l3'])
+                    try:
+                        Tetrahedron_SideLength = float(post_data['Tetrahedron_l3'])
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
+                    
                 else:
                     flag = 0
                     return "Please input value for the Tetrahedron Side Length!"
                 if post_data["Tetrahedron_cr3"]:
-                    Tetrahedron_Color_R = float(post_data['Tetrahedron_cr3'])
+                    try:
+                        Tetrahedron_Color_R = float(post_data['Tetrahedron_cr3'])/255
+                        if Tetrahedron_Color_R < 0 or Tetrahedron_Color_R > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Tetrahedron!"
                 if post_data["Tetrahedron_cg3"]:
-                    Tetrahedron_Color_G = float(post_data['Tetrahedron_cg3'])
+                    try:
+                        Tetrahedron_Color_G = float(post_data['Tetrahedron_cg3'])/255
+                        if Tetrahedron_Color_G < 0 or Tetrahedron_Color_G > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Tetrahedron!"
                 if post_data["Tetrahedron_cb3"]:
-                    Tetrahedron_Color_B = float(post_data['Tetrahedron_cb3'])
+                    try:
+                        Tetrahedron_Color_B = float(post_data['Tetrahedron_cb3'])/255
+                        if Tetrahedron_Color_B < 0 or Tetrahedron_Color_B > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Tetrahedron!"
                 if post_data["Tetrahedron_rx3"]:
-                    Tetrahedron_Rotate_x = float(post_data['Tetrahedron_rx3'])
+                    try:
+                        Tetrahedron_Rotate_x = float(post_data['Tetrahedron_rx3'])
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please input value for X coordinate of the Tetrahedron Rotation!"
                 if post_data["Tetrahedron_ry3"]:
-                    Tetrahedron_Rotate_y = float(post_data['Tetrahedron_ry3'])
+                    try:
+                        Tetrahedron_Rotate_y = float(post_data['Tetrahedron_ry3'])
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Tetrahedron Rotation!"
                 if post_data["Tetrahedron_rz3"]:
-                    Tetrahedron_Rotate_z = float(post_data['Tetrahedron_rz3'])
+                    try:
+                        Tetrahedron_Rotate_z = float(post_data['Tetrahedron_rz3'])
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Tetrahedron Rotation!"
@@ -835,57 +1304,96 @@ def ObjectFeature():
             #user choose to have a Cylinder
             elif post_data["Object3"]=="Cylinder":
                 if post_data["Cylinder_x3"]:
-                    Cylinder_x = float(post_data["Cylinder_x3"])
+                    try:
+                        Cylinder_x = float(post_data["Cylinder_x3"])
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return  "Please input value for X coordinate of the Cylinder!"
                 if post_data["Cylinder_y3"]:
-                    Cylinder_y = float(post_data['Cylinder_y3'])
+                    try:
+                        Cylinder_y = float(post_data['Cylinder_y3'])
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Cylinder!"
                 if post_data["Cylinder_z3"]:
-                    Cylinder_z = float(post_data['Cylinder_z3'])
+                    try:
+                        Cylinder_z = float(post_data['Cylinder_z3'])
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Cylinder!"
                 if post_data["Cylinder_rx3"]:
-                    Cylinder_Rotate_x = float(post_data['Cylinder_rx3'])
+                    try:
+                        Cylinder_Rotate_x = float(post_data['Cylinder_rx3'])
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please input value for X coordinate of the Cylinder Rotation!"
                 if post_data["Cylinder_ry3"]:
-                    Cylinder_Rotate_y = float(post_data['Cylinder_ry3'])
+                    try:
+                        Cylinder_Rotate_y = float(post_data['Cylinder_ry3'])
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Cylinder Rotation!"
                 if post_data["Cylinder_rz3"]:
-                    Cylinder_Rotate_z = float(post_data['Cylinder_rz3'])
+                    try:
+                        Cylinder_Rotate_z = float(post_data['Cylinder_rz3'])
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Cylinder Rotation!"
                 if post_data["Cylinder_cr3"]:
-                    Cylinder_Color_R = float(post_data['Cylinder_cr3'])
+                    try:
+                        Cylinder_Color_R = float(post_data['Cylinder_cr3'])/255
+                        if Cylinder_Color_R < 0 or Cylinder_Color_R > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cylinder!"
                 if post_data["Cylinder_cg3"]:
-                    Cylinder_Color_G = float(post_data['Cylinder_cg3'])
+                    try:
+                        Cylinder_Color_G = float(post_data['Cylinder_cg3'])/255
+                        if Cylinder_Color_G < 0 or Cylinder_Color_G > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cylinder!"
                 if post_data["Cylinder_cb3"]:
-                    Cylinder_Color_B = float(post_data['Cylinder_cb3'])
+                    try:
+                        Cylinder_Color_B = float(post_data['Cylinder_cb3'])/255
+                        if Cylinder_Color_B < 0 or Cylinder_Color_B > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cylinder!"
                 if post_data["Cylinder_h3"]:
-                    Cylinder_Height = float(post_data['Cylinder_h3'])
+                    try:
+                        Cylinder_Height = float(post_data['Cylinder_h3'])
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please input value for the Cylinder Height!"
                 if post_data["Cylinder_r3"]:
-                    Cylinder_Radius = float(post_data['Cylinder_r3'])
+                    try:
+                        Cylinder_Radius = float(post_data['Cylinder_r3'])
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please input value for the Cylinder Radius!"
@@ -899,57 +1407,96 @@ def ObjectFeature():
             #user choose to have a Cone
             elif post_data["Object3"]=="Cone":
                 if post_data["Cone_x3"]:
-                    Cone_x = float(post_data["Cone_x3"])
+                    try:
+                        Cone_x = float(post_data["Cone_x3"])
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return  "Please input value for X coordinate of the Cone!"
                 if post_data["Cone_y3"]:
-                    Cone_y = float(post_data['Cone_y3'])
+                    try:
+                        Cone_y = float(post_data['Cone_y3'])
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Cone!"
                 if post_data["Cone_z3"]:
-                    Cone_z = float(post_data['Cone_z3'])
+                    try:
+                        Cone_z = float(post_data['Cone_z3'])
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Cone!"
                 if post_data["Cone_rx3"]:
-                    Cone_Rotate_x = float(post_data['Cone_rx3'])
+                    try:
+                        Cone_Rotate_x = float(post_data['Cone_rx3'])
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please input value for X coordinate of the Cone Rotation!"
                 if post_data["Cone_ry3"]:
-                    Cone_Rotate_y = float(post_data['Cone_ry3'])
+                    try:
+                        Cone_Rotate_y = float(post_data['Cone_ry3'])
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Cone Rotation!"
                 if post_data["Cone_rz3"]:
-                    Cone_Rotate_z = float(post_data['Cone_rz3'])
+                    try:
+                        Cone_Rotate_z = float(post_data['Cone_rz3'])
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Cone Rotation!"
                 if post_data["Cone_cr3"]:
-                    Cone_Color_R = float(post_data['Cone_cr3'])
+                    try:
+                        Cone_Color_R = float(post_data['Cone_cr3'])/255
+                        if Cone_Color_R < 0 or Cone_Color_R > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cone!"
                 if post_data["Cone_cg3"]:
-                    Cone_Color_G = float(post_data['Cone_cg3'])
+                    try:
+                        Cone_Color_G = float(post_data['Cone_cg3'])/255
+                        if Cone_Color_G < 0 or Cone_Color_G > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cone!"
                 if post_data["Cone_cb3"]:
-                    Cone_Color_B = float(post_data['Cone_cb3'])
+                    try:
+                        Cone_Color_B = float(post_data['Cone_cb3'])/255
+                        if Cone_Color_B < 0 or Cone_Color_B > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cone!"
                 if post_data["Cone_h3"]:
-                    Cone_Height = float(post_data['Cone_h3'])
+                    try:
+                        Cone_Height = float(post_data['Cone_h3'])
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please input value for the Cone Height!"
                 if post_data["Cone_r3"]:
-                    Cone_Radius = float(post_data['Cone_r3'])
+                    try:
+                        Cone_Radius = float(post_data['Cone_r3'])
+                    except:
+                        return "Please enter ONLY numbers for the third object!"
                 else:
                     flag = 0
                     return "Please input value for the Cone Radius!"
@@ -971,37 +1518,64 @@ def ObjectFeature():
             # user choose to have a Sphere
             if post_data["Object4"]=="Sphere":
                 if post_data["Sphere_x4"]:
-                    Sphere_x = float(post_data['Sphere_x4']) 
+                    try:
+                        Sphere_x = float(post_data['Sphere_x4']) 
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return  "Please input value for X coordinate of the Sphere!"  
                 if post_data["Sphere_y4"]:
-                    Sphere_y = float(post_data['Sphere_y4'])
+                    try:
+                        Sphere_y = float(post_data['Sphere_y4'])
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Sphere!"
                 if post_data["Sphere_z4"]:
-                    Sphere_z = float(post_data['Sphere_z4'])
+                    try:
+                        Sphere_z = float(post_data['Sphere_z4'])
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Sphere!"
                 if post_data["Sphere_cr4"]:
-                    Sphere_Color_R = float(post_data['Sphere_cr4'])
+                    try:
+                        Sphere_Color_R = float(post_data['Sphere_cr4'])/255
+                        if Sphere_Color_R < 0 or Sphere_Color_R > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Sphere!"
                 if post_data["Sphere_cg4"]:
-                    Sphere_Color_G = float(post_data['Sphere_cg4'])
+                    try:
+                        Sphere_Color_G = float(post_data['Sphere_cg4'])/255
+                        if Sphere_Color_G < 0 or Sphere_Color_G > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Sphere!"
                 if post_data["Sphere_cb4"]:
-                    Sphere_Color_B = float(post_data['Sphere_cb4'])
+                    try:
+                        Sphere_Color_B = float(post_data['Sphere_cb4'])/255
+                        if Sphere_Color_B < 0 or Sphere_Color_B > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Sphere!"
                 if post_data["Sphere_r4"]:
-                    Sphere_Radius = float(post_data["Sphere_r4"])
+                    try:
+                        Sphere_Radius = float(post_data["Sphere_r4"])
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please input the radius of the Sphere!"
@@ -1014,52 +1588,88 @@ def ObjectFeature():
             # user choose to have a Cube
             elif post_data["Object4"]=="Cube":
                 if post_data["Cube_x4"]:
-                    Cube_x = float(post_data['Cube_x4'])
+                    try:
+                        Cube_x = float(post_data['Cube_x4'])
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return  "Please input value for X coordinate of the Cube!"
                 if post_data["Cube_y4"]:
-                    Cube_y = float(post_data['Cube_y4'])
+                    try:
+                        Cube_y = float(post_data['Cube_y4'])
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Cube!"
                 if post_data["Cube_z4"]:
-                    Cube_z = float(post_data['Cube_z4'])
+                    try:
+                        Cube_z = float(post_data['Cube_z4'])
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Cube!"
                 if post_data["Cube_l4"]:
-                    Cube_SideLength = float(post_data['Cube_l4'])
+                    try:
+                        Cube_SideLength = float(post_data['Cube_l4'])
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please input value for the Cube Side Length!"
                 if post_data["Cube_cr4"]:
-                    Cube_Color_R = float(post_data['Cube_cr4'])
+                    try:
+                        Cube_Color_R = float(post_data['Cube_cr4'])/255
+                        if Cube_Color_R < 0 or Cube_Color_R > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cube!"
                 if post_data["Cube_cg4"]:
-                    Cube_Color_G = float(post_data['Cube_cg4'])
+                    try:
+                        Cube_Color_G = float(post_data['Cube_cg4'])/255
+                        if Cube_Color_G < 0 or Cube_Color_G > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cube!"
                 if post_data["Cube_cb4"]:
-                    Cube_Color_B = float(post_data['Cube_cb4'])
+                    try:
+                        Cube_Color_B = float(post_data['Cube_cb4'])/255
+                        if Cube_Color_B < 0 or Cube_Color_B > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cube!"
                 if post_data["Cube_rx4"]:
-                    Cube_Rotate_x = float(post_data['Cube_rx4'])
+                    try:
+                        Cube_Rotate_x = float(post_data['Cube_rx4'])
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please input value for X coordinate of the Cube Rotation!"
                 if post_data["Cube_ry4"]:
-                    Cube_Rotate_y = float(post_data['Cube_ry4'])
+                    try:
+                        Cube_Rotate_y = float(post_data['Cube_ry4'])
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Cube Rotation!"
                 if post_data["Cube_rz4"]:
-                    Cube_Rotate_z = float(post_data['Cube_rz4'])
+                    try:
+                        Cube_Rotate_z = float(post_data['Cube_rz4'])
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Cube Rotation!"
@@ -1073,52 +1683,88 @@ def ObjectFeature():
             #user choose to have a Tetrahedron
             elif post_data["Object4"]=="Tetrahedron":
                 if post_data["Tetrahedron_x4"]:
-                    Tetrahedron_x = float(post_data['Tetrahedron_x4'])
+                    try:
+                        Tetrahedron_x = float(post_data['Tetrahedron_x4'])
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return  "Please input value for X coordinate of the Tetrahedron Centre Point!"
                 if post_data["Tetrahedron_y4"]:
-                    Tetrahedron_y = float(post_data['Tetrahedron_y4'])
+                    try:
+                        Tetrahedron_y = float(post_data['Tetrahedron_y4'])
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Tetrahedron Centre Point!"
                 if post_data["Tetrahedron_z4"]:
-                    Tetrahedron_z = float(post_data['Tetrahedron_z4'])
+                    try:
+                        Tetrahedron_z = float(post_data['Tetrahedron_z4'])
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Tetrahedron Centre Point!"
                 if post_data["Tetrahedron_l4"]:
-                    Tetrahedron_SideLength = float(post_data['Tetrahedron_l4'])
+                    try:
+                        Tetrahedron_SideLength = float(post_data['Tetrahedron_l4'])
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please input value for the Tetrahedron Side Length!"
                 if post_data["Tetrahedron_cr4"]:
-                    Tetrahedron_Color_R = float(post_data['Tetrahedron_cr4'])
+                    try:
+                        Tetrahedron_Color_R = float(post_data['Tetrahedron_cr4'])/255
+                        if Tetrahedron_Color_R < 0 or Tetrahedron_Color_R > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Tetrahedron!"
                 if post_data["Tetrahedron_cg4"]:
-                    Tetrahedron_Color_G = float(post_data['Tetrahedron_cg4'])
+                    try:
+                        Tetrahedron_Color_G = float(post_data['Tetrahedron_cg4'])/255
+                        if Tetrahedron_Color_G < 0 or Tetrahedron_Color_G > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Tetrahedron!"
                 if post_data["Tetrahedron_cb4"]:
-                    Tetrahedron_Color_B = float(post_data['Tetrahedron_cb4'])
+                    try:
+                        Tetrahedron_Color_B = float(post_data['Tetrahedron_cb4'])/255
+                        if Tetrahedron_Color_B < 0 or Tetrahedron_Color_B > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Tetrahedron!"
                 if post_data["Tetrahedron_rx4"]:
-                    Tetrahedron_Rotate_x = float(post_data['Tetrahedron_rx4'])
+                    try:
+                        Tetrahedron_Rotate_x = float(post_data['Tetrahedron_rx4'])
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please input value for X coordinate of the Tetrahedron Rotation!"
                 if post_data["Tetrahedron_ry4"]:
-                    Tetrahedron_Rotate_y = float(post_data['Tetrahedron_ry4'])
+                    try:
+                        Tetrahedron_Rotate_y = float(post_data['Tetrahedron_ry4'])
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Tetrahedron Rotation!"
                 if post_data["Tetrahedron_rz4"]:
-                    Tetrahedron_Rotate_z = float(post_data['Tetrahedron_rz4'])
+                    try:
+                        Tetrahedron_Rotate_z = float(post_data['Tetrahedron_rz4'])
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Tetrahedron Rotation!"
@@ -1132,57 +1778,96 @@ def ObjectFeature():
             #user choose to have a Cylinder
             elif post_data["Object4"]=="Cylinder":
                 if post_data["Cylinder_x4"]:
-                    Cylinder_x = float(post_data["Cylinder_x4"])
+                    try:
+                        Cylinder_x = float(post_data["Cylinder_x4"])
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return  "Please input value for X coordinate of the Cylinder!"
                 if post_data["Cylinder_y4"]:
-                    Cylinder_y = float(post_data['Cylinder_y4'])
+                    try:
+                        Cylinder_y = float(post_data['Cylinder_y4'])
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Cylinder!"
                 if post_data["Cylinder_z4"]:
-                    Cylinder_z = float(post_data['Cylinder_z4'])
+                    try:
+                        Cylinder_z = float(post_data['Cylinder_z4'])
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Cylinder!"
                 if post_data["Cylinder_rx4"]:
-                    Cylinder_Rotate_x = float(post_data['Cylinder_rx4'])
+                    try:
+                        Cylinder_Rotate_x = float(post_data['Cylinder_rx4'])
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please input value for X coordinate of the Cylinder Rotation!"
                 if post_data["Cylinder_ry4"]:
-                    Cylinder_Rotate_y = float(post_data['Cylinder_ry4'])
+                    try:
+                        Cylinder_Rotate_y = float(post_data['Cylinder_ry4'])
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Cylinder Rotation!"
                 if post_data["Cylinder_rz4"]:
-                    Cylinder_Rotate_z = float(post_data['Cylinder_rz4'])
+                    try:
+                        Cylinder_Rotate_z = float(post_data['Cylinder_rz4'])
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Cylinder Rotation!"
                 if post_data["Cylinder_cr4"]:
-                    Cylinder_Color_R = float(post_data['Cylinder_cr4'])
+                    try:
+                        Cylinder_Color_R = float(post_data['Cylinder_cr4'])/255
+                        if Cylinder_Color_R < 0 or Cylinder_Color_R > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cylinder!"
                 if post_data["Cylinder_cg4"]:
-                    Cylinder_Color_G = float(post_data['Cylinder_cg4'])
+                    try:
+                        Cylinder_Color_G = float(post_data['Cylinder_cg4'])/255
+                        if Cylinder_Color_G < 0 or Cylinder_Color_G > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cylinder!"
                 if post_data["Cylinder_cb4"]:
-                    Cylinder_Color_B = float(post_data['Cylinder_cb4'])
+                    try:
+                        Cylinder_Color_B = float(post_data['Cylinder_cb4'])/255
+                        if Cylinder_Color_B < 0 or Cylinder_Color_B > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cylinder!"
                 if post_data["Cylinder_h4"]:
-                    Cylinder_Height = float(post_data['Cylinder_h4'])
+                    try:
+                        Cylinder_Height = float(post_data['Cylinder_h4'])
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please input value for the Cylinder Height!"
                 if post_data["Cylinder_r4"]:
-                    Cylinder_Radius = float(post_data['Cylinder_r4'])
+                    try:
+                        Cylinder_Radius = float(post_data['Cylinder_r4'])
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please input value for the Cylinder Radius!"
@@ -1196,57 +1881,96 @@ def ObjectFeature():
             #user choose to have a Cone
             elif post_data["Object4"]=="Cone":
                 if post_data["Cone_x4"]:
-                    Cylinder_x = float(post_data["Cone_x4"])
+                    try:
+                        Cone_x = float(post_data["Cone_x4"])
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return  "Please input value for X coordinate of the Cone!"
                 if post_data["Cone_y4"]:
-                    Cone_y = float(post_data['Cone_y4'])
+                    try:
+                        Cone_y = float(post_data['Cone_y4'])
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Cone!"
                 if post_data["Cone_z4"]:
-                    Cone_z = float(post_data['Cone_z4'])
+                    try:
+                        Cone_z = float(post_data['Cone_z4'])
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Cone!"
                 if post_data["Cone_rx4"]:
-                    Cone_Rotate_x = float(post_data['Cone_rx4'])
+                    try:
+                        Cone_Rotate_x = float(post_data['Cone_rx4'])
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please input value for X coordinate of the Cone Rotation!"
                 if post_data["Cone_ry4"]:
-                    Cone_Rotate_y = float(post_data['Cone_ry4'])
+                    try:
+                        Cone_Rotate_y = float(post_data['Cone_ry4'])
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Cone Rotation!"
                 if post_data["Cone_rz4"]:
-                    Cone_Rotate_z = float(post_data['Cone_rz4'])
+                    try:
+                        Cone_Rotate_z = float(post_data['Cone_rz4'])
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Cone Rotation!"
                 if post_data["Cone_cr4"]:
-                    Cone_Color_R = float(post_data['Cone_cr4'])
+                    try:
+                        Cone_Color_R = float(post_data['Cone_cr4'])/255
+                        if Cone_Color_R < 0 or Cone_Color_R > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cone!"
                 if post_data["Cone_cg4"]:
-                    Cone_Color_G = float(post_data['Cone_cg4'])
+                    try:
+                        Cone_Color_G = float(post_data['Cone_cg4'])/255
+                        if Cone_Color_G < 0 or Cone_Color_G > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cone!"
                 if post_data["Cone_cb4"]:
-                    Cone_Color_B = float(post_data['Cone_cb4'])
+                    try:
+                        Cone_Color_B = float(post_data['Cone_cb4'])/255
+                        if Cone_Color_B < 0 or Cone_Color_B > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cone!"
                 if post_data["Cone_h4"]:
-                    Cone_Height = float(post_data['Cone_h4'])
+                    try:
+                        Cone_Height = float(post_data['Cone_h4'])
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please input value for the Cone Height!"
                 if post_data["Cone_r4"]:
-                    Cone_Radius = float(post_data['Cone_r4'])
+                    try:
+                        Cone_Radius = float(post_data['Cone_r4'])
+                    except:
+                        return "Please enter ONLY numbers for the fourth object!"
                 else:
                     flag = 0
                     return "Please input value for the Cone Radius!"
@@ -1268,37 +1992,64 @@ def ObjectFeature():
             # user choose to have a Sphere
             if post_data["Object5"]=="Sphere":
                 if post_data["Sphere_x5"]:
-                    Sphere_x = float(post_data['Sphere_x5']) 
+                    try:
+                        Sphere_x = float(post_data['Sphere_x5']) 
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return  "Please input value for X coordinate of the Sphere!"   
                 if post_data["Sphere_y5"]:
-                    Sphere_y = float(post_data['Sphere_y5'])
+                    try:
+                        Sphere_y = float(post_data['Sphere_y5'])
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Sphere!"
                 if post_data["Sphere_z5"]:
-                    Sphere_z = float(post_data['Sphere_z5'])
+                    try:
+                        Sphere_z = float(post_data['Sphere_z5'])
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Sphere!"
                 if post_data["Sphere_cr5"]:
-                    Sphere_Color_R = float(post_data['Sphere_cr5'])
+                    try:
+                        Sphere_Color_R = float(post_data['Sphere_cr5'])/255
+                        if Sphere_Color_R < 0 or Sphere_Color_R > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Sphere!"
                 if post_data["Sphere_cg5"]:
-                    Sphere_Color_G = float(post_data['Sphere_cg5'])
+                    try:
+                        Sphere_Color_G = float(post_data['Sphere_cg5'])/255
+                        if Sphere_Color_G < 0 or Sphere_Color_G > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Sphere!"
                 if post_data["Sphere_cb5"]:
-                    Sphere_Color_B = float(post_data['Sphere_cb5'])
+                    try:
+                        Sphere_Color_B = float(post_data['Sphere_cb5'])/255
+                        if Sphere_Color_B < 0 or Sphere_Color_B > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Sphere!"
                 if post_data["Sphere_r5"]:
-                    Sphere_Radius = float(post_data["Sphere_r5"])
+                    try:
+                        Sphere_Radius = float(post_data["Sphere_r5"])
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please input the radius of the Sphere!"
@@ -1311,52 +2062,88 @@ def ObjectFeature():
             # user choose to have a Cube
             elif post_data["Object5"]=="Cube":
                 if post_data["Cube_x5"]:
-                    Cube_x = float(post_data['Cube_x5'])
+                    try:
+                        Cube_x = float(post_data['Cube_x5'])
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return  "Please input value for X coordinate of the Cube!"
                 if post_data["Cube_y5"]:
-                    Cube_y = float(post_data['Cube_y5'])
+                    try:
+                        Cube_y = float(post_data['Cube_y5'])
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Cube!"
                 if post_data["Cube_z5"]:
-                    Cube_z = float(post_data['Cube_z5'])
+                    try:
+                        Cube_z = float(post_data['Cube_z5'])
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Cube!"
                 if post_data["Cube_l5"]:
-                    Cube_SideLength = float(post_data['Cube_l5'])
+                    try:
+                        Cube_SideLength = float(post_data['Cube_l5'])
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please input value for the Cube Side Length!"
                 if post_data["Cube_cr5"]:
-                    Cube_Color_R = float(post_data['Cube_cr5'])
+                    try:
+                        Cube_Color_R = float(post_data['Cube_cr5'])/255
+                        if Cube_Color_R < 0 or Cube_Color_R > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cube!"
                 if post_data["Cube_cg5"]:
-                    Cube_Color_G = float(post_data['Cube_cg5'])
+                    try:
+                        Cube_Color_G = float(post_data['Cube_cg5'])/255
+                        if Cube_Color_G < 0 or Cube_Color_G > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cube!"
                 if post_data["Cube_cb5"]:
-                    Cube_Color_B = float(post_data['Cube_cb5'])
+                    try:
+                        Cube_Color_B = float(post_data['Cube_cb5'])/255
+                        if Cube_Color_B < 0 or Cube_Color_B > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cube!"
                 if post_data["Cube_rx5"]:
-                    Cube_Rotate_x = float(post_data['Cube_rx5'])
+                    try:
+                        Cube_Rotate_x = float(post_data['Cube_rx5'])
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please input value for X coordinate of the Cube Rotation!"
                 if post_data["Cube_ry5"]:
-                    Cube_Rotate_y = float(post_data['Cube_ry5'])
+                    try:
+                        Cube_Rotate_y = float(post_data['Cube_ry5'])
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Cube Rotation!"
                 if post_data["Cube_rz5"]:
-                    Cube_Rotate_z = float(post_data['Cube_rz5'])
+                    try:
+                        Cube_Rotate_z = float(post_data['Cube_rz5'])
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Cube Rotation!"
@@ -1370,52 +2157,89 @@ def ObjectFeature():
             #user choose to have a Tetrahedron
             elif post_data["Object5"]=="Tetrahedron":
                 if post_data["Tetrahedron_x5"]:
-                    Tetrahedron_x = float(post_data['Tetrahedron_x5'])
+                    try:
+                        Tetrahedron_x = float(post_data['Tetrahedron_x5'])
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return  "Please input value for X coordinate of the Tetrahedron Centre Point!"
                 if post_data["Tetrahedron_y5"]:
-                    Tetrahedron_y = float(post_data['Tetrahedron_y5'])
+                    try:
+                        Tetrahedron_y = float(post_data['Tetrahedron_y5'])
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Tetrahedron Centre Point!"
                 if post_data["Tetrahedron_z5"]:
-                    Tetrahedron_z = float(post_data['Tetrahedron_z5'])
+                    try:
+                        Tetrahedron_z = float(post_data['Tetrahedron_z5'])
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Tetrahedron Centre Point!"
                 if post_data["Tetrahedron_l5"]:
-                    Tetrahedron_SideLength = float(post_data['Tetrahedron_l5'])
+                    try:
+                        Tetrahedron_SideLength = float(post_data['Tetrahedron_l5'])
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please input value for the Tetrahedron Side Length!"
                 if post_data["Tetrahedron_cr5"]:
-                    Tetrahedron_Color_R = float(post_data['Tetrahedron_cr5'])
+                    try:
+                        Tetrahedron_Color_R = float(post_data['Tetrahedron_cr5'])/255
+                        if Tetrahedron_Color_R < 0 or Tetrahedron_Color_R > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Tetrahedron!"
                 if post_data["Tetrahedron_cg5"]:
-                    Tetrahedron_Color_G = float(post_data['Tetrahedron_cg5'])
+                    try:
+                        Tetrahedron_Color_G = float(post_data['Tetrahedron_cg5'])/255
+                        if Tetrahedron_Color_G < 0 or Tetrahedron_Color_G > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Tetrahedron!"
                 if post_data["Tetrahedron_cb5"]:
-                    Tetrahedron_Color_B = float(post_data['Tetrahedron_cb5'])
+                    try:
+                        Tetrahedron_Color_B = float(post_data['Tetrahedron_cb5'])/255
+                        if Tetrahedron_Color_B < 0 or Tetrahedron_Color_B > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
+                    
                 else:
                     flag = 0
                     return "Please complete the color input of the Tetrahedron!"
                 if post_data["Tetrahedron_rx5"]:
-                    Tetrahedron_Rotate_x = float(post_data['Tetrahedron_rx5'])
+                    try:
+                        Tetrahedron_Rotate_x = float(post_data['Tetrahedron_rx5'])
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please input value for X coordinate of the Tetrahedron Rotation!"
                 if post_data["Tetrahedron_ry5"]:
-                    Tetrahedron_Rotate_y = float(post_data['Tetrahedron_ry5'])
+                    try:
+                        Tetrahedron_Rotate_y = float(post_data['Tetrahedron_ry5'])
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Tetrahedron Rotation!"
                 if post_data["Tetrahedron_rz5"]:
-                    Tetrahedron_Rotate_z = float(post_data['Tetrahedron_rz5'])
+                    try:
+                        Tetrahedron_Rotate_z = float(post_data['Tetrahedron_rz5'])
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Tetrahedron Rotation!"
@@ -1429,57 +2253,96 @@ def ObjectFeature():
             #user choose to have a Cylinder
             elif post_data["Object5"]=="Cylinder":
                 if post_data["Cylinder_x5"]:
-                    Cylinder_x = float(post_data["Cylinder_x5"])
+                    try:
+                        Cylinder_x = float(post_data["Cylinder_x5"])
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return  "Please input value for X coordinate of the Cylinder!"
                 if post_data["Cylinder_y5"]:
-                    Cylinder_y = float(post_data['Cylinder_y5'])
+                    try:
+                        Cylinder_y = float(post_data['Cylinder_y5'])
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Cylinder!"
                 if post_data["Cylinder_z5"]:
-                    Cylinder_z = float(post_data['Cylinder_z5'])
+                    try:
+                        Cylinder_z = float(post_data['Cylinder_z5'])
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Cylinder!"
                 if post_data["Cylinder_rx5"]:
-                    Cylinder_Rotate_x = float(post_data['Cylinder_rx5'])
+                    try:
+                        Cylinder_Rotate_x = float(post_data['Cylinder_rx5'])
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please input value for X coordinate of the Cylinder Rotation!"
                 if post_data["Cylinder_ry5"]:
-                    Cylinder_Rotate_y = float(post_data['Cylinder_ry5'])
+                    try:
+                        Cylinder_Rotate_y = float(post_data['Cylinder_ry5'])
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Cylinder Rotation!"
                 if post_data["Cylinder_rz5"]:
-                    Cylinder_Rotate_z = float(post_data['Cylinder_rz5'])
+                    try:
+                        Cylinder_Rotate_z = float(post_data['Cylinder_rz5'])
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Cylinder Rotation!"
                 if post_data["Cylinder_cr5"]:
-                    Cylinder_Color_R = float(post_data['Cylinder_cr5'])
+                    try:
+                        Cylinder_Color_R = float(post_data['Cylinder_cr5'])/255
+                        if Cylinder_Color_R < 0 or Cylinder_Color_R > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cylinder!"
                 if post_data["Cylinder_cg5"]:
-                    Cylinder_Color_G = float(post_data['Cylinder_cg5'])
+                    try:
+                        Cylinder_Color_G = float(post_data['Cylinder_cg5'])/255
+                        if Cylinder_Color_G < 0 or Cylinder_Color_G > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cylinder!"
                 if post_data["Cylinder_cb5"]:
-                    Cylinder_Color_B = float(post_data['Cylinder_cb5'])
+                    try:
+                        Cylinder_Color_B = float(post_data['Cylinder_cb5'])/255
+                        if Cylinder_Color_B < 0 or Cylinder_Color_B > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cylinder!"
                 if post_data["Cylinder_h5"]:
-                    Cylinder_Height = float(post_data['Cylinder_h5'])
+                    try:
+                        Cylinder_Height = float(post_data['Cylinder_h5'])
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please input value for the Cylinder Height!"
                 if post_data["Cylinder_r5"]:
-                    Cylinder_Radius = float(post_data['Cylinder_r5'])
+                    try:
+                        Cylinder_Radius = float(post_data['Cylinder_r5'])
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please input value for the Cylinder Radius!"
@@ -1493,57 +2356,96 @@ def ObjectFeature():
             #user choose to have a Cone
             elif post_data["Object5"]=="Cone":
                 if post_data["Cone_x5"]:
-                    Cone_x = float(post_data["Cone_x5"])
+                    try:
+                        Cone_x = float(post_data["Cone_x5"])
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return  "Please input value for X coordinate of the Cone!"
                 if post_data["Cone_y5"]:
-                    Cone_y = float(post_data['Cone_y5'])
+                    try:
+                        Cone_y = float(post_data['Cone_y5'])
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Cone!"
                 if post_data["Cone_z5"]:
-                    Cone_z = float(post_data['Cone_z5'])
+                    try:
+                        Cone_z = float(post_data['Cone_z5'])
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Cone!"
                 if post_data["Cone_rx5"]:
-                    Cone_Rotate_x = float(post_data['Cone_rx5'])
+                    try:
+                        Cone_Rotate_x = float(post_data['Cone_rx5'])
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please input value for X coordinate of the Cone Rotation!"
                 if post_data["Cone_ry5"]:
-                    Cone_Rotate_y = float(post_data['Cone_ry5'])
+                    try:
+                        Cone_Rotate_y = float(post_data['Cone_ry5'])
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please input value for Y coordinate of the Cone Rotation!"
                 if post_data["Cone_rz5"]:
-                    Cone_Rotate_z = float(post_data['Cone_rz5'])
+                    try:
+                        Cone_Rotate_z = float(post_data['Cone_rz5'])
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please input value for Z coordinate of the Cone Rotation!"
                 if post_data["Cone_cr5"]:
-                    Cone_Color_R = float(post_data['Cone_cr5'])
+                    try:
+                        Cone_Color_R = float(post_data['Cone_cr5'])/255
+                        if Cone_Color_R < 0 or Cone_Color_R > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cone!"
                 if post_data["Cone_cg5"]:
-                    Cone_Color_G = float(post_data['Cone_cg5'])
+                    try:
+                        Cone_Color_G = float(post_data['Cone_cg5'])/255
+                        if Cone_Color_G < 0 or Cone_Color_G > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cone!"
                 if post_data["Cone_cb5"]:
-                    Cone_Color_B = float(post_data['Cone_cb5'])
+                    try:
+                        Cone_Color_B = float(post_data['Cone_cb5'])/255
+                        if Cone_Color_B < 0 or Cone_Color_B > 1:
+                            return "Color should be between 0 and 255!"
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please complete the color input of the Cone!"
                 if post_data["Cone_h5"]:
-                    Cone_Height = float(post_data['Cone_h5'])
+                    try:
+                        Cone_Height = float(post_data['Cone_h5'])
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please input value for the Cone Height!"
                 if post_data["Cone_r5"]:
-                    Cone_Radius = float(post_data['Cone_r5'])
+                    try:
+                        Cone_Radius = float(post_data['Cone_r5'])
+                    except:
+                        return "Please enter ONLY numbers for the fifth object!"
                 else:
                     flag = 0
                     return "Please input value for the Cone Radius!"
@@ -1576,4 +2478,4 @@ def File_Generate():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')
