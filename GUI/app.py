@@ -56,7 +56,7 @@ def Figure():
         p.start()
     for i in range(len(ps)):
         img = img + result_queue.get()
-        print((i + 1) / len(ps) * 100, '%')
+        print(i + 1) *  1.0  / len(ps) * 100, '%'
     plt.imsave('fig2.png', img)
     return render_template('Figure.html')
 
