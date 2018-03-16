@@ -98,13 +98,3 @@ class OutputGenerator:
         with open(self.output_file, 'w') as f:
             f.write(content)
             f.close()
-    # def print_num_of_object(self):
-    #     print self.object_count
-
-
-
-# f = OutputGenerator()
-# f.Add_Sphere()
-# f.Add_Sphere()
-# f.Generate_File()
-
