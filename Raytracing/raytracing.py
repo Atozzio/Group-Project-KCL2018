@@ -762,8 +762,8 @@ def analyse_input(scene_input):
 
     return camera_seeting, scene
 
-w = 400
-h = 400
+w = 512
+h = 512
 
 # Light position and color.
 L = np.array([5., 5., -10.])
