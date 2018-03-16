@@ -1,6 +1,11 @@
 from flask import Flask,request, render_template
 from generate_output import OutputGenerator
+from raytracing import PositionType,camera,project_block,ray,plane,sphere,triangle_plane,tetrahedron,cube,circle_plane,cylinder,cone,normalize,intersect_plane,intersect_sphere,intersect_TriangleSet,PointinTriangle,add_sphere,add_plane,add_tetrahedron,add_cube,add_cylinder,add_cone,split_square_to_triangle,rotation,rotation_vector,trace_ray_main,reflect_and_refract,refraction,fresnel,getRefractiveIndices,getSimpleRefractive,analyse_input
+import numpy as np
+import matplotlib.pyplot as plt
+import multiprocessing as mp
 import json
+import math
 
 app = Flask(__name__)
 OutputFile = OutputGenerator()
@@ -24,10 +29,68 @@ def ObjectQuantity():
             print "something went wrong"
     return render_template('ObjectQuantity.html')
 
-@app.route('/Figure')
+@app.route('/Figure', methods=['POST', 'GET'])
 def Figure():
-    pass
+    global OutputFile
+    OutputFile.Generate_File() # generate json file
+    w = 512
+    h = 512
+    L = np.array([5., 5., -10.])
+    color_light = np.ones(3)
+    ambient = .05
+    diffuse_c = 1.
+    specular_c = 1.
+    specular_k = 50
+    depth_max = 4  # Maximum number of light reflections.
+    processes_divided = 8
+    with open('data.json', 'r') as inputFile:
+        scene_input = inputFile.read()  
+    result_queue = mp.Queue()
+    ps = []
+    for i in range(processes_divided**2):
+        ps.append(mp.Process(target=trace_ray_main, args=(result_queue, i,
+        scene_input, )))
+    img = np.zeros((h, w, 3))
+    # start processes
+    for p in ps:
+        p.start()
+    for i in range(len(ps)):
+        img = img + result_queue.get()
+        print((i + 1) / len(ps) * 100, '%')
+    plt.imsave('fig2.png', img)
     return render_template('Figure.html')
+
+# @app.route('/FigureGenerator', methods=['POST', 'GET'])
+# def FigureGenerator():
+#     global OutputFile
+#     OutputFile.Generate_File() # generate json file
+
+#     w = 512
+#     h = 512
+#     L = np.array([5., 5., -10.])
+#     color_light = np.ones(3)
+#     ambient = .05
+#     diffuse_c = 1.
+#     specular_c = 1.
+#     specular_k = 50
+#     depth_max = 4  # Maximum number of light reflections.
+#     processes_divided = 8
+#     with open('data.json', 'r') as inputFile:
+#         scene_input = inputFile.read()  
+#     result_queue = mp.Queue()
+#     ps = []
+#     for i in range(processes_divided**2):
+#         ps.append(mp.Process(target=trace_ray_main, args=(result_queue, i,
+#         scene_input, )))
+#     img = np.zeros((h, w, 3))
+#     # start processes
+#     for p in ps:
+#         p.start()
+#     for i in range(len(ps)):
+#         img = img + result_queue.get()
+#         print((i + 1) / len(ps) * 100, '%')
+#     plt.imsave('fig.png', img)
+#     return 
 
 @app.route('/ObjectFeature', methods=['POST', 'GET'])
 def ObjectFeature():
@@ -66,9 +129,9 @@ def ObjectFeature():
             return "Please enter ONLY numbers for Camera Coordinates!"
     #Camera Looking Point
         try:
-            Camera_L_X = float(post_data['Camera_C_X'])
-            Camera_L_Y = float(post_data['Camera_C_Y'])
-            Camera_L_Z = float(post_data['Camera_C_Z'])
+            Camera_L_X = float(post_data['Camera_L_X'])
+            Camera_L_Y = float(post_data['Camera_L_Y'])
+            Camera_L_Z = float(post_data['Camera_L_Z'])
         except:
             return "Please enter ONLY numbers for Camera Looking Points"
     #Light source
@@ -2462,19 +2525,6 @@ def ObjectFeature():
 
     if int(object_quantity) == int(object_quantity_web):
         return "Object saved successfully!"
-
-
-@app.route('/File_Generate', methods=['POST', 'GET'])
-def File_Generate():
-    if request.method == 'POST':
-        flag = request.form["flag"]
-    if flag == "1":
-        global OutputFile
-        # OutputFile.print_num_of_object()
-        OutputFile.Generate_File()
-        return "Grey_Hats"
-    else:
-        return "404"
 
 
 if __name__ == '__main__':
