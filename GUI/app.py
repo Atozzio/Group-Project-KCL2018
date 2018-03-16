@@ -129,9 +129,9 @@ def ObjectFeature():
             return "Please enter ONLY numbers for Camera Coordinates!"
     #Camera Looking Point
         try:
-            Camera_L_X = float(post_data['Camera_C_X'])
-            Camera_L_Y = float(post_data['Camera_C_Y'])
-            Camera_L_Z = float(post_data['Camera_C_Z'])
+            Camera_L_X = float(post_data['Camera_L_X'])
+            Camera_L_Y = float(post_data['Camera_L_Y'])
+            Camera_L_Z = float(post_data['Camera_L_Z'])
         except:
             return "Please enter ONLY numbers for Camera Looking Points"
     #Light source
