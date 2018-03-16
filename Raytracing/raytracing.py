@@ -15,8 +15,8 @@ class camera():
         self.project_plane_normal = normalize(self.point_to - self.position)
         self.project_centre = self.position + self.project_plane_normal
         self.project_blocks = []
-        self.x_project_size = 2
-        self.y_project_size = 2
+        self.x_project_size = 2.0
+        self.y_project_size = 2.0
 
         self.rotation = self.findRotation()
         x = np.matmul(self.rotation,np.array([1,0,0]))
@@ -24,7 +24,7 @@ class camera():
         self.x_coordinate_vector = np.array([x.item(0),x.item(1),x.item(2)])
         self.y_coordinate_vector = np.array([y.item(0),y.item(1),y.item(2)])
 
-        self.project_start = self.project_centre - self.x_project_size / 2 * self.x_coordinate_vector - self.y_project_size / 2 * self.y_coordinate_vector
+        self.project_start = self.project_centre - self.x_project_size / 2.0 * self.x_coordinate_vector - self.y_project_size / 2.0 * self.y_coordinate_vector
 
         self.x_project_size_pre_pixel = self.x_project_size / w
         self.y_project_size_pre_pixel = self.x_project_size / h
@@ -43,7 +43,7 @@ class camera():
 
     def findRotation(self):
      
-        a = np.array([0,0,1])
+        a = np.array([0.0,0.0,1.0])
         b = self.project_plane_normal
 
         v = np.cross(a,b)
@@ -96,7 +96,7 @@ class ray():
         toL = normalize(L - M)
         toO = normalize(self.origin - M)
         # Shadow: find if the point is shadowed or not.
-        transparent_ratio = 1
+        transparent_ratio = 1.0
         for k, obj_sh in enumerate(scene): 
             if k != obj_idx:
                 if obj_sh.intersect(ray(M + N * .001, toL)) < np.inf:
@@ -150,7 +150,7 @@ class plane():
 
     def findRotation(self):
      
-        a = np.array([0,1,0])
+        a = np.array([0.0,1.0,0.0])
         b = self.normal_vector
 
         v = np.cross(a,b)
@@ -217,17 +217,17 @@ class tetrahedron():
     def __init__(self, position, length, rotation_angle, color, transparency_level):
 
         self.position = np.array(position)
-        self.length = length
+        self.length = length * 1.0
         self.rotation_angle = np.array(rotation_angle)
         self.type = 'tetrahedron'
         self.refractive_indices = getRefractiveIndices(transparency_level)
         self.simple_refractive = getSimpleRefractive(transparency_level)
         self.color = np.array(color)
 
-        self.point_1 = self.position + rotation_vector(np.array([0, np.sqrt(3/8), 0]) * self.length, self.rotation_angle)
-        self.point_2 = self.position + rotation_vector(np.array([-1/2, -1/np.sqrt(24), 1/np.sqrt(12)]) * self.length, self.rotation_angle)
-        self.point_3 = self.position + rotation_vector(np.array([1/2, -1/np.sqrt(24), 1/np.sqrt(12)]) * self.length, self.rotation_angle)
-        self.point_4 = self.position + rotation_vector(np.array([0, -1/np.sqrt(24), -1/np.sqrt(3)]) * self.length, self.rotation_angle)
+        self.point_1 = self.position + rotation_vector(np.array([0, np.sqrt(3.0/8), 0]) * self.length, self.rotation_angle)
+        self.point_2 = self.position + rotation_vector(np.array([-1.0/2, -1.0/np.sqrt(24), 1.0/np.sqrt(12)]) * self.length, self.rotation_angle)
+        self.point_3 = self.position + rotation_vector(np.array([1.0/2, -1.0/np.sqrt(24), 1.0/np.sqrt(12)]) * self.length, self.rotation_angle)
+        self.point_4 = self.position + rotation_vector(np.array([0, -1.0/np.sqrt(24), -1.0/np.sqrt(3)]) * self.length, self.rotation_angle)
 
         self.triangle_planes = [triangle_plane(self.point_1, self.point_2, self.point_3),
                     triangle_plane(self.point_1, self.point_2, self.point_4),
@@ -236,10 +236,10 @@ class tetrahedron():
 
         for i, plane in enumerate(self.triangle_planes):
             if  np.dot(plane.point_1 - self.position, plane.normal_vector) < 0:
-                self.triangle_planes[i].normal_vector *=-1
+                self.triangle_planes[i].normal_vector *=-1.0
 
     def intersect(self, ray):
-        if intersect_sphere(ray, self.position, np.sqrt(3/8) * self.length) != np.inf:
+        if intersect_sphere(ray, self.position, np.sqrt(3.0/8) * self.length) != np.inf:
             return intersect_TriangleSet(ray, self.triangle_planes)
         else:
             return np.inf
@@ -254,7 +254,7 @@ class cube():
 
     def __init__(self, position, length, rotation_angle, color, transparency_level):
         self.position = np.array(position)
-        self.length = length
+        self.length = length * 1.0
         self.rotation_angle = np.array(rotation_angle)
         self.color = np.array(color)
         self.refractive_indices = getRefractiveIndices(transparency_level)
@@ -264,9 +264,9 @@ class cube():
         square = [[], [], [], [], [], []]
         self.triangle_planes = []
 
-        x_n_vector = rotation_vector(np.array([1, 0, 0]) * self.length / 2, self.rotation_angle)
-        y_n_vector = rotation_vector(np.array([0, 1, 0]) * self.length / 2, self.rotation_angle)
-        z_n_vector = rotation_vector(np.array([0, 0, 1]) * self.length / 2, self.rotation_angle)
+        x_n_vector = rotation_vector(np.array([1.0, 0.0, 0.0]) * self.length / 2.0, self.rotation_angle)
+        y_n_vector = rotation_vector(np.array([0.0, 1.0, 0.0]) * self.length / 2.0, self.rotation_angle)
+        z_n_vector = rotation_vector(np.array([0.0, 0.0, 1.0]) * self.length / 2.0, self.rotation_angle)
 
         # find 6 square plane of cube
         for i, x in enumerate([x_n_vector, -1 * x_n_vector]):
@@ -292,10 +292,10 @@ class cube():
 
         for i, plane in enumerate(self.triangle_planes):
             if  np.dot(plane.point_1 - self.position, plane.normal_vector) < 0:
-                self.triangle_planes[i].normal_vector *=-1
+                self.triangle_planes[i].normal_vector *=-1.0
 
     def intersect(self, ray):
-        if intersect_sphere(ray, self.position, np.sqrt(3) * self.length / 2) != np.inf:
+        if intersect_sphere(ray, self.position, np.sqrt(3) * self.length / 2.0) != np.inf:
             return intersect_TriangleSet(ray, self.triangle_planes)
         else:
             return np.inf
@@ -328,14 +328,14 @@ class cylinder():
         self.position = np.array(position)
         self.height = height
         self.radius = radius
-        self.normal_vector = rotation_vector(np.array([0, 1, 0]), np.array(rotation_angle))
+        self.normal_vector = rotation_vector(np.array([0.0, 1.0, 0.0]), np.array(rotation_angle))
         self.color = np.array(color)
         self.refractive_indices = getRefractiveIndices(transparency_level)
         self.simple_refractive = getSimpleRefractive(transparency_level)
         self.type = 'cylinder'
 
-        top_plane = circle_plane(self.position + self.normal_vector * (height / 2), radius, self.normal_vector)
-        bottom_plane = circle_plane(self.position - self.normal_vector * (height / 2), radius, -1 * self.normal_vector)
+        top_plane = circle_plane(self.position + self.normal_vector * (height / 2.0), radius, self.normal_vector)
+        bottom_plane = circle_plane(self.position - self.normal_vector * (height / 2.0), radius, -1.0 * self.normal_vector)
         self.top_bottom_plane = [top_plane, bottom_plane]
 
     def intersect(self, ray):
@@ -343,7 +343,7 @@ class cylinder():
         p = np.dot(ray.direction, self.normal_vector) * self.normal_vector - ray.direction
         q = self.position - ray.origin - np.dot(self.position - ray.origin, self.normal_vector) * self.normal_vector
         a = np.dot(p, p)
-        b = 2 * np.dot(p, q)
+        b = 2.0 * np.dot(p, q)
         c = np.dot(q, q) - (self.radius) ** 2
 
         if a == 0:
@@ -360,10 +360,10 @@ class cylinder():
                 t0, t1 = min(t0, t1), max(t0, t1)
                 if t1 >= 0:
                     if t0 < 0:
-                        if (np.linalg.norm(ray.origin + ray.direction * t1 - self.position)) ** 2 < self.radius ** 2 + (self.height / 2) ** 2:
+                        if (np.linalg.norm(ray.origin + ray.direction * t1 - self.position)) ** 2 < self.radius ** 2 + (self.height / 2.0) ** 2:
                             dist = t1
                     else:
-                        if (np.linalg.norm(ray.origin + ray.direction * t0 - self.position)) ** 2 < self.radius ** 2 + (self.height / 2) ** 2:
+                        if (np.linalg.norm(ray.origin + ray.direction * t0 - self.position)) ** 2 < self.radius ** 2 + (self.height / 2.0) ** 2:
                             dist = t0
 
         for i, plane in enumerate(self.top_bottom_plane):
@@ -390,15 +390,15 @@ class cone():
         self.position = np.array(position)
         self.height = height
         self.radius = radius
-        self.angel = math.atan(radius / (height / 2))
-        self.normal_vector = rotation_vector(np.array([0, 1, 0]), np.array(rotation_angle))
+        self.angel = math.atan(radius / (height / 2.0))
+        self.normal_vector = rotation_vector(np.array([0.0, 1.0, 0.0]), np.array(rotation_angle))
         self.color = np.array(color)
         self.refractive_indices = getRefractiveIndices(transparency_level)
         self.simple_refractive = getSimpleRefractive(transparency_level)
         self.type = 'cone'
 
-        top_plane = circle_plane(self.position + self.normal_vector * (height / 2), radius, self.normal_vector)
-        bottom_plane = circle_plane(self.position - self.normal_vector * (height / 2), radius, -1 * self.normal_vector)
+        top_plane = circle_plane(self.position + self.normal_vector * (height / 2.0), radius, self.normal_vector)
+        bottom_plane = circle_plane(self.position - self.normal_vector * (height / 2.0), radius, -1 * self.normal_vector)
         self.top_bottom_plane = [top_plane, bottom_plane]
 
     def intersect(self, ray):
@@ -406,7 +406,7 @@ class cone():
         p = ray.direction - np.dot(ray.direction, self.normal_vector) * self.normal_vector
         q = ray.origin - self.position - np.dot(ray.origin - self.position, self.normal_vector) * self.normal_vector
         a = math.cos(self.angel) ** 2 * np.dot(p, p) - math.sin(self.angel) ** 2 * (np.dot(ray.direction, self.normal_vector) ** 2)
-        b = 2 * math.cos(self.angel) ** 2 * np.dot(p, q) - 2 * math.sin(self.angel) ** 2 * np.dot(ray.direction,self.normal_vector) * np.dot((ray.origin - self.position),self.normal_vector)
+        b = 2.0 * math.cos(self.angel) ** 2 * np.dot(p, q) - 2 * math.sin(self.angel) ** 2 * np.dot(ray.direction,self.normal_vector) * np.dot((ray.origin - self.position),self.normal_vector)
         c = math.cos(self.angel) ** 2 * np.dot(q, q) - math.sin(self.angel) ** 2 * (np.dot(ray.origin - self.position,self.normal_vector) ** 2)
 
         if a == 0:
@@ -423,10 +423,10 @@ class cone():
                 t0, t1 = min(t0, t1), max(t0, t1)
                 if t1 >= 0:
                     if t0 < 0:
-                        if (np.linalg.norm(ray.origin + ray.direction * t1 - self.position)) ** 2 < self.radius ** 2 + (self.height / 2) ** 2:
+                        if (np.linalg.norm(ray.origin + ray.direction * t1 - self.position)) ** 2 < self.radius ** 2 + (self.height / 2.0) ** 2:
                             dist = t1
                     else:
-                        if (np.linalg.norm(ray.origin + ray.direction * t0 - self.position)) ** 2 < self.radius ** 2 + (self.height / 2) ** 2:
+                        if (np.linalg.norm(ray.origin + ray.direction * t0 - self.position)) ** 2 < self.radius ** 2 + (self.height / 2.0) ** 2:
                             dist = t0
 
 
@@ -448,7 +448,7 @@ class cone():
                                                self.normal_vector) * self.normal_vector
 
 
-        p = project_point + (project_point - self.position) * (self.radius / (self.height / 2))**2
+        p = project_point + (project_point - self.position) * (self.radius / (self.height / 2.0))**2
 
         return normalize(intersected_point - p)
 
@@ -510,7 +510,7 @@ def PointinTriangle(point_1, point_2, point_3, M):
     dot11 = np.dot(v1, v1)
     dot12 = np.dot(v1, v2)
 
-    inverDeno = 1 / ((dot00 * dot11) - (dot01 * dot01))
+    inverDeno = 1.0 / ((dot00 * dot11) - (dot01 * dot01))
     u = ((dot11 * dot02) - (dot01 * dot12)) * inverDeno
     if u < 0 or u > 1:  # if u out of range, return directly
         return False
@@ -569,7 +569,7 @@ def split_square_to_triangle(square_vertex):
 # rotate a node base on given center node with specific x-axis, y-asix, z-axis
 # angle
 def rotation(node, r_centre, r_angle):
-    angle = r_angle * np.pi / 180
+    angle = r_angle * np.pi / 180.0
     r_x = np.matrix([[1, 0, 0], [0, np.cos(angle[0]), np.sin(angle[0] * -1)], [0, np.sin(angle[0]), np.cos(angle[0])]])
     r_y = np.matrix([[np.cos(angle[1]), 0, np.sin(angle[1])], [0, 1, 0], [np.sin(angle[1]) * -1, 0, np.cos(angle[1])]])
     r_z = np.matrix([[np.cos(angle[2]), np.sin(angle[2]) * -1, 0], [np.sin(angle[2]), np.cos(angle[2]), 0], [0, 0, 1]])
@@ -613,14 +613,14 @@ def reflect_and_refract(primaryRay, scene, positionType, depth, pathLoss, i,j):
     if np.dot(primaryRay.direction, N) < 0:
         positionType = PositionType.OUT
         col = pathLoss * col_ray
-        n1 = 1
+        n1 = 1.0
         n2 = obj.refractive_indices
         newNormal = N
     else:
         positionType = PositionType.IN
         newNormal = N * -1
         col = np.zeros(3)
-        n2 = 1
+        n2 = 1.0
         n1 = obj.refractive_indices
 
     # Reflection Ray
@@ -643,10 +643,10 @@ def reflect_and_refract(primaryRay, scene, positionType, depth, pathLoss, i,j):
 
 def refraction(primaryRay, positionType, normal, refraction_obj, refraction_point):
 
-    r = 1 / refraction_obj.refractive_indices
+    r = 1.0 / refraction_obj.refractive_indices
 
     if  positionType == PositionType.IN:
-        r = 1 / r
+        r = 1.0 / r
 
     c1 = abs(np.dot(normal, primaryRay.direction))    
     t = 1 - r ** 2 * (1 - c1 ** 2)    
@@ -676,7 +676,7 @@ def fresnel(n1, n2, normal, incident) :
         cost = np.sqrt(1 - sint * sint)
         Rs = ((n2 * cosi) - (n1 * cost)) / ((n2 * cosi) + (n1 * cost)) 
         Rp = ((n1 * cosi) - (n2 * cost)) / ((n1 * cosi) + (n2 * cost))
-        kr = (Rs * Rs + Rp * Rp) / 2 
+        kr = (Rs * Rs + Rp * Rp) / 2.0
 
     return kr
 
@@ -684,13 +684,13 @@ def fresnel(n1, n2, normal, incident) :
 def getRefractiveIndices(level):
 
     if level == 0:
-        return 10
+        return 10.0
     elif level == 1:
-        return 8
+        return 8.0
     elif level == 2:
-        return 5
+        return 5.0
     elif level == 3:
-        return 2
+        return 2.0
     elif level == 4:
         return 1.3
     elif level == 5:
@@ -699,7 +699,7 @@ def getRefractiveIndices(level):
 def getSimpleRefractive(level):
 
     if level == 0:
-        return 0
+        return 0.0
     elif level == 1:
         return 0.2
     elif level == 2:
@@ -762,8 +762,8 @@ def analyse_input(scene_input):
 
     return camera_seeting, scene
 
-w = 512
-h = 512
+w = 400
+h = 400
 
 # Light position and color.
 L = np.array([5., 5., -10.])
@@ -798,7 +798,7 @@ if __name__ == '__main__':
 
     for i in range(len(ps)):
         img = img + result_queue.get()
-        print((i + 1) / len(ps) * 100, '%')
+        print(i + 1) *  1.0  / len(ps) * 100, '%'
 
     # for debug
     #processes_divided = 1
