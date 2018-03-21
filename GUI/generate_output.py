@@ -16,6 +16,22 @@ class OutputGenerator:
         self.camera_point_to = []
         self.light = []
 
+    def Truncate_File(self):
+        with open(self.output_file, 'r+') as f:
+            f.seek(0)
+            f.truncate()
+        self.object_count = 0
+        self.Configure_dict = {}
+        self.Sphere_list = []
+        self.Cube_list = []
+        self.Tetrahedron_list = []
+        self.Cylinder_list = []
+        self.Cone_list = []
+        self.Plane_list = []
+        self.camera_position = []
+        self.camera_point_to = []
+        self.light = []
+
     def Scene_Config(self,camera_c,camera_l,light):
         self.camera_position = camera_c
         self.camera_point_to = camera_l

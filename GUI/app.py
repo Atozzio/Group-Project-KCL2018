@@ -7,13 +7,26 @@ import multiprocessing as mp
 import json
 import math
 
-app = Flask(__name__)
 OutputFile = OutputGenerator()
+
+app = Flask(__name__)
+
+@app.after_request
+def add_header(r): # disabled static file cache
+    """
+    Add headers to both force latest IE rendering engine or Chrome Frame,
+    and also to cache the rendered page for 10 minutes.
+    """
+    r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    r.headers["Pragma"] = "no-cache"
+    r.headers["Expires"] = "0"
+    r.headers['Cache-Control'] = 'public, max-age=0'
+    return r 
+
  
 @app.route('/')
 def render_static():
     return render_template('index.html')
-
 
 @app.route('/index')
 def index():
@@ -56,45 +69,14 @@ def Figure():
         p.start()
     for i in range(len(ps)):
         img = img + result_queue.get()
-        print(i + 1) *  1.0  / len(ps) * 100, '%'
-    plt.imsave('fig2.png', img)
+    plt.imsave('./static/Grey_Hats.png', img)
     return render_template('Figure.html')
 
-# @app.route('/FigureGenerator', methods=['POST', 'GET'])
-# def FigureGenerator():
-#     global OutputFile
-#     OutputFile.Generate_File() # generate json file
-
-#     w = 512
-#     h = 512
-#     L = np.array([5., 5., -10.])
-#     color_light = np.ones(3)
-#     ambient = .05
-#     diffuse_c = 1.
-#     specular_c = 1.
-#     specular_k = 50
-#     depth_max = 4  # Maximum number of light reflections.
-#     processes_divided = 8
-#     with open('data.json', 'r') as inputFile:
-#         scene_input = inputFile.read()  
-#     result_queue = mp.Queue()
-#     ps = []
-#     for i in range(processes_divided**2):
-#         ps.append(mp.Process(target=trace_ray_main, args=(result_queue, i,
-#         scene_input, )))
-#     img = np.zeros((h, w, 3))
-#     # start processes
-#     for p in ps:
-#         p.start()
-#     for i in range(len(ps)):
-#         img = img + result_queue.get()
-#         print((i + 1) / len(ps) * 100, '%')
-#     plt.imsave('fig.png', img)
-#     return 
 
 @app.route('/ObjectFeature', methods=['POST', 'GET'])
 def ObjectFeature():
     global OutputFile
+    OutputFile.Truncate_File()
     object_quantity = 0
     if request.method == 'POST':
         post_data = request.get_json()
