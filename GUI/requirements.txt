@@ -1,4 +1,4 @@
 Python==2.7.10
 Flask==0.12.2
-numpy==1.14.0
+numpy==1.22.0
 matplotlib==2.1.1
